@@ -36,11 +36,12 @@ class BnReorientAxis:
         self.reorientAxis = ioAxis
         self.reorientSign = ioSign
 
-    def apply( self, values ):
+    def apply( self, iovalues ):
         ovalues = []
-        for idv in range(0, len(values)):
-            ovalues.append( values[ self.reorientAxis[idv] ] * self.reorientSign[idv]  )
-        return ovalues
+        for idv in range(0, len(iovalues)):
+            ovalues.append( iovalues[ self.reorientAxis[idv] ] * self.reorientSign[idv]  )
+        for idv in range(0, len(iovalues)):
+            iovalues[idv] = ovalues[idv]
 
 
 
@@ -51,10 +52,12 @@ if __name__ == "__main__":
     test_io_axis = [ 3, 2, 1, 0 ]
     test_io_sign = [ -1, -1, -1, -1 ]
     test_ivalues = [ 3, 4.5, 2, 10.2 ]
+    # ovalues are equal to ivalues for inplace operators
+    test_ovalues = [ 3, 4.5, 2, 10.2 ]
     test_evalues = [ -10.2, -2, -4.5, -3 ]
     test_obj = BnReorientAxis()
     test_obj.config( test_io_axis, test_io_sign )
-    test_ovalues = test_obj.apply( test_ivalues )
+    test_obj.apply( test_ovalues )
     if test_evalues == test_ovalues:
         print("Test passed: output = "+str(test_ovalues) + " expected = "+str(test_evalues))
     else:
