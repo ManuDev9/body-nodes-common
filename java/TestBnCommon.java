@@ -32,7 +32,7 @@ import java.util.Arrays;
  *
  * */
 
-public class TestBnUtils {
+public class TestBnCommon {
     public static void main(String[] args) {
         System.out.println("Testing BnReorientAxis");
 
