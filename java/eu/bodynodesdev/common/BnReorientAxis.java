@@ -22,7 +22,7 @@
 # SOFTWARE.
 */
 
-package eu.bodynodes.common;
+package eu.bodynodesdev.common;
 
 import java.util.Arrays;
 

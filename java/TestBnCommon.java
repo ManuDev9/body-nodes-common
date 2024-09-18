@@ -22,7 +22,7 @@
 # SOFTWARE.
 */
 
-import eu.bodynodes.common.BnReorientAxis;
+import eu.bodynodesdev.common.BnReorientAxis;
 
 import java.util.Arrays;
 
