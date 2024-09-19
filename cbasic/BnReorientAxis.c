@@ -22,29 +22,36 @@
 # SOFTWARE.
 */
 
-#ifndef BN_REORIENT_AXIS_CPP
-#define BN_REORIENT_AXIS_CPP
-
-#define MAX_NUMBER_AXIS 4
-
-#include <cstdint>
-
-class BnReorientAxis {
-
-    public:
-        BnReorientAxis();
-        
-        void config( int const ioAxis[], int const ioSign[], uint8_t const length );
-        void apply( float iovalues[] );
-        void apply( int iovalues[] );
-
-    private:
-
-        int mReorientAxis[MAX_NUMBER_AXIS];
-        int mReorientSign[MAX_NUMBER_AXIS];
-        uint8_t mLength;
-};
+#include "BnReorientAxis.h"
 
 
-#endif // BN_REORIENT_AXIS_CPP
+void BnReorientAxis_config( BnReorientAxisData_t* data, int const ioAxis[], int const ioSign[], uint8_t const length ) {
+    data->length = length;
+    for( uint8_t idl = 0; idl < data->length; ++idl ) {
+        data->reorientAxis[idl] = ioAxis[idl];
+        data->reorientSign[idl] = ioSign[idl];
+    }
+}
+
+void BnReorientAxis_apply_float( BnReorientAxisData_t* data, float iovalues[] ) {
+    float ovalues[data->length];
+    for( uint8_t idv = 0; idv < data->length; ++idv ) {
+        ovalues[idv] = iovalues[ data->reorientAxis[idv] ] * data->reorientSign[idv];
+    }
+    for( uint8_t idv = 0; idv < data->length; ++idv ) {
+        iovalues[idv] = ovalues[idv];
+    }
+}
+
+void BnReorientAxis_apply_int( BnReorientAxisData_t* data, int iovalues[] ) {
+    int ovalues[data->length];
+    for( uint8_t idv = 0; idv < data->length; ++idv ) {
+        ovalues[idv] = iovalues[ data->reorientAxis[idv] ] * data->reorientSign[idv];
+    }
+    for( uint8_t idv = 0; idv < data->length; ++idv ) {
+        iovalues[idv] = ovalues[idv];
+    }
+}
+
+
 

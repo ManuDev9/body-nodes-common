@@ -22,29 +22,30 @@
 # SOFTWARE.
 */
 
-#ifndef BN_REORIENT_AXIS_CPP
-#define BN_REORIENT_AXIS_CPP
+#ifndef BN_REORIENT_AXIS_C
+#define BN_REORIENT_AXIS_C
 
 #define MAX_NUMBER_AXIS 4
 
-#include <cstdint>
+#include "stdint.h"
 
-class BnReorientAxis {
+typedef struct BnReorientAxisData_st {
+    int reorientAxis[MAX_NUMBER_AXIS];
+    int reorientSign[MAX_NUMBER_AXIS];
+    uint8_t length;
+} BnReorientAxisData_t;
 
-    public:
-        BnReorientAxis();
-        
-        void config( int const ioAxis[], int const ioSign[], uint8_t const length );
-        void apply( float iovalues[] );
-        void apply( int iovalues[] );
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-    private:
+void BnReorientAxis_config( BnReorientAxisData_t* data, int const ioAxis[], int const ioSign[], uint8_t const length );
+void BnReorientAxis_apply_float( BnReorientAxisData_t* data, float iovalues[] );
+void BnReorientAxis_apply_int( BnReorientAxisData_t* data, int iovalues[] );
 
-        int mReorientAxis[MAX_NUMBER_AXIS];
-        int mReorientSign[MAX_NUMBER_AXIS];
-        uint8_t mLength;
-};
+#ifdef __cplusplus
+}
+#endif
 
-
-#endif // BN_REORIENT_AXIS_CPP
+#endif // BN_REORIENT_AXIS_C
 
