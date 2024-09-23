@@ -22,42 +22,44 @@
 # SOFTWARE.
 */
 
-public class BnReorientAxis
+namespace BodynodesDev.Common
 {
-    public BnReorientAxis() {
-        mReorientAxis = new int[]{ 0, 1, 2, 3 };
-        mReorientSign = new int[]{ 1, 1, 1, 1 };
-    }
+    public class BnReorientAxis
+    {
+        public BnReorientAxis() {
+            mReorientAxis = new int[]{ 0, 1, 2, 3 };
+            mReorientSign = new int[]{ 1, 1, 1, 1 };
+        }
 
-    public void config( int[] ioAxis, int[] ioSign ) {
-        for( uint idv = 0; idv < ioAxis.Length; ++idv ) {
-            mReorientAxis[idv] = ioAxis[idv];
-            mReorientSign[idv] = ioSign[idv];
+        public void config( int[] ioAxis, int[] ioSign ) {
+            for( uint idv = 0; idv < ioAxis.Length; ++idv ) {
+                mReorientAxis[idv] = ioAxis[idv];
+                mReorientSign[idv] = ioSign[idv];
+            }
         }
-    }
 
-    public void apply( float[] iovalues ) {
-        float[] ovalues = new float[iovalues.Length];
-        for( uint idv = 0; idv < iovalues.Length; ++idv ) {
-            ovalues[idv] = iovalues[ mReorientAxis[idv] ] * mReorientSign[idv] ;
+        public void apply( float[] iovalues ) {
+            float[] ovalues = new float[iovalues.Length];
+            for( uint idv = 0; idv < iovalues.Length; ++idv ) {
+                ovalues[idv] = iovalues[ mReorientAxis[idv] ] * mReorientSign[idv] ;
+            }
+            for( uint idv = 0; idv < iovalues.Length; ++idv ) {
+                iovalues[idv] = ovalues[idv];
+            }
         }
-        for( uint idv = 0; idv < iovalues.Length; ++idv ) {
-            iovalues[idv] = ovalues[idv];
-        }
-    }
 
-    public void apply( int[] iovalues ) {
-        int[] ovalues = new int[iovalues.Length];
-        for( uint idv = 0; idv < iovalues.Length; ++idv ) { 
-            ovalues[idv] = iovalues[ mReorientAxis[idv] ] * mReorientSign[idv] ;
+        public void apply( int[] iovalues ) {
+            int[] ovalues = new int[iovalues.Length];
+            for( uint idv = 0; idv < iovalues.Length; ++idv ) { 
+                ovalues[idv] = iovalues[ mReorientAxis[idv] ] * mReorientSign[idv] ;
+            }
+            for( uint idv = 0; idv < iovalues.Length; ++idv ) {
+                iovalues[idv] = ovalues[idv];
+            }
         }
-        for( uint idv = 0; idv < iovalues.Length; ++idv ) {
-            iovalues[idv] = ovalues[idv];
-        }
-    }
 
-    private int[] mReorientAxis;
-    private int[] mReorientSign;
+        private int[] mReorientAxis;
+        private int[] mReorientSign;
+    }
 }
-
 

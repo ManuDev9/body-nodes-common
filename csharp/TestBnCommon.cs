@@ -22,11 +22,13 @@
 # SOFTWARE.
 */
 
-
 using System;
+using BodynodesDev.Common;
 
 /*
  * dotnet new console
+ *
+ *
  * dotnet build
  * dotnet run
  */
@@ -47,16 +49,63 @@ public static class TestBnCommon
         test_obj.config( test_io_axis, test_io_sign );
         test_obj.apply( test_ovalues );
 
-        BnTestHelper.Assert(test_evalues[0] == test_ovalues[0]);
-        BnTestHelper.Assert(test_evalues[1] == test_ovalues[1]);
-        BnTestHelper.Assert(test_evalues[2] == test_ovalues[2]);
-        BnTestHelper.Assert(test_evalues[3] == test_ovalues[3]);
+        BnTestHelper.Assert(BnTestHelper.areArraysClose( test_evalues, test_ovalues, 1e-5f, 1e-3f) );
     }
+
+    public static void BnTwoNodesMotionTrackingTest()
+    {
+
+        float[] test_node1_quat = new float[]{ 0.9926f, 0.0329f, 0.0973f, 0.0640f };
+        float[] test_node2_quat = new float[]{ 0.9583f, -0.1367f, -0.0595f, -0.2439f };
+        float[] test_ovalues = new float[]{ 0, 0, 0 };
+        float[] test_evalues = new float[]{ 18.468636171839087f, -3.1761790635934757f, -0.08354223767877755f };
+
+        BnTwoNodesMotionTracking test_obj = new BnTwoNodesMotionTracking(
+            new float[]{ 0,0,0}, 10, 10, new float[,] { { 10, 20 }, { -5, 5}, { -5, 5} }, "cm"    
+        );
+        test_obj.compute( test_node1_quat, test_node2_quat, test_ovalues );
+
+        BnTestHelper.Assert(BnTestHelper.areArraysClose( test_evalues, test_ovalues, 1e-2f, 1e-2f) );
+    }
+
+    public static void BnTwoNodesMotionTrackingConstraintTest()
+    {
+
+        float[] test_node1_quat = new float[]{ 0.8504f, 0.3678f, -0.1840f, 0.3281f }; 
+        float[] test_node2_quat = new float[]{ 0.9293f, -0.0039f, -0.2892f, 0.2296f };
+        float[] test_ovalues = new float[]{ 0, 0, 0 };
+        float[] test_evalues = new float[]{ 14.443218483410508f, 5f, 5f };
+
+        BnTwoNodesMotionTracking test_obj = new BnTwoNodesMotionTracking( 
+            new float[]{ 0,0,0}, 10, 10, new float[,] { { 10, 20 }, { -5, 5}, { -5, 5} }, "cm"
+        );
+        test_obj.compute( test_node1_quat, test_node2_quat, test_ovalues );
+
+        BnTestHelper.Assert(BnTestHelper.areArraysClose( test_evalues, test_ovalues, 1e-2f, 1e-2f) );
+    }
+
+    public static void BnRobotIK_ZYY2ArmsTest()
+    {
+
+        float[] test_endpoint = new float[]{ 18.219124272891392f, 3.8972461548699857f, 1.6501078154541111f };
+        float[] test_ovalues = new float[]{ 0, 0, 0 };
+        float[] test_evalues = new float[]{ 0.21073373345528476f, -0.4522653965641126f, 0.723883473845901f };
+
+        BnRobotIK_ZYY2Arms test_obj = new BnRobotIK_ZYY2Arms(
+            10, 10, new float[]{ 0, 0, 0 }, new float[]{ 0, 0, 0 }, "cm" );
+        test_obj.compute( test_endpoint, test_ovalues );
+
+        BnTestHelper.Assert(BnTestHelper.areArraysClose( test_evalues, test_ovalues, 1e-5f, 1e-3f) );
+    }
+
 
     public static void Main()
     {
         // Register the test method
         BnTestHelper.DefineTest(BnReorientAxisTest, nameof(BnReorientAxisTest));
+        BnTestHelper.DefineTest(BnTwoNodesMotionTrackingTest, nameof(BnTwoNodesMotionTrackingTest));
+        BnTestHelper.DefineTest(BnTwoNodesMotionTrackingConstraintTest, nameof(BnTwoNodesMotionTrackingConstraintTest));
+        BnTestHelper.DefineTest(BnRobotIK_ZYY2ArmsTest, nameof(BnRobotIK_ZYY2ArmsTest));
 
         // Run all tests
         BnTestRegistry.Instance.RunAllTests();

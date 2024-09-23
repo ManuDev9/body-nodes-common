@@ -24,6 +24,10 @@
 
 #include "BnReorientAxis.h"
 
+namespace bodynodesdev {
+
+namespace common {
+
 BnReorientAxis::BnReorientAxis() : mReorientAxis{ 0, 1, 2, 3 }, mReorientSign{ 1, 1, 1, 1}, mLength(0) {}
 
 void BnReorientAxis::config( int const ioAxis[], int const ioSign[], uint8_t const length ) {
@@ -54,5 +58,8 @@ void BnReorientAxis::apply( int iovalues[] ) {
     }
 }
 
+} //namespace common
+
+} //namespace bodynodesdev
 
 

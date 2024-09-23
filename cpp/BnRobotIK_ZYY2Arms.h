@@ -22,36 +22,38 @@
 # SOFTWARE.
 */
 
-#ifndef BN_REORIENT_AXIS_CPP
-#define BN_REORIENT_AXIS_CPP
-
-#define MAX_NUMBER_AXIS 4
+#ifndef BN_ROBOT_IK_ZYY_2ARMS_CPP
+#define BN_ROBOT_IK_ZYY_2ARMS_CPP
 
 #include <cstdint>
+#include <cstring>
+#include <string>
 
 namespace bodynodesdev {
 
 namespace common {
-
-class BnReorientAxis {
+    
+class BnRobotIK_ZYY2Arms {
 
     public:
-        BnReorientAxis();
-        
-        void config( int const ioAxis[], int const ioSign[], uint8_t const length );
-        void apply( float iovalues[] );
-        void apply( int iovalues[] );
+
+        // Starting Point is assumed to be [0, 0, 0]
+        BnRobotIK_ZYY2Arms( float const lengthRA2, float const lengthRA3, float const displSP[3], float const displEP[3], std::string const units );
+
+        // The returned angles refer to the X axis
+        void compute( float const endpoint[3], float outAngles[3] );
 
     private:
 
-        int mReorientAxis[MAX_NUMBER_AXIS];
-        int mReorientSign[MAX_NUMBER_AXIS];
-        uint8_t mLength;
+        float mLengthRA2;
+        float mLengthRA3;
+        float mDisplSP[3];
+        float mDisplEP[3];
+
 };
 
 } //namespace common
 
 } //namespace bodynodesdev
 
-#endif // BN_REORIENT_AXIS_CPP
-
+#endif // BN_ROBOT_IK_ZYY_2ARMS_CPP

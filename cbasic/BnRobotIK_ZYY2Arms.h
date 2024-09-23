@@ -22,36 +22,31 @@
 # SOFTWARE.
 */
 
-#ifndef BN_REORIENT_AXIS_CPP
-#define BN_REORIENT_AXIS_CPP
+#ifndef BN_ROBOT_IK_ZYY_2ARMS_C
+#define BN_ROBOT_IK_ZYY_2ARMS_C
 
-#define MAX_NUMBER_AXIS 4
+#include "stdint.h"
 
-#include <cstdint>
+typedef struct BnRobotIK_ZYY2Arms_st {    
+    float lengthRA2;
+    float lengthRA3;
+    float displSP[3];
+    float displEP[3];
+} BnRobotIK_ZYY2Arms_t;
 
-namespace bodynodesdev {
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-namespace common {
+// Starting Point is assumed to be [0, 0, 0]
+void BnRobotIK_ZYY2Arms_create( BnRobotIK_ZYY2Arms_t *data,
+    float const lengthRA2, float const lengthRA3, float const displSP[3], float const displEP[3], char const *units );
 
-class BnReorientAxis {
+// The returned angles refer to the X axis
+void BnRobotIK_ZYY2Arms_compute( BnRobotIK_ZYY2Arms_t *data, float const endpoint[3], float outAngles[3] );
 
-    public:
-        BnReorientAxis();
-        
-        void config( int const ioAxis[], int const ioSign[], uint8_t const length );
-        void apply( float iovalues[] );
-        void apply( int iovalues[] );
+#ifdef __cplusplus
+}
+#endif
 
-    private:
-
-        int mReorientAxis[MAX_NUMBER_AXIS];
-        int mReorientSign[MAX_NUMBER_AXIS];
-        uint8_t mLength;
-};
-
-} //namespace common
-
-} //namespace bodynodesdev
-
-#endif // BN_REORIENT_AXIS_CPP
-
+#endif // BN_ROBOT_IK_ZYY_2ARMS_C

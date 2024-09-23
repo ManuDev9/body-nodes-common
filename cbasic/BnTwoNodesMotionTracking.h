@@ -22,36 +22,34 @@
 # SOFTWARE.
 */
 
-#ifndef BN_REORIENT_AXIS_CPP
-#define BN_REORIENT_AXIS_CPP
+#ifndef BN_TWO_NODES_MOTION_TRACKING_C
+#define BN_TWO_NODES_MOTION_TRACKING_C
 
-#define MAX_NUMBER_AXIS 4
+#include "stdint.h"
 
-#include <cstdint>
+typedef struct BnTwoNodesMotionTracking_st {
+    float initialPosition[3];
+    float lengthArm1;
+    float lengthArm2;
+    float locationConstraints[6];
+    uint8_t hasLocationConstraints;
+} BnTwoNodesMotionTracking_t;
 
-namespace bodynodesdev {
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-namespace common {
+// *locationConstraints => locationConstraints[6] = { minX, maxX, minY, maxY, minZ, maxZ };
+void BnTwoNodesMotionTracking_create(BnTwoNodesMotionTracking_t *data,
+    float const initialPosition[3], float const lengthArm1, float const lengthArm2,
+    float const *locationConstraints, char const *units);
 
-class BnReorientAxis {
+void BnTwoNodesMotionTracking_compute( BnTwoNodesMotionTracking_t const *data,
+    float const node1Quat[4], float const node2Quat[4], float finalPosition[3] );
 
-    public:
-        BnReorientAxis();
-        
-        void config( int const ioAxis[], int const ioSign[], uint8_t const length );
-        void apply( float iovalues[] );
-        void apply( int iovalues[] );
+#ifdef __cplusplus
+}
+#endif
 
-    private:
-
-        int mReorientAxis[MAX_NUMBER_AXIS];
-        int mReorientSign[MAX_NUMBER_AXIS];
-        uint8_t mLength;
-};
-
-} //namespace common
-
-} //namespace bodynodesdev
-
-#endif // BN_REORIENT_AXIS_CPP
+#endif // BN_TWO_NODES_MOTION_TRACKING_C
 

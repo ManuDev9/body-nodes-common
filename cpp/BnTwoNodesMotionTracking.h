@@ -22,36 +22,46 @@
 # SOFTWARE.
 */
 
-#ifndef BN_REORIENT_AXIS_CPP
-#define BN_REORIENT_AXIS_CPP
-
-#define MAX_NUMBER_AXIS 4
+#ifndef BN_TWO_NODES_MOTION_TRACKING_CPP
+#define BN_TWO_NODES_MOTION_TRACKING_CPP
 
 #include <cstdint>
+#include <cstring>
+#include <string>
 
 namespace bodynodesdev {
 
 namespace common {
 
-class BnReorientAxis {
+class BnTwoNodesMotionTracking {
 
     public:
-        BnReorientAxis();
+
+        // *locationConstraints => locationConstraints[6] = { minX, maxX, minY, maxY, minZ, maxZ };
+        BnTwoNodesMotionTracking(
+            float const initialPosition[3], float const lengthArm1, float const lengthArm2,
+            float const *locationConstraints, std::string const units);
         
-        void config( int const ioAxis[], int const ioSign[], uint8_t const length );
-        void apply( float iovalues[] );
-        void apply( int iovalues[] );
+        void compute( float const node1Quat[4], float const node2Quat[4], float finalPosition[3] );
 
     private:
 
-        int mReorientAxis[MAX_NUMBER_AXIS];
-        int mReorientSign[MAX_NUMBER_AXIS];
-        uint8_t mLength;
+        void quaternion_to_rotation_matrix( float const quat[4], float rotationMatrix[3][3] );
+        void matrix_multiply_3x3( float const matrix[3][3], float const vector[3], float result[3]);
+
+    private:
+
+        float mInitialPosition[3];
+        float mLengthArm1;
+        float mLengthArm2;
+        float mLocationConstraints[6];
+        bool mHasLocationConstraints;
+
 };
 
 } //namespace common
 
 } //namespace bodynodesdev
 
-#endif // BN_REORIENT_AXIS_CPP
+#endif // BN_TWO_NODES_MOTION_TRACKING_CPP
 

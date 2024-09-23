@@ -23,6 +23,18 @@
         } \
     } while (false)
 
+// Macro to assert a condition in the test
+#define ASSERT(val) \
+    do { \
+        if (!(val)) { \
+            std::cout << __FILE__ << ":" << __LINE__ << ": Test failed." << std::endl; \
+            return; \
+        } \
+        else { \
+          std::cout << __FILE__ << ":" << __LINE__ << ": Test Passed. " << std::endl; \
+        } \
+    } while (false)
+
 class BnTestRegistry {
 
 private:

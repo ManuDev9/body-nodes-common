@@ -91,4 +91,22 @@ public static class BnTestHelper
             Console.WriteLine("\tPassed");
         }
     }
+
+    public static bool areArraysClose(float[] actual, float[] expected, float absError, float relError) {
+        if (actual.Length != expected.Length) {
+            throw new Exception("Arrays must be of the same length.");
+        }
+
+        for (int i = 0; i < actual.Length; i++) {
+            float diff = Math.Abs(actual[i] - expected[i]);
+            float expectedValue = Math.Abs(expected[i]);
+
+            // Check if the difference is within absolute or relative error bounds
+            if (diff > absError && (expectedValue == 0 || diff / expectedValue > relError)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
