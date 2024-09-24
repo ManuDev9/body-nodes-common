@@ -95,11 +95,10 @@ TEST_CASE(BnRobotIK_ZYY2ArmsTest) {
     float lengthRA2 = 10;
     float lengthRA3 = 10;
     float displSP[3] = { 0,0,0 };
-    float displEP[3] = { 0,0,0 };
     std::string units = "cm";
 
     bodynodesdev::common::BnRobotIK_ZYY2Arms test_obj(
-        lengthRA2, lengthRA3, displSP, displEP, units
+        lengthRA2, lengthRA3, displSP, units
     );
     test_obj.compute( test_endpoint, test_ovalues);
 

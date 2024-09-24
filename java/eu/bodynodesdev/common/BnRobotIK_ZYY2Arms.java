@@ -31,30 +31,23 @@ public class BnRobotIK_ZYY2Arms {
     private float mLengthRA2;
     private float mLengthRA3;
     private float[] mDisplSP;
-    private float[] mDisplEP;
 
     // Starting Point is assumed to be [0, 0, 0]
-    public BnRobotIK_ZYY2Arms( float lengthRA2, float lengthRA3, float displSP[], float displEP[], String unit ) {
+    public BnRobotIK_ZYY2Arms( float lengthRA2, float lengthRA3, float displSP[], String unit ) {
         mLengthRA2 = lengthRA2;
         mLengthRA3 = lengthRA3;
         mDisplSP = Arrays.copyOf( displSP, displSP.length );
-        mDisplEP = Arrays.copyOf( displEP, displEP.length );
     }
 
     // The returned angles are made to work along the X axis
     public void compute( float endpoint[], float outAngles[] ) {
-    
-        float intermEP[] = new float[3];
-        intermEP[0] = endpoint[0] - mDisplEP[0];
-        intermEP[1] = endpoint[1] - mDisplEP[1];
-        intermEP[2] = endpoint[2] - mDisplEP[2];
 
-        outAngles[0] = (float) Math.asin( ( intermEP[1] ) / Math.sqrt( intermEP[0]*intermEP[0] + intermEP[1]*intermEP[1] ) );
+        outAngles[0] = (float) Math.asin( ( endpoint[1] ) / Math.sqrt( endpoint[0]*endpoint[0] + endpoint[1]*endpoint[1] ) );
         
         float diff_iSP_iEP[] = new float[3];
-        diff_iSP_iEP[0] = intermEP[0] - mDisplSP[0];
-        diff_iSP_iEP[1] = intermEP[1] - mDisplSP[1];
-        diff_iSP_iEP[2] = intermEP[2] - mDisplSP[2];
+        diff_iSP_iEP[0] = endpoint[0] - mDisplSP[0];
+        diff_iSP_iEP[1] = endpoint[1] - mDisplSP[1];
+        diff_iSP_iEP[2] = endpoint[2] - mDisplSP[2];
 
         float dist_iSP_iEP_2 = diff_iSP_iEP[0] * diff_iSP_iEP[0] + diff_iSP_iEP[1] * diff_iSP_iEP[1] + diff_iSP_iEP[2] * diff_iSP_iEP[2];
         float dist_iSP_iEP = (float) Math.sqrt(dist_iSP_iEP_2);

@@ -107,19 +107,17 @@ class BnTwoNodesMotionTracking:
 class BnRobotIK_ZYY2Arms:
 
     # Starting Point is assumed to be [0, 0, 0]
-    def __init__(self, lengthRA2 = 1, lengthRA3 = 1, displSP = [0, 0, 0], displEP = [0, 0, 0], units = "cm"):
+    def __init__(self, lengthRA2 = 1, lengthRA3 = 1, displSP = [0, 0, 0], units = "cm"):
         self.lengthRA2 = lengthRA2
         self.lengthRA3 = lengthRA3
         self.displSP = displSP
-        self.displEP = displEP
         
     # The returned angles are made to work in blender
     def compute(self, endpoint):
     
-        interm_ep = [ endpoint[0] - self.displEP[0], endpoint[1] - self.displEP[1], endpoint[2] - self.displEP[2] ]
-        theta_RA1 = math.asin( ( interm_ep[1] ) / math.sqrt( interm_ep[0]*interm_ep[0] + interm_ep[1]*interm_ep[1] ) )
+        theta_RA1 = math.asin( ( endpoint[1] ) / math.sqrt( endpoint[0]*endpoint[0] + endpoint[1]*endpoint[1] ) )
         
-        diff_iSP_iEP = [ interm_ep[0] - self.displSP[0], interm_ep[1] - self.displSP[1], interm_ep[2] - self.displSP[2] ]
+        diff_iSP_iEP = [ endpoint[0] - self.displSP[0], endpoint[1] - self.displSP[1], endpoint[2] - self.displSP[2] ]
         
         dist_iSP_iEP_2 = diff_iSP_iEP[0] * diff_iSP_iEP[0] + diff_iSP_iEP[1] * diff_iSP_iEP[1] + diff_iSP_iEP[2] * diff_iSP_iEP[2]
         dist_iSP_iEP = math.sqrt(dist_iSP_iEP_2)

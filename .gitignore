@@ -1,3 +1,11 @@
 
+cbasic/testBnCommon
+cpp/testBnCommon
+csharp/bin/
+csharp/obj/
+
+*.o
+*.class
+
 __pycache__
 

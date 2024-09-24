@@ -92,7 +92,7 @@ public static class TestBnCommon
         float[] test_evalues = new float[]{ 0.21073373345528476f, -0.4522653965641126f, 0.723883473845901f };
 
         BnRobotIK_ZYY2Arms test_obj = new BnRobotIK_ZYY2Arms(
-            10, 10, new float[]{ 0, 0, 0 }, new float[]{ 0, 0, 0 }, "cm" );
+            10, 10, new float[]{ 0, 0, 0 }, "cm" );
         test_obj.compute( test_endpoint, test_ovalues );
 
         BnTestHelper.Assert(BnTestHelper.areArraysClose( test_evalues, test_ovalues, 1e-5f, 1e-3f) );

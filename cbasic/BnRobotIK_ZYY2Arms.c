@@ -29,7 +29,7 @@
 const double BN_M_PI = 3.141592653589793;
 
 void BnRobotIK_ZYY2Arms_create( BnRobotIK_ZYY2Arms_t *data,
-        float const lengthRA2, float const lengthRA3, float const displSP[3], float const displEP[3], char const * unit ) {
+        float const lengthRA2, float const lengthRA3, float const displSP[3], char const * unit ) {
 
     data->lengthRA2 = lengthRA2;
     data->lengthRA3 = lengthRA3;
@@ -37,26 +37,16 @@ void BnRobotIK_ZYY2Arms_create( BnRobotIK_ZYY2Arms_t *data,
     data->displSP[0] =  displSP[0];
     data->displSP[1] =  displSP[1];
     data->displSP[2] =  displSP[2];
-
-    data->displEP[0] =  displEP[0];
-    data->displEP[1] =  displEP[1];
-    data->displEP[2] =  displEP[2];
 }
 
 void BnRobotIK_ZYY2Arms_compute( BnRobotIK_ZYY2Arms_t *data, float const endpoint[3], float outAngles[3] ) {
-    
-    float intermEP[3] = {
-        endpoint[0] - data->displEP[0],
-        endpoint[1] - data->displEP[1],
-        endpoint[2] - data->displEP[2]
-    };
 
-    outAngles[0] = (float)( asin( ( intermEP[1] ) / sqrt( intermEP[0]*intermEP[0] + intermEP[1]*intermEP[1] ) ) );
+    outAngles[0] = (float)( asin( ( endpoint[1] ) / sqrt( endpoint[0]*endpoint[0] + endpoint[1]*endpoint[1] ) ) );
     
     float diff_iSP_iEP[3] = {
-        intermEP[0] - data->displSP[0],
-        intermEP[1] - data->displSP[1],
-        intermEP[2] - data->displSP[2]
+        endpoint[0] - data->displSP[0],
+        endpoint[1] - data->displSP[1],
+        endpoint[2] - data->displSP[2]
     };
 
     float dist_iSP_iEP_2 = diff_iSP_iEP[0] * diff_iSP_iEP[0] + diff_iSP_iEP[1] * diff_iSP_iEP[1] + diff_iSP_iEP[2] * diff_iSP_iEP[2];

@@ -99,12 +99,11 @@ TEST_CASE(BnRobotIK_ZYY2ArmsTest) {
     float lengthRA2 = 10;
     float lengthRA3 = 10;
     float displSP[3] = { 0,0,0 };
-    float displEP[3] = { 0,0,0 };
     std::string units = "cm";
 
     BnRobotIK_ZYY2Arms_t test_obj;
     BnRobotIK_ZYY2Arms_create( &test_obj,
-        lengthRA2, lengthRA3, displSP, displEP, units.c_str()
+        lengthRA2, lengthRA3, displSP, units.c_str()
     );
     BnRobotIK_ZYY2Arms_compute( &test_obj, test_endpoint, test_ovalues);
 

@@ -105,7 +105,7 @@ namespace BodynodesDev.Common
         private float[] mInitialPosition;
         private float mLengthArm1;
         private float mLengthArm2;
-        private float[,] mLocationConstraints; 
+        private float[,]? mLocationConstraints; 
     }
 }
 

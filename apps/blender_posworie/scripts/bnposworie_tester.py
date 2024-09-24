@@ -64,7 +64,7 @@ blender_common_path = "C:/Users/Manu/VirtualBox VMs/BodynodesDev/CommonDir/works
 pythonlib_wifi_path = "C:/Users/Manu/VirtualBox VMs/BodynodesDev/CommonDir/workspace/body-nodes-host/modules/pythonlib"
 
 # Removing the scripts saved in cache so that Blender uses the last updated version of the scritps
-[os.remove(file) for file in glob.glob(os.path.join(os.path.abspath(bn_common_path + "/__pycache__"), "bnutils.cpython*.pyc"))]
+[os.remove(file) for file in glob.glob(os.path.join(os.path.abspath(bn_common_path + "/__pycache__"), "bncommon.cpython*.pyc"))]
 [os.remove(file) for file in glob.glob(os.path.join(os.path.abspath(blender_common_path + "/__pycache__"), "bnblenderutils.cpython*.pyc"))]
 [os.remove(file) for file in glob.glob(os.path.join(os.path.abspath(pythonlib_wifi_path + "/__pycache__"), "bnwifibodynodeshost.cpython*.pyc"))]
 
@@ -73,14 +73,14 @@ sys.path.append(bn_common_path)
 sys.path.append(blender_common_path)
 sys.path.append(pythonlib_wifi_path)
 
-if "bnutils" in sys.modules:
-    del sys.modules["bnutils"]
+if "bncommon" in sys.modules:
+    del sys.modules["bncommon"]
 if "bnblenderutils" in sys.modules:
     del sys.modules["bnblenderutils"]
 if "bnwifibodynodeshost" in sys.modules:
     del sys.modules["bnwifibodynodeshost"]
 
-import bnutils
+import bncommon
 import bnblenderutils
 import bnwifibodynodeshost
 
@@ -190,13 +190,13 @@ class BlenderBodynodeListener(bnwifibodynodeshost.BodynodeListener):
 
 blenderbnlistener = BlenderBodynodeListener()
 bnhost = bnwifibodynodeshost.BnWifiHostCommunicator()
-bnmotiontrack = bnutils.BnTwoNodesMotionTracking(
+bnmotiontrack = bncommon.BnTwoNodesMotionTracking(
     initialPosition = [0,0,0], lengthArm1 = 10, lengthArm2 = 10,
     locationConstraints = position2_obj[ "constrloc"])
 
-bnaik = bnutils.BnRobotIK_ZYY2Arms(
+bnaik = bncommon.BnRobotIK_ZYY2Arms(
     lengthRA2 = 10, lengthRA3 = 10,
-    displSP = [0, 0, 0], displEP = [0, 0, 0],
+    displSP = [0, 0, 0],
     units = "cm")
 
 def main_read_orientations():

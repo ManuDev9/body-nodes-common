@@ -100,7 +100,7 @@ public class TestBnCommon {
         float[] test_evalues = new float[] { 0.21073373345528476f, -0.4522653965641126f, 0.723883473845901f };
 
         BnRobotIK_ZYY2Arms bnaik = new BnRobotIK_ZYY2Arms(
-            10, 10, new float[]{ 0, 0, 0 }, new float[]{ 0, 0, 0 }, "cm" );
+            10, 10, new float[]{ 0, 0, 0 }, "cm" );
 
         float[] test_ovalues = { 0, 0, 0 };
         bnaik.compute( test_endpoint, test_ovalues );

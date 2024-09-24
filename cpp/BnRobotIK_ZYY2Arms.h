@@ -38,7 +38,7 @@ class BnRobotIK_ZYY2Arms {
     public:
 
         // Starting Point is assumed to be [0, 0, 0]
-        BnRobotIK_ZYY2Arms( float const lengthRA2, float const lengthRA3, float const displSP[3], float const displEP[3], std::string const units );
+        BnRobotIK_ZYY2Arms( float const lengthRA2, float const lengthRA3, float const displSP[3], std::string const units );
 
         // The returned angles refer to the X axis
         void compute( float const endpoint[3], float outAngles[3] );
@@ -48,7 +48,6 @@ class BnRobotIK_ZYY2Arms {
         float mLengthRA2;
         float mLengthRA3;
         float mDisplSP[3];
-        float mDisplEP[3];
 
 };
 
