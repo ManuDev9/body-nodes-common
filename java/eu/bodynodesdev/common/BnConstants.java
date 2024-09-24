@@ -101,13 +101,6 @@ public class BnConstants {
     public static final int COMMUNICATION_TYPE_WIFI = 0;
     public static final int COMMUNICATION_TYPE_BLUETOOTH = 1;
 
-    public static final int[] REORIENT_IO_AXIS = new int[]{ 1, 2, 3, 0 };
-    public static final int[] REORIENT_IO_SIGN = new int[]{ -1, 1, -1, -1 };
-
-    public static final int AR_OUT_AXIS_X = 0;
-    public static final int AR_OUT_AXIS_Y = 1;
-    public static final int AR_OUT_AXIS_Z = 2;
-
     public static final int WIFI_PERMISSION_CODE                = 10000;
     public static final int FOREGROUND_SERVICE_PERMISSION_CODE  = 10001;
     public static final int SENSOR_SERVICE_NOTIFICATION_ID      = 10002;
