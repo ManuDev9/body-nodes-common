@@ -1,6 +1,7 @@
 
 cbasic/testBnCommon
-cpp/testBnCommon
+cpp/build/
+cbasic/build/
 csharp/bin/
 csharp/obj/
 

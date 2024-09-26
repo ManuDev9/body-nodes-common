@@ -1,21 +1,24 @@
 # Use > for indentation
 .RECIPEPREFIX := >
 
+buildir:
+> mkdir -p build
+
 BnRobotIK_ZYY2Arms.o:
-> g++ -g -c BnRobotIK_ZYY2Arms.cpp -o BnRobotIK_ZYY2Arms.o
+> g++ -g -c BnRobotIK_ZYY2Arms.cpp -o build/BnRobotIK_ZYY2Arms.o
 
 BnTwoNodesMotionTracking.o:
-> g++ -g -c BnTwoNodesMotionTracking.cpp -o BnTwoNodesMotionTracking.o
+> g++ -g -c BnTwoNodesMotionTracking.cpp -o build/BnTwoNodesMotionTracking.o
 
 BnReorientAxis.o:
-> g++ -g -c BnReorientAxis.cpp -o BnReorientAxis.o
+> g++ -g -c BnReorientAxis.cpp -o build/BnReorientAxis.o
 
-build: BnReorientAxis.o BnTwoNodesMotionTracking.o BnRobotIK_ZYY2Arms.o
-> g++ -g testBnCommon.cpp BnReorientAxis.o BnTwoNodesMotionTracking.o BnRobotIK_ZYY2Arms.o -o testBnCommon
+build: buildir BnReorientAxis.o BnTwoNodesMotionTracking.o BnRobotIK_ZYY2Arms.o
+> g++ -g testBnCommon.cpp build/BnReorientAxis.o build/BnTwoNodesMotionTracking.o build/BnRobotIK_ZYY2Arms.o -o build/testBnCommon
 
 test: build
-> ./testBnCommon
+> ./build/testBnCommon
 
 clean:
-> rm testBnCommon *.o
+> rm -r build
 
