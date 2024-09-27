@@ -22,6 +22,8 @@
 # SOFTWARE.
 */
 
+using System;
+
 namespace BodynodesDev.Common
 {
     public class BnTwoNodesMotionTracking
