@@ -89,6 +89,14 @@
 #define ACTION_SETWIFI_PASSWORD_TAG         "password"
 #define ACTION_SETWIFI_MULTICASTMESSAGE_TAG "multicast_message"
 
+// MESSAGE
+#define MESSAGE_PLAYER_TAG      "player"
+#define MESSAGE_BODYPART_TAG    "bodypart"
+#define MESSAGE_SENSORTYPE_TAG  "sensortype"
+#define MESSAGE_VALUE_TAG       "value"
+#define MESSAGE_SENSORTYPE_ORIENTATION_ABS_TAG   "orientation_abs"
+#define MESSAGE_SENSORTYPE_ACCELERATION_REL_TAG  "acceleration_rel"
+
 // MEMORY
 #define MEMORY_BODYPART_TAG               "bodypart"
 #define MEMORY_BODYPART_GLOVE_TAG         "bodypart_glove"

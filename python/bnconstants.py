@@ -64,6 +64,14 @@ ACTION_SETWIFI_SSID_TAG =            "ssid"
 ACTION_SETWIFI_PASSWORD_TAG =        "password"
 ACTION_SETWIFI_MULTICASTMESSAGE_TAG ="multicast_message"
 
+# MESSAGE
+MESSAGE_PLAYER_TAG =     "player"
+MESSAGE_BODYPART_TAG =   "bodypart"
+MESSAGE_SENSORTYPE_TAG = "sensortype"
+MESSAGE_VALUE_TAG =      "value"
+MESSAGE_SENSORTYPE_ORIENTATION_ABS_TAG =  "orientation_abs"
+MESSAGE_SENSORTYPE_ACCELERATION_REL_TAG = "acceleration_rel"
+
 # MEMORY
 MEMORY_BODYPART_TAG =              "bodypart"
 MEMORY_BODYPART_GLOVE_TAG =        "bodypart_glove"
