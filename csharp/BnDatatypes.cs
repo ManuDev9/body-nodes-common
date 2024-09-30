@@ -24,10 +24,9 @@
 
 using System.Net;
 using System;
-using UnityEngine;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Linq;
-using UnityEditor;
 
 namespace BodynodesDev.Common
 {
@@ -160,7 +159,8 @@ namespace BodynodesDev.Common
         }
 
 
-
+#pragma warning disable CS0169
+#pragma warning disable CS0414
         class BnIPConnectionData
         {
             public void setDisconnected()
@@ -205,6 +205,8 @@ namespace BodynodesDev.Common
             ulong last_sent_time = 0;
             ulong last_rec_time = 0;
         }
+#pragma warning restore CS016
+#pragma warning restore CS0414
 
         public class BnSensorData
         {
@@ -291,9 +293,9 @@ namespace BodynodesDev.Common
 
             private uint sd_num_values = 0;
             private BnType sd_sensortype = new BnType { value = BnConstants.SENSORTYPE_NONE_TAG };
-            private float[] sd_values_float;
-            private Int32[] sd_values_int;
-            private String sd_values_str;
+            private float[] sd_values_float = new float[4];
+            private Int32[] sd_values_int = new Int32[9];
+            private String sd_values_str = "";
         };
 
         public class BnMessage
@@ -363,30 +365,49 @@ namespace BodynodesDev.Common
                     debugStr += values[0];
                 }
                 debugStr += " }";
-                Debug.Log(debugStr);
+                Console.WriteLine(debugStr);
             }
 
-            public void parseString(String messageStr)
+            public bool parseString(String messageStr)
             {
-                JObject messageJson = JObject.Parse(messageStr);
-                m_player.value =  messageJson[BnConstants.MESSAGE_PLAYER_TAG].ToString();
-                m_bodypart.value = messageJson[BnConstants.MESSAGE_BODYPART_TAG].ToString();
-                BnType sensortype = new BnType{ value = messageJson[BnConstants.MESSAGE_SENSORTYPE_TAG].ToString() };
+                JsonObject messageJson;
+                try
+                {
+                    messageJson = JsonNode.Parse(messageStr)!.AsObject();
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine("JSON parsing error: " + ex.Message);
+                    return false;
+                }
+                
+                if ( messageJson[BnConstants.MESSAGE_PLAYER_TAG] == null ||
+                        messageJson[BnConstants.MESSAGE_BODYPART_TAG] == null ||
+                        messageJson[BnConstants.MESSAGE_BODYPART_TAG] == null ||
+                        messageJson[BnConstants.MESSAGE_VALUE_TAG] == null ) {
+                    return false;
+                }
+                
+                m_player.value =  messageJson[BnConstants.MESSAGE_PLAYER_TAG]!.ToString();
+                m_bodypart.value = messageJson[BnConstants.MESSAGE_BODYPART_TAG]!.ToString();
+                BnType sensortype = new BnType{ value = messageJson[BnConstants.MESSAGE_SENSORTYPE_TAG]!.ToString() };
 
-                String messageValueStr = messageJson[BnConstants.MESSAGE_VALUE_TAG].ToString();
+                String messageValueStr = messageJson[BnConstants.MESSAGE_VALUE_TAG]!.ToJsonString();
                 if (BnConstants.MESSAGE_VALUE_RESET_TAG.Equals(messageValueStr))
                 {
                     m_sensorData.setValues(BnConstants.MESSAGE_VALUE_RESET_TAG, sensortype);
                 }
                 else if( BnConstants.SENSORTYPE_GLOVE_TAG.Equals( sensortype.value ) )
                 {
-                    m_sensorData.setValues(messageJson[BnConstants.MESSAGE_VALUE_TAG].ToObject<Int32[]>(), sensortype);
+                    Int32[] values = messageJson[BnConstants.MESSAGE_VALUE_TAG]!.AsArray()!.Select(score => (int?)score != null ? (Int32)score : 0).ToArray();
+                    m_sensorData.setValues(values, sensortype);
                 }
                 else 
                 {
-                    m_sensorData.setValues(messageJson[BnConstants.MESSAGE_VALUE_TAG].ToObject<float[]>(), sensortype);
+                    float[] values = messageJson[BnConstants.MESSAGE_VALUE_TAG]!.AsArray()!.Select(score  => (float?)score != null ? (float)score : 0).ToArray();
+                    m_sensorData.setValues(values, sensortype);
                 }
-
+                return true;
             }
 
             public BnName getPlayer()
@@ -421,58 +442,62 @@ namespace BodynodesDev.Common
         {
             public BnAction()
             {
-                a_json = new JObject();
-                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_NONE_TAG);
-                a_json.Add(BnConstants.ACTION_PLAYER_TAG, BnConstants.PLAYER_NONE_TAG);
-                a_json.Add(BnConstants.ACTION_BODYPART_TAG, BnConstants.BODYPART_NONE_TAG);
+                a_json = new JsonObject();
+                a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_NONE_TAG;
+                a_json[BnConstants.ACTION_PLAYER_TAG] = BnConstants.PLAYER_NONE_TAG;
+                a_json[BnConstants.ACTION_BODYPART_TAG] = BnConstants.BODYPART_NONE_TAG;
             }
 
             public void createHaptic(BnName player, BnBodypart bodypart, ushort duration_ms, ushort strength)
             {
-                a_json = new JObject();
-                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_HAPTIC_TAG);
-                a_json.Add(BnConstants.ACTION_PLAYER_TAG, player.value);
-                a_json.Add(BnConstants.ACTION_BODYPART_TAG, bodypart.value);
-                a_json.Add(BnConstants.ACTION_HAPTIC_DURATION_MS_TAG, duration_ms);
-                a_json.Add(BnConstants.ACTION_HAPTIC_STRENGTH_TAG, strength);
+                a_json = new JsonObject();
+                a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_HAPTIC_TAG;
+                a_json[BnConstants.ACTION_PLAYER_TAG] = player.value;
+                a_json[BnConstants.ACTION_BODYPART_TAG] = bodypart.value;
+                a_json[BnConstants.ACTION_HAPTIC_DURATION_MS_TAG] = duration_ms;
+                a_json[BnConstants.ACTION_HAPTIC_STRENGTH_TAG] = strength;
             }
 
             public void createSetPlayer(BnName player, BnBodypart bodypart, BnName new_player)
             {
-                a_json = new JObject();
-                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_SETPLAYER_TAG);
-                a_json.Add(BnConstants.ACTION_PLAYER_TAG, player.value);
-                a_json.Add(BnConstants.ACTION_BODYPART_TAG, bodypart.value);
-                a_json.Add(BnConstants.ACTION_SETPLAYER_NEWPLAYER_TAG, new_player.value);
+                a_json = new JsonObject();
+                a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_SETPLAYER_TAG;
+                a_json[BnConstants.ACTION_PLAYER_TAG] = player.value;
+                a_json[BnConstants.ACTION_BODYPART_TAG] = bodypart.value;
+                a_json[BnConstants.ACTION_SETPLAYER_NEWPLAYER_TAG] = new_player.value;
             }
 
             public void createSetBodypart(BnName player, BnBodypart bodypart, BnBodypart new_bodypart)
             {
-                a_json = new JObject();
-                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_SETBODYPART_TAG);
-                a_json.Add(BnConstants.ACTION_PLAYER_TAG, player.value);
-                a_json.Add(BnConstants.ACTION_BODYPART_TAG, bodypart.value);
-                a_json.Add(BnConstants.ACTION_SETBODYPART_NEWBODYPART_TAG, new_bodypart.value);
+                a_json = new JsonObject();
+                a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_SETBODYPART_TAG;
+                a_json[BnConstants.ACTION_PLAYER_TAG] = player.value;
+                a_json[BnConstants.ACTION_BODYPART_TAG] = bodypart.value;
+                a_json[BnConstants.ACTION_SETBODYPART_NEWBODYPART_TAG] = new_bodypart.value;
             }
 
             public void createEnableSensor(BnName player, BnBodypart bodypart, BnType sensortype, bool toEnable)
             {
-                a_json = new JObject();
-                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_ENABLESENSOR_TAG);
-                a_json.Add(BnConstants.ACTION_PLAYER_TAG, player.value);
-                a_json.Add(BnConstants.ACTION_BODYPART_TAG, bodypart.value);
-                a_json.Add(BnConstants.ACTION_ENABLESENSOR_SENSORTYPE_TAG, bodypart.value);
-                a_json.Add(BnConstants.ACTION_ENABLESENSOR_ENABLE_TAG, toEnable);
+                a_json = new JsonObject();
+                a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_ENABLESENSOR_TAG;
+                a_json[BnConstants.ACTION_PLAYER_TAG] = player.value;
+                a_json[BnConstants.ACTION_BODYPART_TAG] = bodypart.value;
+                a_json[BnConstants.ACTION_ENABLESENSOR_SENSORTYPE_TAG] = bodypart.value;
+                a_json[BnConstants.ACTION_ENABLESENSOR_ENABLE_TAG] = toEnable;
             }
 
             public String getString()
             {
-                return a_json.ToString();
+                return a_json.ToJsonString();
             }
 
             public bool isEmpty()
             {
-                if (BnConstants.PLAYER_NONE_TAG.Equals(a_json[BnConstants.ACTION_PLAYER_TAG].ToString()))
+                if (a_json == null || a_json[BnConstants.ACTION_PLAYER_TAG] == null )
+                {
+                    return true;
+                }
+                if ( BnConstants.PLAYER_NONE_TAG.Equals(a_json[BnConstants.ACTION_PLAYER_TAG]!.ToString()))
                 {
                     return true;
                 }
@@ -484,35 +509,58 @@ namespace BodynodesDev.Common
 
             public BnType getType()
             {
+                if (a_json == null || a_json[BnConstants.ACTION_TYPE_TAG] == null )
+                {
+                    return new BnType { value = BnConstants.ACTION_TYPE_NONE_TAG };
+                }
 
-                return new BnType { value = a_json[BnConstants.ACTION_TYPE_TAG].ToString() };
+                return new BnType { value = a_json[BnConstants.ACTION_TYPE_TAG]!.ToString() };
             }
 
             public BnBodypart getBodypart()
             {
-                return new BnBodypart { value = a_json[BnConstants.ACTION_BODYPART_TAG].ToString() };
+                if (a_json == null || a_json[BnConstants.ACTION_BODYPART_TAG] == null )
+                {
+                    return new BnBodypart { value = BnConstants.BODYPART_NONE_TAG };
+                }
+                return new BnBodypart { value = a_json[BnConstants.ACTION_BODYPART_TAG]!.ToString() };
             }
 
             public BnName getPlayer()
             {
-                return new BnName { value = a_json[BnConstants.ACTION_PLAYER_TAG].ToString() };
+                if (a_json == null || a_json[BnConstants.ACTION_PLAYER_TAG] == null )
+                {
+                    return new BnName { value = BnConstants.PLAYER_NONE_TAG };
+                }
+                return new BnName { value = a_json[BnConstants.ACTION_PLAYER_TAG]!.ToString() };
             }
 
-            public void parseString(String actionStr) {
-                a_json = JObject.Parse(actionStr);
+            public bool parseString(String actionStr) {
+                try
+                {
+                    a_json = JsonNode.Parse(actionStr)!.AsObject();
+                }
+                catch (JsonException ex)
+                {
+                    a_json = new JsonObject();
+                    Console.WriteLine("JSON parsing error: " + ex.Message);
+                    return false;
+                }
+                return true;
             }
 
-            public string ToString()
+            public override string ToString()
             {
-                string printString = a_json.ToString();
+                string printString = a_json.ToJsonString();
                 return printString;
             }
+
             public void print()
             {
-                Debug.Log(ToString());
+                Console.WriteLine(ToString());
             }
 
-            private JObject a_json = null;
+            private JsonObject a_json;
 
         };
     }

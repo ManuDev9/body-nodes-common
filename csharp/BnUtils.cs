@@ -22,9 +22,7 @@
 * SOFTWARE.
 */
 
-using Newtonsoft.Json.Linq;
 using System;
-
 
 namespace BodynodesDev.Common
 {
