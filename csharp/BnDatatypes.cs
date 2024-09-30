@@ -22,11 +22,20 @@
 * SOFTWARE.
 */
 
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_ANDROID
+#define USE_NEWTONSOFT_JSON
+#endif
+
+
 using System.Net;
 using System;
+#if USE_NEWTONSOFT_JSON
+using Newtonsoft.Json.Linq;
+#else
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Linq;
+#endif
 
 namespace BodynodesDev.Common
 {
@@ -370,6 +379,27 @@ namespace BodynodesDev.Common
 
             public bool parseString(String messageStr)
             {
+#if USE_NEWTONSOFT_JSON
+                JObject messageJson = JObject.Parse(messageStr);
+                m_player.value = messageJson[BnConstants.MESSAGE_PLAYER_TAG].ToString();
+                m_bodypart.value = messageJson[BnConstants.MESSAGE_BODYPART_TAG].ToString();
+                BnType sensortype = new BnType { value = messageJson[BnConstants.MESSAGE_SENSORTYPE_TAG].ToString() };
+
+                String messageValueStr = messageJson[BnConstants.MESSAGE_VALUE_TAG].ToString();
+                if (BnConstants.MESSAGE_VALUE_RESET_TAG.Equals(messageValueStr))
+                {
+                    m_sensorData.setValues(BnConstants.MESSAGE_VALUE_RESET_TAG, sensortype);
+                }
+                else if (BnConstants.SENSORTYPE_GLOVE_TAG.Equals(sensortype.value))
+                {
+                    m_sensorData.setValues(messageJson[BnConstants.MESSAGE_VALUE_TAG].ToObject<Int32[]>(), sensortype);
+                }
+                else
+                {
+                    m_sensorData.setValues(messageJson[BnConstants.MESSAGE_VALUE_TAG].ToObject<float[]>(), sensortype);
+                }
+                return true;
+#else
                 JsonObject messageJson;
                 try
                 {
@@ -408,6 +438,7 @@ namespace BodynodesDev.Common
                     m_sensorData.setValues(values, sensortype);
                 }
                 return true;
+#endif
             }
 
             public BnName getPlayer()
@@ -442,53 +473,98 @@ namespace BodynodesDev.Common
         {
             public BnAction()
             {
+#if USE_NEWTONSOFT_JSON
+                a_json = new JObject();
+                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_NONE_TAG);
+                a_json.Add(BnConstants.ACTION_PLAYER_TAG, BnConstants.PLAYER_NONE_TAG);
+                a_json.Add(BnConstants.ACTION_BODYPART_TAG, BnConstants.BODYPART_NONE_TAG);
+#else
                 a_json = new JsonObject();
                 a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_NONE_TAG;
                 a_json[BnConstants.ACTION_PLAYER_TAG] = BnConstants.PLAYER_NONE_TAG;
                 a_json[BnConstants.ACTION_BODYPART_TAG] = BnConstants.BODYPART_NONE_TAG;
+#endif
             }
 
             public void createHaptic(BnName player, BnBodypart bodypart, ushort duration_ms, ushort strength)
             {
+#if USE_NEWTONSOFT_JSON
+                a_json = new JObject();
+                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_HAPTIC_TAG);
+                a_json.Add(BnConstants.ACTION_PLAYER_TAG, player.value);
+                a_json.Add(BnConstants.ACTION_BODYPART_TAG, bodypart.value);
+                a_json.Add(BnConstants.ACTION_HAPTIC_DURATION_MS_TAG, duration_ms);
+                a_json.Add(BnConstants.ACTION_HAPTIC_STRENGTH_TAG, strength);
+#else
                 a_json = new JsonObject();
                 a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_HAPTIC_TAG;
                 a_json[BnConstants.ACTION_PLAYER_TAG] = player.value;
                 a_json[BnConstants.ACTION_BODYPART_TAG] = bodypart.value;
                 a_json[BnConstants.ACTION_HAPTIC_DURATION_MS_TAG] = duration_ms;
                 a_json[BnConstants.ACTION_HAPTIC_STRENGTH_TAG] = strength;
+#endif
             }
 
             public void createSetPlayer(BnName player, BnBodypart bodypart, BnName new_player)
             {
+#if USE_NEWTONSOFT_JSON
+                a_json = new JObject();
+                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_SETPLAYER_TAG);
+                a_json.Add(BnConstants.ACTION_PLAYER_TAG, player.value);
+                a_json.Add(BnConstants.ACTION_BODYPART_TAG, bodypart.value);
+                a_json.Add(BnConstants.ACTION_SETPLAYER_NEWPLAYER_TAG, new_player.value);
+#else
                 a_json = new JsonObject();
                 a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_SETPLAYER_TAG;
                 a_json[BnConstants.ACTION_PLAYER_TAG] = player.value;
                 a_json[BnConstants.ACTION_BODYPART_TAG] = bodypart.value;
                 a_json[BnConstants.ACTION_SETPLAYER_NEWPLAYER_TAG] = new_player.value;
+#endif
             }
 
             public void createSetBodypart(BnName player, BnBodypart bodypart, BnBodypart new_bodypart)
             {
+#if USE_NEWTONSOFT_JSON
+                a_json = new JObject();
+                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_SETBODYPART_TAG);
+                a_json.Add(BnConstants.ACTION_PLAYER_TAG, player.value);
+                a_json.Add(BnConstants.ACTION_BODYPART_TAG, bodypart.value);
+                a_json.Add(BnConstants.ACTION_SETBODYPART_NEWBODYPART_TAG, new_bodypart.value);
+#else
                 a_json = new JsonObject();
                 a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_SETBODYPART_TAG;
                 a_json[BnConstants.ACTION_PLAYER_TAG] = player.value;
                 a_json[BnConstants.ACTION_BODYPART_TAG] = bodypart.value;
                 a_json[BnConstants.ACTION_SETBODYPART_NEWBODYPART_TAG] = new_bodypart.value;
+#endif
             }
 
             public void createEnableSensor(BnName player, BnBodypart bodypart, BnType sensortype, bool toEnable)
             {
+#if USE_NEWTONSOFT_JSON
+                a_json = new JObject();
+                a_json.Add(BnConstants.ACTION_TYPE_TAG, BnConstants.ACTION_TYPE_ENABLESENSOR_TAG);
+                a_json.Add(BnConstants.ACTION_PLAYER_TAG, player.value);
+                a_json.Add(BnConstants.ACTION_BODYPART_TAG, bodypart.value);
+                a_json.Add(BnConstants.ACTION_ENABLESENSOR_SENSORTYPE_TAG, bodypart.value);
+                a_json.Add(BnConstants.ACTION_ENABLESENSOR_ENABLE_TAG, toEnable);
+#else
                 a_json = new JsonObject();
                 a_json[BnConstants.ACTION_TYPE_TAG] = BnConstants.ACTION_TYPE_ENABLESENSOR_TAG;
                 a_json[BnConstants.ACTION_PLAYER_TAG] = player.value;
                 a_json[BnConstants.ACTION_BODYPART_TAG] = bodypart.value;
                 a_json[BnConstants.ACTION_ENABLESENSOR_SENSORTYPE_TAG] = bodypart.value;
                 a_json[BnConstants.ACTION_ENABLESENSOR_ENABLE_TAG] = toEnable;
+#endif
             }
 
             public String getString()
             {
+#if USE_NEWTONSOFT_JSON
+                return a_json.ToString();
+#else
                 return a_json.ToJsonString();
+#endif
             }
 
             public bool isEmpty()
@@ -536,6 +612,17 @@ namespace BodynodesDev.Common
             }
 
             public bool parseString(String actionStr) {
+#if USE_NEWTONSOFT_JSON
+                a_json = JObject.Parse(actionStr);
+                if (a_json != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+#else
                 try
                 {
                     a_json = JsonNode.Parse(actionStr)!.AsObject();
@@ -547,11 +634,16 @@ namespace BodynodesDev.Common
                     return false;
                 }
                 return true;
+#endif
             }
 
             public override string ToString()
             {
+#if USE_NEWTONSOFT_JSON
+                string printString = a_json.ToString();
+#else
                 string printString = a_json.ToJsonString();
+#endif
                 return printString;
             }
 
@@ -560,8 +652,11 @@ namespace BodynodesDev.Common
                 Console.WriteLine(ToString());
             }
 
+#if USE_NEWTONSOFT_JSON
+            private JObject a_json = null;
+#else
             private JsonObject a_json;
-
+#endif
         };
     }
 }
