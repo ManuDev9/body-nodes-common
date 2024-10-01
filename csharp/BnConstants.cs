@@ -99,5 +99,14 @@ namespace BodynodesDev.Common
         public static int BODYNODES_MULTICAST_PORT = 12346;
         public static string BODYNODES_MULTICASTGROUP_DEFAULT = "239.192.1.99";
         public static string BODYNODES_MULTICASTMESSAGE_DEFAULT = "BN";
+        
+        public static string BLE_BODYNODES_SERVICE_UUID                             = "0000CCA0-0000-1000-8000-00805F9B34FB";
+        public static string BLE_BODYNODES_CHARA_PLAYER_UUID                        = "0000CCA1-0000-1000-8000-00805F9B34FB";
+        public static string BLE_BODYNODES_CHARA_BODYPART_UUID                      = "0000CCA2-0000-1000-8000-00805F9B34FB";
+        public static string BLE_BODYNODES_CHARA_ORIENTATION_ABS_VALUE_UUID         = "0000CCA3-0000-1000-8000-00805F9B34FB";
+        public static string BLE_BODYNODES_CHARA_ACCELERATION_REL_VALUE_UUID        = "0000CCA4-0000-1000-8000-00805F9B34FB";
+        public static string BLE_BODYNODES_CHARA_GLOVE_VALUE_UUID                   = "0000CCA5-0000-1000-8000-00805F9B34FB";
+        public static string BLE_BODYNODES_CHARA_SHOE_UUID                          = "0000CCA6-0000-1000-8000-00805F9B34FB";
+
     }
 }

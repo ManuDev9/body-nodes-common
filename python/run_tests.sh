@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python3 bnutils.py
+python3 bncommon.py
 

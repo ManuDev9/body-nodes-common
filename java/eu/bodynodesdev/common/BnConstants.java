@@ -121,5 +121,11 @@ public class BnConstants {
     public static final int CONNECTION_KEEP_ALIVE_REC_INTERVAL_MS = 60000;
     public static final int MULTICAST_KEEP_ALIVE_REC_INTERVAL_MS = 30000;
 
-
+    public static final String BLE_BODYNODES_SERVICE_UUID                           = "0000CCA0-0000-1000-8000-00805F9B34FB";
+    public static final String BLE_BODYNODES_CHARA_PLAYER_UUID                      = "0000CCA1-0000-1000-8000-00805F9B34FB";
+    public static final String BLE_BODYNODES_CHARA_BODYPART_UUID                    = "0000CCA2-0000-1000-8000-00805F9B34FB";
+    public static final String BLE_BODYNODES_CHARA_ORIENTATION_ABS_VALUE_UUID       = "0000CCA3-0000-1000-8000-00805F9B34FB";
+    public static final String BLE_BODYNODES_CHARA_ACCELERATION_REL_VALUE_UUID      = "0000CCA4-0000-1000-8000-00805F9B34FB";
+    public static final String BLE_BODYNODES_CHARA_GLOVE_VALUE_UUID                 = "0000CCA5-0000-1000-8000-00805F9B34FB";
+    public static final String BLE_BODYNODES_CHARA_SHOE_UUID                        = "0000CCA6-0000-1000-8000-00805F9B34FB";
 }

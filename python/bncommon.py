@@ -190,7 +190,7 @@ if __name__ == "__main__":
     test_res = "Test BnRobotIK_ZYY2Arms "
     bnaik = BnRobotIK_ZYY2Arms(
         lengthRA2 = 10, lengthRA3 = 10,
-        displSP = [0, 0, 0], displEP = [0, 0, 0],
+        displSP = [0, 0, 0],
         units = "cm")
 
     test_endpoint = [18.219124272891392, 3.8972461548699857, 1.6501078154541111]
