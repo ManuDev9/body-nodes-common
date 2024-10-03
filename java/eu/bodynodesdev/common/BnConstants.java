@@ -30,9 +30,8 @@ package eu.bodynodesdev.common;
 public class BnConstants {
 
 
-    public static final String PLAYER_ALL_TAG           = "all";
-    public static final String PLAYER_NONE_TAG          = "none";
-
+    public static final String PLAYER_ALL_TAG = "all";
+    public static final String PLAYER_NONE_TAG = "none";
 
     /*Body Parts*/
     public static final String BODYPART_NONE_TAG              = "none";
@@ -56,10 +55,6 @@ public class BnConstants {
     public static final String BODYPART_UNTAGGED_TAG          = "untagged";
     public static final String BODYPART_ALL_TAG               = "all";
 
-    /*Additional Body Parts*/
-    public static final String BODY_UNTAGGED_TAG       = "untagged";
-    public static final String BODY_KATANA_TAG = "katana";
-
     /*Messages*/
     public static final String MESSAGE_PLAYER_TAG      = "player";
     public static final String MESSAGE_BODYPART_TAG    = "bodypart";
@@ -67,9 +62,11 @@ public class BnConstants {
     public static final String MESSAGE_VALUE_TAG       = "value";
     public static final String MESSAGE_VALUE_RESET_TAG = "reset";
 
+    // SENSORTYPE
     public static final String SENSORTYPE_ORIENTATION_ABS_TAG = "orientation_abs";
     public static final String SENSORTYPE_ACCELERATION_REL_TAG = "acceleration_rel";
     public static final String SENSORTYPE_GLOVE_TAG = "glove";
+    public static final String SENSORTYPE_SHOE_TAG = "shoe";
 
     /*Actions*/
     public static final String ACTION_TYPE_NONE_TAG                 = "none";
@@ -98,29 +95,19 @@ public class BnConstants {
     public final static int COMMUNICATION_STATE_WAITING_ACK = 1;
     public final static int COMMUNICATION_STATE_CONNECTED = 2;
 
-    public static final int COMMUNICATION_TYPE_WIFI = 0;
-    public static final int COMMUNICATION_TYPE_BLUETOOTH = 1;
-
-    public static final int WIFI_PERMISSION_CODE                = 10000;
-    public static final int FOREGROUND_SERVICE_PERMISSION_CODE  = 10001;
-    public static final int SENSOR_SERVICE_NOTIFICATION_ID      = 10002;
-    public static final int BLUETOOTH_PERMISSION_CODE           = 10003;
-
-    public final static float BIG_ORIENTATION_ABS_DIFF = 0.002f;
-    public final static float BIG_ACCELERATION_REL_DIFF = 0.05f;
-
-
-    public static final String PLAYER_NAME_DEFAULT = "playerone";
-    public static final String MULTICAST_GROUP_DEFAULT = "BN";
-
+        // Wifi
+    public static final int BODYNODES_PORT = 12345;
+    public static final int BODYNODES_MULTICAST_PORT = 12346;
+    public static String BODYNODES_MULTICASTGROUP_DEFAULT = "239.192.1.99";
+    public static String BODYNODES_MULTICASTMESSAGE_DEFAULT = "BN";
 
     public static final int SENSOR_READ_INTERVAL_MS = 30;
-
     public static final int CONNECTION_ACK_INTERVAL_MS = 1000;
     public static final int CONNECTION_KEEP_ALIVE_SEND_INTERVAL_MS = 30000;
     public static final int CONNECTION_KEEP_ALIVE_REC_INTERVAL_MS = 60000;
     public static final int MULTICAST_KEEP_ALIVE_REC_INTERVAL_MS = 30000;
 
+    public static final String BLE_BODYNODES_NAME                                   = "Bodynode";
     public static final String BLE_BODYNODES_SERVICE_UUID                           = "0000CCA0-0000-1000-8000-00805F9B34FB";
     public static final String BLE_BODYNODES_CHARA_PLAYER_UUID                      = "0000CCA1-0000-1000-8000-00805F9B34FB";
     public static final String BLE_BODYNODES_CHARA_BODYPART_UUID                    = "0000CCA2-0000-1000-8000-00805F9B34FB";

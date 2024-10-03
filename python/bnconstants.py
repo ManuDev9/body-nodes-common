@@ -22,6 +22,10 @@
 # SOFTWARE.
 
 
+PLAYER_ALL_TAG =     "all"
+PLAYER_NONE_TAG =    "none"
+
+
 BODYPART_HEAD_TAG =            "head"
 BODYPART_HAND_LEFT_TAG =       "hand_left"
 BODYPART_LOWERARM_LEFT_TAG =   "lowerarm_left"
@@ -65,12 +69,11 @@ ACTION_SETWIFI_PASSWORD_TAG =        "password"
 ACTION_SETWIFI_MULTICASTMESSAGE_TAG ="multicast_message"
 
 # MESSAGE
-MESSAGE_PLAYER_TAG =     "player"
-MESSAGE_BODYPART_TAG =   "bodypart"
-MESSAGE_SENSORTYPE_TAG = "sensortype"
-MESSAGE_VALUE_TAG =      "value"
-MESSAGE_SENSORTYPE_ORIENTATION_ABS_TAG =  "orientation_abs"
-MESSAGE_SENSORTYPE_ACCELERATION_REL_TAG = "acceleration_rel"
+MESSAGE_PLAYER_TAG =        "player"
+MESSAGE_BODYPART_TAG =      "bodypart"
+MESSAGE_SENSORTYPE_TAG =    "sensortype"
+MESSAGE_VALUE_TAG =         "value"
+MESSAGE_VALUE_RESET_TAG =   "reset"
 
 # MEMORY
 MEMORY_BODYPART_TAG =              "bodypart"
@@ -111,6 +114,7 @@ BODYNODES_MULTICASTMESSAGE_DEFAULT = "BN"
 #TODO
 
 # BLE Connections
+BLE_BODYNODES_NAME                                  = "Bodynode"
 BLE_BODYNODES_SERVICE_UUID                          = "0000CCA0-0000-1000-8000-00805F9B34FB"
 BLE_BODYNODES_CHARA_PLAYER_UUID                     = "0000CCA1-0000-1000-8000-00805F9B34FB"
 BLE_BODYNODES_CHARA_BODYPART_UUID                   = "0000CCA2-0000-1000-8000-00805F9B34FB"

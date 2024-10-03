@@ -26,7 +26,6 @@ namespace BodynodesDev.Common
 {
     class BnConstants
     {
-        public static string PLAYER_DEFAULT_VALUE_TAG = "playerone";
         public static string PLAYER_ALL_TAG = "all";
         public static string PLAYER_NONE_TAG = "none";
 
@@ -51,7 +50,7 @@ namespace BodynodesDev.Common
         public static string ACTION_SETWIFI_PASSWORD_TAG            = "password";
         public static string ACTION_SETWIFI_MULTICASTMESSAGE_TAG    = "multicast_message";
 
-
+        // MESSAGE
         public static string MESSAGE_PLAYER_TAG             = "player";
         public static string MESSAGE_BODYPART_TAG           = "bodypart";
         public static string MESSAGE_SENSORTYPE_TAG         = "sensortype";
@@ -86,8 +85,6 @@ namespace BodynodesDev.Common
         public static string BODYPART_UNTAGGED_TAG              = "untagged";
         public static string BODYPART_ALL_TAG                   = "all";
 
-
-
         // COMMUNICATOR STATUS
         public static uint CONNECTION_STATUS_NOT_CONNECTED = 1;
         public static uint CONNECTION_STATUS_WAITING_ACK = 2;
@@ -100,6 +97,7 @@ namespace BodynodesDev.Common
         public static string BODYNODES_MULTICASTGROUP_DEFAULT = "239.192.1.99";
         public static string BODYNODES_MULTICASTMESSAGE_DEFAULT = "BN";
         
+        public static string BLE_BODYNODES_NAME                                     = "Bodynode";
         public static string BLE_BODYNODES_SERVICE_UUID                             = "0000CCA0-0000-1000-8000-00805F9B34FB";
         public static string BLE_BODYNODES_CHARA_PLAYER_UUID                        = "0000CCA1-0000-1000-8000-00805F9B34FB";
         public static string BLE_BODYNODES_CHARA_BODYPART_UUID                      = "0000CCA2-0000-1000-8000-00805F9B34FB";
