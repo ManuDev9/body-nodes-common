@@ -58,7 +58,7 @@ public class BnConstants {
     /*Messages*/
     public static final String MESSAGE_PLAYER_TAG      = "player";
     public static final String MESSAGE_BODYPART_TAG    = "bodypart";
-    public static final String MESSAGE_SENSOR_TYPE_TAG = "sensortype";
+    public static final String MESSAGE_SENSORTYPE_TAG = "sensortype";
     public static final String MESSAGE_VALUE_TAG       = "value";
     public static final String MESSAGE_VALUE_RESET_TAG = "reset";
 
