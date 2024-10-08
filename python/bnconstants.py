@@ -85,11 +85,11 @@ MEMORY_WIFI_PASSWORD_TAG =         "wifi_password"
 MEMORY_WIFI_MULTICASTMESSAGE_TAG = "multicast_message"
 
 # SENSOR DATA TYPES 
-SENSOR_DATA_TYPE_NONE_TAG =              "none"
-SENSOR_DATA_TYPE_ORIENTATION_ABS_TAG =   "orientation_abs"
-SENSOR_DATA_TYPE_ACCELERATION_REL_TAG =  "acceleration_rel"
-SENSOR_DATA_TYPE_GLOVE_TAG =             "glove"
-SENSOR_DATA_TYPE_SHOE_TAG =              "shoe"
+SENSORTYPE_NONE_TAG =              "none"
+SENSORTYPE_ORIENTATION_ABS_TAG =   "orientation_abs"
+SENSORTYPE_ACCELERATION_REL_TAG =  "acceleration_rel"
+SENSORTYPE_GLOVE_TAG =             "glove"
+SENSORTYPE_SHOE_TAG =              "shoe"
 
 # SENSOR STATUS
 SENSOR_STATUS_NOT_ACCESSIBLE =  1
