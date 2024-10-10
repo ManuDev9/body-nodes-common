@@ -97,7 +97,6 @@
 #define MESSAGE_BODYPART_TAG    "bodypart"
 #define MESSAGE_SENSORTYPE_TAG  "sensortype"
 #define MESSAGE_VALUE_TAG       "value"
-#define MESSAGE_VALUE_RESET_TAG "reset"
 
 // MEMORY
 #define MEMORY_BODYPART_TAG               "bodypart"
@@ -109,11 +108,12 @@
 #define MEMORY_WIFI_MULTICASTMESSAGE_TAG  "multicast_message"
 
 // SENSORTYPES 
-#define SENSORTYPE_NONE_TAG               "none"
-#define SENSORTYPE_ORIENTATION_ABS_TAG    "orientation_abs"
-#define SENSORTYPE_ACCELERATION_REL_TAG   "acceleration_rel"
-#define SENSORTYPE_GLOVE_TAG              "glove"
-#define SENSORTYPE_SHOE_TAG               "shoe"
+#define SENSORTYPE_NONE_TAG                 "none"
+#define SENSORTYPE_ORIENTATION_ABS_TAG      "orientation_abs"
+#define SENSORTYPE_ACCELERATION_REL_TAG     "acceleration_rel"
+#define SENSORTYPE_GLOVE_TAG                "glove"
+#define SENSORTYPE_SHOE_TAG                 "shoe"
+#define SENSORTYPE_ANGULARVELOCITY_REL_TAG  "angularvelocity_rel"
 
 // SENSOR STATUS
 #define SENSOR_STATUS_NOT_ACCESSIBLE  1
@@ -145,6 +145,7 @@
 #define BLE_BODYNODES_CHARA_ACCELERATION_REL_VALUE_UUID         "0000CCA4-0000-1000-8000-00805F9B34FB"
 #define BLE_BODYNODES_CHARA_GLOVE_VALUE_UUID                    "0000CCA5-0000-1000-8000-00805F9B34FB"
 #define BLE_BODYNODES_CHARA_SHOE_UUID                           "0000CCA6-0000-1000-8000-00805F9B34FB"
+#define BLE_BODYNODES_CHARA_ANGULARVELOCITY_REL_VALUE_UUID      "0000CCA7-0000-1000-8000-00805F9B34FB"
 
 
 #endif //__BN_CONSTANTS_H

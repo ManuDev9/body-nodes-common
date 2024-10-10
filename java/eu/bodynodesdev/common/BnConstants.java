@@ -60,13 +60,13 @@ public class BnConstants {
     public static final String MESSAGE_BODYPART_TAG    = "bodypart";
     public static final String MESSAGE_SENSORTYPE_TAG = "sensortype";
     public static final String MESSAGE_VALUE_TAG       = "value";
-    public static final String MESSAGE_VALUE_RESET_TAG = "reset";
 
     // SENSORTYPE
-    public static final String SENSORTYPE_ORIENTATION_ABS_TAG = "orientation_abs";
-    public static final String SENSORTYPE_ACCELERATION_REL_TAG = "acceleration_rel";
-    public static final String SENSORTYPE_GLOVE_TAG = "glove";
-    public static final String SENSORTYPE_SHOE_TAG = "shoe";
+    public static final String SENSORTYPE_ORIENTATION_ABS_TAG       = "orientation_abs";
+    public static final String SENSORTYPE_ACCELERATION_REL_TAG      = "acceleration_rel";
+    public static final String SENSORTYPE_GLOVE_TAG                 = "glove";
+    public static final String SENSORTYPE_SHOE_TAG                  = "shoe";
+    public static final String SENSORTYPE_ANGULARVELOCITY_REL_TAG   = "angularvelocity_rel";
 
     /*Actions*/
     public static final String ACTION_TYPE_NONE_TAG                 = "none";
@@ -115,4 +115,5 @@ public class BnConstants {
     public static final String BLE_BODYNODES_CHARA_ACCELERATION_REL_VALUE_UUID      = "0000CCA4-0000-1000-8000-00805F9B34FB";
     public static final String BLE_BODYNODES_CHARA_GLOVE_VALUE_UUID                 = "0000CCA5-0000-1000-8000-00805F9B34FB";
     public static final String BLE_BODYNODES_CHARA_SHOE_UUID                        = "0000CCA6-0000-1000-8000-00805F9B34FB";
+    public static final String BLE_BODYNODES_CHARA_ANGULARVELOCITY_REL_VALUE_UUID     = "0000CCA7-0000-1000-8000-00805F9B34FB";
 }

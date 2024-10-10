@@ -73,7 +73,6 @@ MESSAGE_PLAYER_TAG =        "player"
 MESSAGE_BODYPART_TAG =      "bodypart"
 MESSAGE_SENSORTYPE_TAG =    "sensortype"
 MESSAGE_VALUE_TAG =         "value"
-MESSAGE_VALUE_RESET_TAG =   "reset"
 
 # MEMORY
 MEMORY_BODYPART_TAG =              "bodypart"
@@ -85,11 +84,12 @@ MEMORY_WIFI_PASSWORD_TAG =         "wifi_password"
 MEMORY_WIFI_MULTICASTMESSAGE_TAG = "multicast_message"
 
 # SENSOR DATA TYPES 
-SENSORTYPE_NONE_TAG =              "none"
-SENSORTYPE_ORIENTATION_ABS_TAG =   "orientation_abs"
-SENSORTYPE_ACCELERATION_REL_TAG =  "acceleration_rel"
-SENSORTYPE_GLOVE_TAG =             "glove"
-SENSORTYPE_SHOE_TAG =              "shoe"
+SENSORTYPE_NONE_TAG =                   "none"
+SENSORTYPE_ORIENTATION_ABS_TAG =        "orientation_abs"
+SENSORTYPE_ACCELERATION_REL_TAG =       "acceleration_rel"
+SENSORTYPE_GLOVE_TAG =                  "glove"
+SENSORTYPE_SHOE_TAG =                   "shoe"
+SENSORTYPE_ANGULARVELOCITY_REL_TAG =    "angularvelocity_rel"
 
 # SENSOR STATUS
 SENSOR_STATUS_NOT_ACCESSIBLE =  1

@@ -55,7 +55,6 @@ namespace BodynodesDev.Common
         public static string MESSAGE_BODYPART_TAG           = "bodypart";
         public static string MESSAGE_SENSORTYPE_TAG         = "sensortype";
         public static string MESSAGE_VALUE_TAG              = "value";
-        public static string MESSAGE_VALUE_RESET_TAG        = "reset";
 
         // SENSOR TYPE
         public static string SENSORTYPE_NONE_TAG                = "none";
@@ -63,6 +62,7 @@ namespace BodynodesDev.Common
         public static string SENSORTYPE_ACCELERATION_REL_TAG    = "acceleration_rel";
         public static string SENSORTYPE_GLOVE_TAG               = "glove";
         public static string SENSORTYPE_SHOE_TAG                = "shoe";
+        public static string SENSORTYPE_ANGULARVELOCITY_REL_TAG = "angularvelocity_rel";
 
         public static string BODYPART_NONE_TAG                  = "none";
         public static string BODYPART_HEAD_TAG                  = "head";
@@ -105,6 +105,6 @@ namespace BodynodesDev.Common
         public static string BLE_BODYNODES_CHARA_ACCELERATION_REL_VALUE_UUID        = "0000CCA4-0000-1000-8000-00805F9B34FB";
         public static string BLE_BODYNODES_CHARA_GLOVE_VALUE_UUID                   = "0000CCA5-0000-1000-8000-00805F9B34FB";
         public static string BLE_BODYNODES_CHARA_SHOE_UUID                          = "0000CCA6-0000-1000-8000-00805F9B34FB";
-
+        public static string BLE_BODYNODES_CHARA_ANGULARVELOCITY_REL_VALUE_UUID     = "0000CCA7-0000-1000-8000-00805F9B34FB";
     }
 }
