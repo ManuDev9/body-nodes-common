@@ -61,6 +61,17 @@ public class BnConstants {
     public static final String MESSAGE_SENSORTYPE_TAG = "sensortype";
     public static final String MESSAGE_VALUE_TAG       = "value";
 
+    // GLOVE
+    public static final int GLOVE_ANGLE_MIGNOLO_INDEX   = 0;
+    public static final int GLOVE_ANGLE_ANULARE_INDEX   = 1;
+    public static final int GLOVE_ANGLE_MEDIO_INDEX     = 2;
+    public static final int GLOVE_ANGLE_INDICE_INDEX    = 3;
+    public static final int GLOVE_ANGLE_POLLICE_INDEX   = 4;
+    public static final int GLOVE_TOUCH_MIGNOLO_INDEX   = 5;
+    public static final int GLOVE_TOUCH_ANULARE_INDEX   = 6;
+    public static final int GLOVE_TOUCH_MEDIO_INDEX     = 7;
+    public static final int GLOVE_TOUCH_INDICE_INDEX    = 8;
+        
     // SENSORTYPE
     public static final String SENSORTYPE_ORIENTATION_ABS_TAG       = "orientation_abs";
     public static final String SENSORTYPE_ACCELERATION_REL_TAG      = "acceleration_rel";

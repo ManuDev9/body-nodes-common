@@ -56,6 +56,17 @@ namespace BodynodesDev.Common
         public static string MESSAGE_SENSORTYPE_TAG         = "sensortype";
         public static string MESSAGE_VALUE_TAG              = "value";
 
+        // GLOVE
+        public static uint GLOVE_ANGLE_MIGNOLO_INDEX   = 0;
+        public static uint GLOVE_ANGLE_ANULARE_INDEX   = 1;
+        public static uint GLOVE_ANGLE_MEDIO_INDEX     = 2;
+        public static uint GLOVE_ANGLE_INDICE_INDEX    = 3;
+        public static uint GLOVE_ANGLE_POLLICE_INDEX   = 4;
+        public static uint GLOVE_TOUCH_MIGNOLO_INDEX   = 5;
+        public static uint GLOVE_TOUCH_ANULARE_INDEX   = 6;
+        public static uint GLOVE_TOUCH_MEDIO_INDEX     = 7;
+        public static uint GLOVE_TOUCH_INDICE_INDEX    = 8;
+
         // SENSOR TYPE
         public static string SENSORTYPE_NONE_TAG                = "none";
         public static string SENSORTYPE_ORIENTATION_ABS_TAG     = "orientation_abs";

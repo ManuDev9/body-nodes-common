@@ -98,6 +98,17 @@
 #define MESSAGE_SENSORTYPE_TAG  "sensortype"
 #define MESSAGE_VALUE_TAG       "value"
 
+// GLOVE
+#define GLOVE_ANGLE_MIGNOLO_INDEX   0
+#define GLOVE_ANGLE_ANULARE_INDEX   1
+#define GLOVE_ANGLE_MEDIO_INDEX     2
+#define GLOVE_ANGLE_INDICE_INDEX    3
+#define GLOVE_ANGLE_POLLICE_INDEX   4
+#define GLOVE_TOUCH_MIGNOLO_INDEX   5
+#define GLOVE_TOUCH_ANULARE_INDEX   6
+#define GLOVE_TOUCH_MEDIO_INDEX     7
+#define GLOVE_TOUCH_INDICE_INDEX    8
+
 // MEMORY
 #define MEMORY_BODYPART_TAG               "bodypart"
 #define MEMORY_BODYPART_GLOVE_TAG         "bodypart_glove"
