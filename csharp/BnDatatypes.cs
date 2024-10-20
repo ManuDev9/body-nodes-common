@@ -31,6 +31,7 @@ using System.Net;
 using System;
 #if USE_NEWTONSOFT_JSON
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 #else
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -259,22 +260,6 @@ namespace BodynodesDev.Common
                 }
             }
 
-            public void setValues(String valuesStr, BnType sensortype)
-            {
-                sd_num_values = 0;
-                if (sensortype.value == BnConstants.SENSORTYPE_ORIENTATION_ABS_TAG)
-                {
-                    sd_sensortype.value = sensortype.value;
-                    sd_num_values = 4;
-                }
-                else if (sensortype.value == BnConstants.SENSORTYPE_ACCELERATION_REL_TAG)
-                {
-                    sd_sensortype.value = sensortype.value;
-                    sd_num_values = 3;
-                }
-                sd_values_str = valuesStr;
-            }
-
             public float[] getValuesFloat()
             {
                 return sd_values_float;
@@ -385,18 +370,16 @@ namespace BodynodesDev.Common
                 m_bodypart.value = messageJson[BnConstants.MESSAGE_BODYPART_TAG].ToString();
                 BnType sensortype = new BnType { value = messageJson[BnConstants.MESSAGE_SENSORTYPE_TAG].ToString() };
 
-                String messageValueStr = messageJson[BnConstants.MESSAGE_VALUE_TAG].ToString();
-                if (BnConstants.MESSAGE_VALUE_RESET_TAG.Equals(messageValueStr))
-                {
-                    m_sensorData.setValues(BnConstants.MESSAGE_VALUE_RESET_TAG, sensortype);
-                }
-                else if (BnConstants.SENSORTYPE_GLOVE_TAG.Equals(sensortype.value))
+                if (BnConstants.SENSORTYPE_GLOVE_TAG.Equals(sensortype.value))
                 {
                     m_sensorData.setValues(messageJson[BnConstants.MESSAGE_VALUE_TAG].ToObject<Int32[]>(), sensortype);
                 }
                 else
                 {
-                    m_sensorData.setValues(messageJson[BnConstants.MESSAGE_VALUE_TAG].ToObject<float[]>(), sensortype);
+                    JToken messageValueToken = messageJson[BnConstants.MESSAGE_VALUE_TAG];
+                    String messageValueStr = messageJson[BnConstants.MESSAGE_VALUE_TAG].ToString();
+                    JArray valueArray = JArray.Parse(messageValueStr);
+                    m_sensorData.setValues(valueArray.ToObject<float[]>(), sensortype);
                 }
                 return true;
 #else
@@ -422,14 +405,10 @@ namespace BodynodesDev.Common
                 m_bodypart.value = messageJson[BnConstants.MESSAGE_BODYPART_TAG]!.ToString();
                 BnType sensortype = new BnType{ value = messageJson[BnConstants.MESSAGE_SENSORTYPE_TAG]!.ToString() };
 
-                String messageValueStr = messageJson[BnConstants.MESSAGE_VALUE_TAG]!.ToJsonString();
-                if (BnConstants.MESSAGE_VALUE_RESET_TAG.Equals(messageValueStr))
-                {
-                    m_sensorData.setValues(BnConstants.MESSAGE_VALUE_RESET_TAG, sensortype);
-                }
-                else if( BnConstants.SENSORTYPE_GLOVE_TAG.Equals( sensortype.value ) )
+                if( BnConstants.SENSORTYPE_GLOVE_TAG.Equals( sensortype.value ) )
                 {
                     Int32[] values = messageJson[BnConstants.MESSAGE_VALUE_TAG]!.AsArray()!.Select(score => (int?)score != null ? (Int32)score : 0).ToArray();
+                    String messageValueStr = messageJson[BnConstants.MESSAGE_VALUE_TAG].ToString();
                     m_sensorData.setValues(values, sensortype);
                 }
                 else 
@@ -454,14 +433,6 @@ namespace BodynodesDev.Common
             public BnSensorData getData()
             {
                 return m_sensorData;
-            }
-
-            public bool isOrientationAbsReset()
-            {
-                if (BnConstants.MESSAGE_VALUE_RESET_TAG.Equals(m_sensorData.getValuesStr())) { 
-                    return true;
-                }
-                return false;
             }
 
             private BnName m_player = new BnName { value = BnConstants.PLAYER_NONE_TAG };
