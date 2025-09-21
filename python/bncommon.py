@@ -305,14 +305,12 @@ def multiply_rotation_matrices(R1, R2):
 
 def create_quanternion(axis_config, values):
     
-    print(axis_config)
     quat = BnQuaternion([
         axis_config["new_w_sign"] * float(values[axis_config["new_w_val"]]),
         axis_config["new_x_sign"] * float(values[axis_config["new_x_val"]]),
         axis_config["new_y_sign"] * float(values[axis_config["new_y_val"]]),
         axis_config["new_z_sign"] * float(values[axis_config["new_z_val"]])
     ])
-    #print("bodypart = "+str(bodypart)+" - quat = "+str(quat))
     return quat
 
 # This trasformation ignores what is the local axis of the object once rotated, we don't trust those axis system which might be compromised
@@ -324,12 +322,13 @@ def create_quanternion(axis_config, values):
 def transform_sensor_quat( sensor_quat, first_quat, starting_quat, env_quat, bodynodes_axis_config):
 
     sensor_quat = BnQuaternion(sensor_quat)
-    first_quat = BnQuaternion(first_quat)
     starting_quat = BnQuaternion(starting_quat)
     env_quat = BnQuaternion(env_quat)
 
     if first_quat == None:
         first_quat = sensor_quat.inverse()
+    else:
+        first_quat = BnQuaternion(first_quat)
 
     #bpy.data.objects["katana"].rotation_quaternion = sensor_quat @ first_quat @ starting_quat 
     #bpy.data.objects["katana"].rotation_quaternion = starting_quat @ sensor_quat
