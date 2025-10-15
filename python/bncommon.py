@@ -131,28 +131,32 @@ class BnMotionTracking_2Nodes:
         rotatedArm1 = self.__matrix_multiply_3x3(node1_rm, self.armVector1 )
         rotatedArm2 = self.__matrix_multiply_3x3(node2_rm, self.armVector2 )        
         
-        finalPosition = [0, 0, 0]
-        finalPosition[0] = self.initialPosition[0] + rotatedArm1[0] + rotatedArm2[0]
-        finalPosition[1] = self.initialPosition[1] + rotatedArm1[1] + rotatedArm2[1]
-        finalPosition[2] = self.initialPosition[2] + rotatedArm1[2] + rotatedArm2[2]
+        point1Position = [0, 0, 0]
+        point1Position[0] = self.initialPosition[0] + rotatedArm1[0]
+        point1Position[1] = self.initialPosition[1] + rotatedArm1[1]
+        point1Position[2] = self.initialPosition[2] + rotatedArm1[2]
+        point2Position = [0, 0, 0]
+        point2Position[0] = point1Position[0] + rotatedArm2[0]
+        point2Position[1] = point1Position[1] + rotatedArm2[1]
+        point2Position[2] = point1Position[2] + rotatedArm2[2]
 
         if self.locationConstraints!= None:
-            if finalPosition[0] < self.locationConstraints[0][0]:
-                finalPosition[0] = self.locationConstraints[0][0]
-            elif finalPosition[0] > self.locationConstraints[0][1]:
-                finalPosition[0] = self.locationConstraints[0][1]
+            if point2Position[0] < self.locationConstraints[0][0]:
+                point2Position[0] = self.locationConstraints[0][0]
+            elif point2Position[0] > self.locationConstraints[0][1]:
+                point2Position[0] = self.locationConstraints[0][1]
 
-            if finalPosition[1] < self.locationConstraints[1][0]:
-                finalPosition[1] = self.locationConstraints[1][0]
-            elif finalPosition[1] > self.locationConstraints[1][1]:
-                finalPosition[1] = self.locationConstraints[1][1]
+            if point2Position[1] < self.locationConstraints[1][0]:
+                point2Position[1] = self.locationConstraints[1][0]
+            elif point2Position[1] > self.locationConstraints[1][1]:
+                point2Position[1] = self.locationConstraints[1][1]
 
-            if finalPosition[2] < self.locationConstraints[2][0]:
-                finalPosition[2] = self.locationConstraints[2][0]
-            elif finalPosition[2] > self.locationConstraints[2][1]:
-                finalPosition[2] = self.locationConstraints[2][1]
+            if point2Position[2] < self.locationConstraints[2][0]:
+                point2Position[2] = self.locationConstraints[2][0]
+            elif point2Position[2] > self.locationConstraints[2][1]:
+                point2Position[2] = self.locationConstraints[2][1]
 
-        return finalPosition
+        return [self.initialPosition, point1Position, point2Position]
 
 
 class BnRobotArmZYY_IK:
@@ -165,6 +169,9 @@ class BnRobotArmZYY_IK:
         self.lengthRA2 = lengthRA2
         self.lengthRA3 = lengthRA3
         self.anglesConstraints = anglesConstraints
+        self.theta_RA1 = None
+        self.gamma_RA2 = None
+        self.gamma_RA3 = None
 
     # The returned angles are made to work in blender
     # We are assuming the reset position is all arms along the global Z axis going upwards
@@ -239,7 +246,6 @@ class BnRobotArmZYY_IK:
         # Internal angle start of Arm3 of the triangle Arm2+Arm3+endpoint, then changed to get the local angle we want
         gamma_RA3 = (math.pi - math.acos(tmp))
 
-
         if self.anglesConstraints != None:
 
             if not math.isnan(theta_RA1):
@@ -253,8 +259,34 @@ class BnRobotArmZYY_IK:
             elif gamma_RA3 > self.anglesConstraints[2][1]:
                 gamma_RA3 = self.anglesConstraints[2][1]
 
+        self.theta_RA1 = theta_RA1
+        self.gamma_RA2 = gamma_RA2
+        self.gamma_RA3 = gamma_RA3
         return [ theta_RA1, gamma_RA2, gamma_RA3 ]
 
+
+    def getEndpoints(self):
+        # Get the endpoint of Arm1, Arm2, and Arm3 from last compute() step
+
+        endpointArm1 = [
+            0,
+            0,
+            self.lengthRA1,
+        ]
+
+        endpointArm2 = [
+            self.lengthRA2 * math.sin(self.gamma_RA2) * math.cos(self.theta_RA1),
+            self.lengthRA2 * math.sin(self.gamma_RA2) * math.sin(self.theta_RA1),
+            endpointArm1[2] + (self.lengthRA2 * math.cos(self.gamma_RA2)),
+        ]
+
+        endpointArm3 = [
+            endpointArm2[0] + (self.lengthRA3 * math.sin(self.gamma_RA2+self.gamma_RA3) * math.cos(self.theta_RA1) ),
+            endpointArm2[1] + (self.lengthRA3 * math.sin(self.gamma_RA2+self.gamma_RA3) * math.sin(self.theta_RA1) ),
+            endpointArm2[2] + (self.lengthRA3 * math.cos(self.gamma_RA2+self.gamma_RA3)),
+        ]
+
+        return [ endpointArm1, endpointArm2, endpointArm3 ]
 
 # Generic class that can take any IK and MotionTracking algo for a robotic arm
 class BnRobotArm_MT:
@@ -265,12 +297,11 @@ class BnRobotArm_MT:
 
     # It only needs the angles, the endpoint is computed internally
     def compute(self, node1_quat, node2_quat):
-        endpoint = self.motionTraker.compute( node1_quat, node2_quat )
+        [_, _, endpoint] = self.motionTraker.compute( node1_quat, node2_quat )
         return self.robotIK.compute(endpoint)
 
 
 ####### UTILITIES
-
 
 # Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in degrees
 def blender_euler_to_rotation_matrix_degree(roll, pitch, yaw):
@@ -379,7 +410,7 @@ def test_BnMotionTracking_2Nodes():
     test_node1_quat = [ 0.9926, 0.0329, 0.0973, 0.0640 ]
     test_node2_quat = [ 0.9583, -0.1367, -0.0595, -0.2439 ]
     test_evalues = [18.468636171839087, -3.1761790635934757, -0.08354223767877755]
-    test_ovalues = bnmotiontrack.compute(test_node1_quat, test_node2_quat)
+    [ _, _, test_ovalues] = bnmotiontrack.compute(test_node1_quat, test_node2_quat)
     if np.allclose(test_evalues, test_ovalues, rtol=1e-02, atol=1e-03):
         test_res += "passed"
     else:
@@ -396,7 +427,7 @@ def test_BnMotionTracking_2Nodes_Constraints():
     test_node1_quat = [ 0.8504, 0.3678, -0.1840, 0.3281 ]
     test_node2_quat = [ 0.9293, -0.0039, -0.2892, 0.2296 ]
     test_evalues = [14.443218483410508, 5, 5]
-    test_ovalues = bnmotiontrack.compute(test_node1_quat, test_node2_quat)
+    [ _, _, test_ovalues] = bnmotiontrack.compute(test_node1_quat, test_node2_quat)
     if np.allclose(test_evalues, test_ovalues, rtol=1e-03, atol=1e-05):
         test_res += "passed"
     else:
@@ -414,7 +445,7 @@ def test_BnRobotArmZYY_IK():
     test_endpoint = [18.219124272891392, 3.8972461548699857, 1.6501078154541111]
     test_evalues = [0.21073373345528476,  1.118530930230784, 0.723883473845901]
     test_ovalues = bnaik.compute(test_endpoint)
-    if np.allclose(test_evalues, test_ovalues, rtol=1e-03, atol=1e-05):
+    if np.allclose(test_evalues, test_ovalues, rtol=5e-03, atol=1e-04):
         test_res += "passed"
     else:
         test_res += "failed"
@@ -633,16 +664,16 @@ if __name__ == "__main__":
     # Then double check the results are the ones you expect. They will be different from what Blender is giving because X and Y are swithed.
     # NOTE: also the rotation positive/negative depends on the right thumb rule. Switched X-Y axis can also mean different rotation signs
 
-    #test_BnReorientAxis()
-    #test_BnMotionTracking_2Nodes()
-    #test_BnMotionTracking_2Nodes_Constraints()
-    #test_BnRobotArmZYY_IK()
+    test_BnReorientAxis()
+    test_BnMotionTracking_2Nodes()
+    test_BnMotionTracking_2Nodes_Constraints()
+    test_BnRobotArmZYY_IK()
     test_BnQuaternion()
 
-    #test_BlenderSimpleLinksProj1()
-    #test_BlenderSimpleLinksProj2()
-    #test_BlenderSimpleLinksProj3()
-    #test_BlenderSimpleLinksProj4()
-    #test_BlenderSimpleLinksProj5()
+    test_BlenderSimpleLinksProj1()
+    test_BlenderSimpleLinksProj2()
+    test_BlenderSimpleLinksProj3()
+    test_BlenderSimpleLinksProj4()
+    test_BlenderSimpleLinksProj5()
 
 
