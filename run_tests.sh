@@ -46,7 +46,7 @@ popd
 
 echo "Testing python"
 pushd python
-output_txt+=$(./run_tests.sh)$'\n'
+output_txt+=$(make test)$'\n'
 popd
 echo "$output_txt"
 

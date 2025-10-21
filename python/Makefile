@@ -21,5 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-python3 bncommon.py
+test:
+	python3 -m pytest -v
 
