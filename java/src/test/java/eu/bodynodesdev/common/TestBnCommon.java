@@ -28,16 +28,14 @@ import eu.bodynodesdev.common.BnRobotIK_ZYY2Arms;
 
 import java.util.Arrays;
 
-/*
- * javac TestBnCommon.java
- * java TestBnCommon
- *
- * */
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 
 public class TestBnCommon {
 
-    private static void testBnReorientAxis() {
-        System.out.println("Testing BnReorientAxis");
+    @Test
+    public void testBnReorientAxis() {
 
         int[] test_io_axis = new int[]{ 3, 2, 1, 0 };
         int[] test_io_sign = new int[]{ -1, -1, -1, -1 };
@@ -48,15 +46,11 @@ public class TestBnCommon {
         BnReorientAxis test_obj = new BnReorientAxis();
         test_obj.config( test_io_axis, test_io_sign );
         test_obj.apply( test_ovalues );
-        if(areArraysClose(test_evalues, test_ovalues, 1e-5f, 1e-3f )) {
-            System.out.println("Test passed: output = "+Arrays.toString(test_ovalues) + " expected = "+Arrays.toString(test_evalues));
-        } else {
-            System.out.println("Test failed: output = "+Arrays.toString(test_ovalues) + " expected = "+Arrays.toString(test_evalues));
-        }
+        assertTrue(areArraysClose(test_evalues, test_ovalues, 1e-5f, 1e-3f ));
     }
 
-    private static void testBnTwoNodesMotionTracking() {
-        System.out.println("Testing BnTwoNodesMotionTracking");
+    @Test
+    public void testBnTwoNodesMotionTracking() {
 
         float[] test_node1_quat = new float[] { 0.9926f, 0.0329f, 0.0973f, 0.0640f };
         float[] test_node2_quat = new float[] { 0.9583f, -0.1367f, -0.0595f, -0.2439f };
@@ -67,15 +61,11 @@ public class TestBnCommon {
 
         float[] test_ovalues = {0, 0, 0};
         bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues );
-        if(areArraysClose(test_evalues, test_ovalues, 1e-2f, 1e-2f )) {
-            System.out.println("Test passed: output = "+Arrays.toString(test_ovalues) + " expected = "+Arrays.toString(test_evalues));
-        } else {
-            System.out.println("Test failed: output = "+Arrays.toString(test_ovalues) + " expected = "+Arrays.toString(test_evalues));
-        }
+        assertTrue(areArraysClose(test_evalues, test_ovalues, 1e-2f, 1e-2f ));
     }
 
-    private static void testBnTwoNodesMotionTrackingConstraint() {
-        System.out.println("Testing BnTwoNodesMotionTracking Constraint");
+    @Test
+    public void testBnTwoNodesMotionTrackingConstraint() {
 
         float[] test_node1_quat = new float[] { 0.8504f, 0.3678f, -0.1840f, 0.3281f };
         float[] test_node2_quat = new float[] { 0.9293f, -0.0039f, -0.2892f, 0.2296f };
@@ -86,15 +76,11 @@ public class TestBnCommon {
 
         float[] test_ovalues = { 0, 0, 0 };
         bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues );
-        if(areArraysClose(test_evalues, test_ovalues, 1e-2f, 1e-2f )) {
-            System.out.println("Test passed: output = "+Arrays.toString(test_ovalues) + " expected = "+Arrays.toString(test_evalues));
-        } else {
-            System.out.println("Test failed: output = "+Arrays.toString(test_ovalues) + " expected = "+Arrays.toString(test_evalues));
-        }
+        assertTrue(areArraysClose(test_evalues, test_ovalues, 1e-2f, 1e-2f ));
     }
 
-    private static void testBnRobotIK_ZYY2Arms() {
-        System.out.println("Testing BnRobotIK_ZYY2Arms");
+    @Test
+    public void testBnRobotIK_ZYY2Arms() {
 
         float[] test_endpoint = new float[] { 18.219124272891392f, 3.8972461548699857f, 1.6501078154541111f };
         float[] test_evalues = new float[] { 0.21073373345528476f, -0.4522653965641126f, 0.723883473845901f };
@@ -104,11 +90,7 @@ public class TestBnCommon {
 
         float[] test_ovalues = { 0, 0, 0 };
         bnaik.compute( test_endpoint, test_ovalues );
-        if(areArraysClose(test_evalues, test_ovalues, 1e-5f, 1e-3f )) {
-            System.out.println("Test passed: output = "+Arrays.toString(test_ovalues) + " expected = "+Arrays.toString(test_evalues));
-        } else {
-            System.out.println("Test failed: output = "+Arrays.toString(test_ovalues) + " expected = "+Arrays.toString(test_evalues));
-        }
+        assertTrue(areArraysClose(test_evalues, test_ovalues, 1e-5f, 1e-3f ));
     }
 
     /**
@@ -138,10 +120,4 @@ public class TestBnCommon {
         return true;
     }
 
-    public static void main(String[] args) {
-        testBnReorientAxis();
-        testBnTwoNodesMotionTracking();
-        testBnTwoNodesMotionTrackingConstraint();
-        testBnRobotIK_ZYY2Arms();
-    }
 }

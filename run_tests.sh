@@ -31,7 +31,7 @@ popd
 
 echo "Testing java"
 pushd java
-output_txt+=$(./run_tests.sh)$'\n'
+output_txt+=$(make test)$'\n'
 popd
 
 echo "Testing csharp"
@@ -51,7 +51,7 @@ popd
 echo "$output_txt"
 
 
-if echo "$output_txt" | grep -qi "fail"; then
+if echo "$output_txt" | sed 's/Failures: 0/ /g' | grep -qi "fail"; then
     echo "Tests Failed!"
     exit 1  # Exit with error code
 else
