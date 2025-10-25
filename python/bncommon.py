@@ -24,6 +24,132 @@
 import math
 import numpy as np
 
+class _ConstMeta(type):
+    def __setattr__(cls, name, value):
+        raise AttributeError("Cannot modify constant values")
+
+    def __delattr__(cls, name):
+        raise AttributeError("Cannot delete constant values")
+
+
+class BnConstants(metaclass=_ConstMeta):
+
+    def __new__(cls):
+        raise TypeError("Class cannot be instantiated")
+
+
+    PLAYER_ALL_TAG =     "all"
+    PLAYER_NONE_TAG =    "none"
+
+    BODYPART_HEAD_TAG =            "head"
+    BODYPART_HAND_LEFT_TAG =       "hand_left"
+    BODYPART_LOWERARM_LEFT_TAG =   "lowerarm_left"
+    BODYPART_UPPERARM_LEFT_TAG =   "upperarm_left"
+    BODYPART_BODY_TAG =            "body"
+    BODYPART_LOWERARM_RIGHT_TAG =  "lowerarm_right"
+    BODYPART_UPPERARM_RIGHT_TAG =  "upperarm_right"
+    BODYPART_HAND_RIGHT_TAG =      "hand_right"
+    BODYPART_LOWERLEG_LEFT_TAG =   "lowerleg_left"
+    BODYPART_UPPERLEG_LEFT_TAG =   "upperleg_left"
+    BODYPART_FOOT_LEFT_TAG =       "foot_left"
+    BODYPART_LOWERLEG_RIGHT_TAG =  "lowerleg_right"
+    BODYPART_UPPERLEG_RIGHT_TAG =  "upperleg_right"
+    BODYPART_FOOT_RIGHT_TAG =      "foot_right"
+    BODYPART_UPPERBODY_TAG =       "upperbody"
+    BODYPART_LOWERBODY_TAG =       "lowerbody"
+    BODYPART_KATANA_TAG =          "katana"
+    BODYPART_UNTAGGED_TAG =        "untagged"
+    BODYPART_ALL_TAG =             "all"
+
+    # ACTIONS
+    ACTION_TYPE_TAG =              "type"
+    ACTION_PLAYER_TAG =            "player"
+    ACTION_BODYPART_TAG =          "bodypart"
+
+    ACTION_TYPE_NONE_TAG =         "none"
+    ACTION_TYPE_HAPTIC_TAG =       "haptic"
+    ACTION_TYPE_SETPLAYER_TAG =    "set_player"
+    ACTION_TYPE_SETBODYPART_TAG =  "set_bodypart"
+    ACTION_TYPE_ENABLESENSOR_TAG = "enable_sensor"
+    ACTION_TYPE_SETWIFI_TAG =      "set_wifi"
+
+    ACTION_HAPTIC_DURATION_MS_TAG =      "duration_ms"
+    ACTION_HAPTIC_STRENGTH_TAG =         "strength"
+    ACTION_SETPLAYER_NEWPLAYER_TAG =     "new_player"
+    ACTION_SETBODYPART_NEWBODYPART_TAG = "new_bodypart"
+    ACTION_ENABLESENSOR_SENSORTYPE_TAG = "sensortype"
+    ACTION_ENABLESENSOR_ENABLE_TAG =     "enable"
+    ACTION_SETWIFI_SSID_TAG =            "ssid"
+    ACTION_SETWIFI_PASSWORD_TAG =        "password"
+    ACTION_SETWIFI_MULTICASTMESSAGE_TAG ="multicast_message"
+
+    # MESSAGE
+    MESSAGE_PLAYER_TAG =        "player"
+    MESSAGE_BODYPART_TAG =      "bodypart"
+    MESSAGE_SENSORTYPE_TAG =    "sensortype"
+    MESSAGE_VALUE_TAG =         "value"
+
+    # GLOVE
+    GLOVE_ANGLE_MIGNOLO_INDEX =  0
+    GLOVE_ANGLE_ANULARE_INDEX =  1
+    GLOVE_ANGLE_MEDIO_INDEX =    2
+    GLOVE_ANGLE_INDICE_INDEX =   3
+    GLOVE_ANGLE_POLLICE_INDEX =  4
+    GLOVE_TOUCH_MIGNOLO_INDEX =  5
+    GLOVE_TOUCH_ANULARE_INDEX =  6
+    GLOVE_TOUCH_MEDIO_INDEX =    7
+    GLOVE_TOUCH_INDICE_INDEX =   8
+
+    # MEMORY
+    MEMORY_BODYPART_TAG =              "bodypart"
+    MEMORY_BODYPART_GLOVE_TAG =        "bodypart_glove"
+    MEMORY_BODYPART_SHOE_TAG =         "bodypart_shoe"
+    MEMORY_PLAYER_TAG =                "player"
+    MEMORY_WIFI_SSID_TAG =             "wifi_ssid"
+    MEMORY_WIFI_PASSWORD_TAG =         "wifi_password"
+    MEMORY_WIFI_MULTICASTMESSAGE_TAG = "multicast_message"
+
+    # SENSOR DATA TYPES
+    SENSORTYPE_NONE_TAG =                   "none"
+    SENSORTYPE_ORIENTATION_ABS_TAG =        "orientation_abs"
+    SENSORTYPE_ACCELERATION_REL_TAG =       "acceleration_rel"
+    SENSORTYPE_GLOVE_TAG =                  "glove"
+    SENSORTYPE_SHOE_TAG =                   "shoe"
+    SENSORTYPE_ANGULARVELOCITY_REL_TAG =    "angularvelocity_rel"
+
+    # SENSOR STATUS
+    SENSOR_STATUS_NOT_ACCESSIBLE =  1
+    SENSOR_STATUS_CALIBRATING =     2
+    SENSOR_STATUS_WORKING =         3
+
+    # CONNECTION STATUS
+    CONNECTION_STATUS_NOT_CONNECTED = 0
+    CONNECTION_STATUS_WAITING_ACK =   1
+    CONNECTION_STATUS_CONNECTED =     2
+
+    # Wifi Connections
+    WIFI_PORT =                    12345
+    WIFI_MULTICAST_PORT =          12346
+    WIFI_SSID_DEFAULT =       "BodynodeHotspot"
+    WIFI_PASSWORD_DEFAULT =       "bodynodes1"
+    WIFI_MULTICASTGROUP_DEFAULT =   "239.192.1.99"
+    WIFI_MULTICASTMESSAGE_DEFAULT = "BN"
+
+    # Bluetooth Connections
+    #TODO
+
+    # BLE Connections
+    BLE_NAME                                  = "Bodynode"
+    BLE_SERVICE_UUID                          = "0000CCA0-0000-1000-8000-00805F9B34FB"
+    BLE_CHARA_PLAYER_UUID                     = "0000CCA1-0000-1000-8000-00805F9B34FB"
+    BLE_CHARA_BODYPART_UUID                   = "0000CCA2-0000-1000-8000-00805F9B34FB"
+    BLE_CHARA_ORIENTATION_ABS_VALUE_UUID      = "0000CCA3-0000-1000-8000-00805F9B34FB"
+    BLE_CHARA_ACCELERATION_REL_VALUE_UUID     = "0000CCA4-0000-1000-8000-00805F9B34FB"
+    BLE_CHARA_GLOVE_VALUE_UUID                = "0000CCA5-0000-1000-8000-00805F9B34FB"
+    BLE_CHARA_SHOE_UUID                       = "0000CCA6-0000-1000-8000-00805F9B34FB"
+    BLE_CHARA_ANGULARVELOCITY_REL_VALUE_UUID  = "0000CCA7-0000-1000-8000-00805F9B34FB"
+
+
 class BnReorientAxis:
     def __init__( self ):
         self.reorientAxis = [0, 1, 2, 3]

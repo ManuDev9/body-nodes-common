@@ -22,8 +22,27 @@
 # SOFTWARE.
 
 import numpy as np
+import pytest
+import pathlib
+import json
 
 import bncommon
+
+def test_BnConstants():
+    with pytest.raises(TypeError, match="Class cannot be instantiated"):
+        bncommon.BnConstants()
+
+    with pytest.raises(AttributeError, match="Cannot delete constant values"):
+        del bncommon.BnConstants.ACTION_BODYPART_TAG
+
+    with (pathlib.Path(__file__).resolve().parents[2] / "BNCONSTANTS.json").open() as f:
+        all_constants = {k: v for k, v in json.load(f).items() if not k.startswith("__")}
+
+    missing = [key for key in all_constants if not hasattr(bncommon.BnConstants, key)]
+    assert missing == []
+
+    for key in all_constants.keys():
+        assert getattr(bncommon.BnConstants, key) == all_constants[key]
 
 # The X and Y starting position of the Links can create problems in understanding what is the right quanternion and point location
 # To get the right quaternions of Blender feel free to blindly apply the XYZ angles and then get Quaternions
