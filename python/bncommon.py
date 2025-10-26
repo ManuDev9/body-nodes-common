@@ -37,7 +37,6 @@ class BnConstants(metaclass=_ConstMeta):
     def __new__(cls):
         raise TypeError("Class cannot be instantiated")
 
-
     PLAYER_ALL_TAG =     "all"
     PLAYER_NONE_TAG =    "none"
 
@@ -150,28 +149,6 @@ class BnConstants(metaclass=_ConstMeta):
     BLE_CHARA_ANGULARVELOCITY_REL_VALUE_UUID  = "0000CCA7-0000-1000-8000-00805F9B34FB"
 
 
-class BnReorientAxis:
-    def __init__( self ):
-        self.reorientAxis = [0, 1, 2, 3]
-        self.reorientSign = [1, 1, 1, 1]
-
-    # Change the orientation of received data to align to the main application
-    # ioAxis is an array of 3 or 4 integer that can be 0 ('w'), 1 ('x'), 2 ('y'), or 3 ('z').
-    # Example [ 0, 1, 2, 3]
-    # ioSign is an array of 3 or 4 integers that can be 1 or -1. Example [1, 1, 1, 1]
-    # Note: by default the orientation is set as [ 0, 1, 2, 3 ] and [1, 1, 1, 1]
-    def config( self, ioAxis, ioSign ):
-        self.reorientAxis = ioAxis
-        self.reorientSign = ioSign
-
-    def apply( self, iovalues ):
-        ovalues = []
-        for idv in range(0, len(iovalues)):
-            ovalues.append( iovalues[ self.reorientAxis[idv] ] * self.reorientSign[idv]  )
-        for idv in range(0, len(iovalues)):
-            iovalues[idv] = ovalues[idv]
-
-
 class BnQuaternion:
     def __init__(self, q):
         if isinstance(q, list) and len(q) == 4:
@@ -222,6 +199,28 @@ class BnQuaternion:
     def to_list(self):
         # Return quaternion as a simple list
         return self.q
+
+
+class BnReorientAxis:
+    def __init__( self ):
+        self.reorientAxis = [0, 1, 2, 3]
+        self.reorientSign = [1, 1, 1, 1]
+
+    # Change the orientation of received data to align to the main application
+    # ioAxis is an array of 3 or 4 integer that can be 0 ('w'), 1 ('x'), 2 ('y'), or 3 ('z').
+    # Example [ 0, 1, 2, 3]
+    # ioSign is an array of 3 or 4 integers that can be 1 or -1. Example [1, 1, 1, 1]
+    # Note: by default the orientation is set as [ 0, 1, 2, 3 ] and [1, 1, 1, 1]
+    def config( self, ioAxis, ioSign ):
+        self.reorientAxis = ioAxis
+        self.reorientSign = ioSign
+
+    def apply( self, iovalues ):
+        ovalues = []
+        for idv in range(0, len(iovalues)):
+            ovalues.append( iovalues[ self.reorientAxis[idv] ] * self.reorientSign[idv]  )
+        for idv in range(0, len(iovalues)):
+            iovalues[idv] = ovalues[idv]
 
 
 class BnMotionTracking_2Nodes:
@@ -429,88 +428,91 @@ class BnRobotArm_MT:
 
 ####### UTILITIES
 
-# Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in degrees
-def blender_euler_to_rotation_matrix_degree(roll, pitch, yaw):
-    return blender_euler_to_rotation_matrix_rad(np.deg2rad(roll), np.deg2rad(pitch), np.deg2rad(yaw))
 
-# Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in radians
-def blender_euler_to_rotation_matrix_rad(roll, pitch, yaw):
-	# counter rh wise rotations
-    R_x = np.array([[1, 0, 0],
-                    [0, np.cos(roll), -np.sin(roll)],
-                    [0, np.sin(roll), np.cos(roll)]])
-    
-    R_y = np.array([[np.cos(pitch), 0, np.sin(pitch)],
-                    [0, 1, 0],
-                    [-np.sin(pitch), 0, np.cos(pitch)]])
-    
-    R_z = np.array([[np.cos(yaw), -np.sin(yaw), 0],
-                    [np.sin(yaw), np.cos(yaw), 0],
-                    [0, 0, 1]])
+class BnUtils():
 
-    #print("\nResult of Multiplication (R_y * R_x):")
-    #print(np.dot(R_y, R_x))
+    def __new__(cls):
+        raise TypeError("Class cannot be instantiated")
 
-    # Overall rotation matrix (XYZ order)
-    R = np.dot(R_z, np.dot(R_y, R_x))
-    return R
+    # Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in radians
+    @staticmethod
+    def blender_euler_to_rotation_matrix_rad(roll, pitch, yaw):
+    	# counter rh wise rotations
+        R_x = np.array([[1, 0, 0],
+                        [0, np.cos(roll), -np.sin(roll)],
+                        [0, np.sin(roll), np.cos(roll)]])
+        
+        R_y = np.array([[np.cos(pitch), 0, np.sin(pitch)],
+                        [0, 1, 0],
+                        [-np.sin(pitch), 0, np.cos(pitch)]])
+        
+        R_z = np.array([[np.cos(yaw), -np.sin(yaw), 0],
+                        [np.sin(yaw), np.cos(yaw), 0],
+                        [0, 0, 1]])
 
-# Function to multiply two rotation matrices
-def multiply_rotation_matrices(R1, R2):
-    return np.dot(R1, R2)
-    
+        #print("\nResult of Multiplication (R_y * R_x):")
+        #print(np.dot(R_y, R_x))
 
-def create_quanternion(axis_config, values):
-    
-    quat = BnQuaternion([
-        axis_config["new_w_sign"] * float(values[axis_config["new_w_val"]]),
-        axis_config["new_x_sign"] * float(values[axis_config["new_x_val"]]),
-        axis_config["new_y_sign"] * float(values[axis_config["new_y_val"]]),
-        axis_config["new_z_sign"] * float(values[axis_config["new_z_val"]])
-    ])
-    return quat
+        # Overall rotation matrix (XYZ order)
+        R = np.dot(R_z, np.dot(R_y, R_x))
+        return R
 
-# This trasformation ignores what is the local axis of the object once rotated, we don't trust those axis system which might be compromised
-# sensor_quat               - is the raw quaternion (vector of 4 values) from the sensor
-# first_quat                - is the first quaternion that has been registered from the sensor, this will create a 0 angle from where the sensor started sensing
-# starting_quat             - is the starting quaternion of the object we want to rotated with the sensor
-# env_quat                  - is the environment quaternion, basically indicates somehow where the x axis points 
-# bodynodes_axis_config     - axis configuration that will transfor the sensor values into values for the virtual world
-def transform_sensor_quat( sensor_quat, first_quat, starting_quat, env_quat, bodynodes_axis_config):
+    # Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in degrees
+    @staticmethod
+    def blender_euler_to_rotation_matrix_degree(roll, pitch, yaw):
+        return __class__.blender_euler_to_rotation_matrix_rad(np.deg2rad(roll), np.deg2rad(pitch), np.deg2rad(yaw))
 
-    sensor_quat = BnQuaternion(sensor_quat)
-    starting_quat = BnQuaternion(starting_quat)
-    env_quat = BnQuaternion(env_quat)
+    # Function to multiply two rotation matrices
+    @staticmethod
+    def multiply_rotation_matrices(R1, R2):
+        return np.dot(R1, R2)
+        
+    @staticmethod
+    def create_quanternion(axis_config, values):
+        quat = BnQuaternion([
+            axis_config["new_w_sign"] * float(values[axis_config["new_w_val"]]),
+            axis_config["new_x_sign"] * float(values[axis_config["new_x_val"]]),
+            axis_config["new_y_sign"] * float(values[axis_config["new_y_val"]]),
+            axis_config["new_z_sign"] * float(values[axis_config["new_z_val"]])
+        ])
+        return quat
 
-    if first_quat == None:
-        first_quat = sensor_quat.inverse()
-    else:
-        first_quat = BnQuaternion(first_quat)
+    # This trasformation ignores what is the local axis of the object once rotated, we don't trust those axis system which might be compromised
+    # sensor_quat               - is the raw quaternion (vector of 4 values) from the sensor
+    # first_quat                - is the first quaternion that has been registered from the sensor, this will create a 0 angle from where the sensor started sensing
+    # starting_quat             - is the starting quaternion of the object we want to rotated with the sensor
+    # env_quat                  - is the environment quaternion, basically indicates somehow where the x axis points 
+    # bodynodes_axis_config     - axis configuration that will transfor the sensor values into values for the virtual world
+    @staticmethod
+    def transform_sensor_quat( sensor_quat, first_quat, starting_quat, env_quat, bodynodes_axis_config):
 
-    #bpy.data.objects["katana"].rotation_quaternion = sensor_quat @ first_quat @ starting_quat 
-    #bpy.data.objects["katana"].rotation_quaternion = starting_quat @ sensor_quat
-    
-    #bpy.data.objects["katana"].rotation_quaternion = sensor_quat @ first_quat 
-    # Definitely wrong, the object rotates differently depeding where the sensor starts
-    
-    #bpy.data.objects["katana"].rotation_quaternion = sensor_quat
-    # It imposes the current rotation instead of considering the initial rotation of the sensor
+        sensor_quat = BnQuaternion(sensor_quat)
+        starting_quat = BnQuaternion(starting_quat)
+        env_quat = BnQuaternion(env_quat)
 
-    rotation_real_quat = first_quat @ sensor_quat
-    rotation_realaxis_quat = create_quanternion(
-            bodynodes_axis_config,
-            rotation_real_quat)
-    
-    object_new_quat = env_quat @ rotation_realaxis_quat @ env_quat.inverse() @ starting_quat
-    
-    return [ object_new_quat.to_list() , first_quat.to_list() ]
+        if first_quat == None:
+            first_quat = sensor_quat.inverse()
+        else:
+            first_quat = BnQuaternion(first_quat)
 
+        #bpy.data.objects["katana"].rotation_quaternion = sensor_quat @ first_quat @ starting_quat 
+        #bpy.data.objects["katana"].rotation_quaternion = starting_quat @ sensor_quat
+        
+        #bpy.data.objects["katana"].rotation_quaternion = sensor_quat @ first_quat 
+        # Definitely wrong, the object rotates differently depeding where the sensor starts
+        
+        #bpy.data.objects["katana"].rotation_quaternion = sensor_quat
+        # It imposes the current rotation instead of considering the initial rotation of the sensor
 
-
-
-
+        rotation_real_quat = first_quat @ sensor_quat
+        rotation_realaxis_quat = __class__.create_quanternion(
+                bodynodes_axis_config,
+                rotation_real_quat)
+        
+        object_new_quat = env_quat @ rotation_realaxis_quat @ env_quat.inverse() @ starting_quat
+        
+        return [ object_new_quat.to_list() , first_quat.to_list() ]
 
 if __name__ == "__main__":
     print("This is a module. Nothing is done just by running it directly")
-
 

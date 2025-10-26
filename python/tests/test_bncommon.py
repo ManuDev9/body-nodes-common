@@ -44,6 +44,50 @@ def test_BnConstants():
     for key in all_constants.keys():
         assert getattr(bncommon.BnConstants, key) == all_constants[key]
 
+
+def test_BnQuaternion():
+    q1 = bncommon.BnQuaternion([1, 2, 3, 4])  # Quaternion with w=1, x=2, y=3, z=4
+    q2 = bncommon.BnQuaternion([0, 1, 0, 0])  # Another quaternion
+
+    # Multiply quaternions using the @ operator
+    q3 = q1 @ q2
+    assert q3.to_list()  == [-2, 1, 4, -3]
+
+    # Conjugate and inverse
+    assert q1.conjugate().to_list() == [1, -2, -3, -4]
+    np.allclose(q1.inverse().to_list(), np.array([0.03333333333333333, -0.06666666666666667, -0.1, -0.13333333333333333]) )
+
+
+def test_BnUtils():
+
+    assert np.allclose(bncommon.BnUtils.blender_euler_to_rotation_matrix_rad(0.123, 2.12, -3.11), [[ 0.52174769, -0.07324637, -0.8499496 ], [ 0.01648888, -0.99525533,  0.09589024], [-0.85294048, -0.06404523, -0.51806442]], atol=1e-09)
+
+    assert np.allclose(bncommon.BnUtils.blender_euler_to_rotation_matrix_degree(30, 40, 50),[[ 0.49240388, -0.45682599,  0.74084306], [ 0.58682409,  0.80287234,  0.10504046], [-0.64278761,  0.38302222,  0.66341395]], atol=1e-09)
+
+    assert np.allclose(bncommon.BnUtils.multiply_rotation_matrices([[1,2,3],[4,5,6],[1,2,3]], [[4,5,3],[1,5,8],[9,1,4]]), [[33, 18, 31], [75, 51, 76], [33, 18, 31]], atol=1e-09)
+
+    axis_config = {
+        "new_w_sign" : 1,
+        "new_x_sign" : -1,
+        "new_y_sign" : -1,
+        "new_z_sign" : 1,
+        
+        "new_w_val" : 0,
+        "new_x_val" : 1,
+        "new_y_val" : 3,
+        "new_z_val" : 2
+    }
+
+    assert np.allclose(bncommon.BnUtils.create_quanternion(axis_config, [3,4,2,1]).to_list(), [3.0, -4.0, -1.0, 2.0], atol=1e-09)
+
+    assert np.allclose(bncommon.BnUtils.transform_sensor_quat(
+        [0.4, 0.3, 0.2, 0.3],
+        [0.4, 0.3, 0.2, 0.3],
+        [0.4, 0.3, 0.2, 0.3],
+        [0.4, 0.3, 0.2, 0.3],
+        axis_config) , [[0.048, -0.009999999999999974, -0.22799999999999995, 0.022000000000000006], [0.4, 0.3, 0.2, 0.3]], atol=1e-09)
+
+
 # The X and Y starting position of the Links can create problems in understanding what is the right quanternion and point location
 # To get the right quaternions of Blender feel free to blindly apply the XYZ angles and then get Quaternions
 # Then to get the right point locaiton, just move the angles in a way that will move the point where it should be
@@ -62,7 +106,7 @@ def test_BnReorientAxis():
     test_obj.apply( test_ovalues )
     
      # Apparently the values come out pretty differently but on the same order of magnitude...
-    assert np.allclose(test_evalues, test_ovalues, rtol=1e-03, atol=1e-05)
+    assert np.allclose(test_evalues, test_ovalues, atol=1e-05, rtol=1e-03)
 
 def test_BnMotionTracking_2Nodes():
     bnmotiontrack = bncommon.BnMotionTracking_2Nodes(
@@ -73,7 +117,7 @@ def test_BnMotionTracking_2Nodes():
     test_node2_quat = [ 0.9583, -0.1367, -0.0595, -0.2439 ]
     test_evalues = [18.468636171839087, -3.1761790635934757, -0.08354223767877755]
     [ _, _, test_ovalues] = bnmotiontrack.compute(test_node1_quat, test_node2_quat)
-    assert np.allclose(test_evalues, test_ovalues, rtol=1e-02, atol=1e-03)
+    assert np.allclose(test_evalues, test_ovalues, atol=1e-03, rtol=1e-02)
 
 def test_BnMotionTracking_2Nodes_Constraints():
     bnmotiontrack = bncommon.BnMotionTracking_2Nodes(
@@ -84,7 +128,7 @@ def test_BnMotionTracking_2Nodes_Constraints():
     test_node2_quat = [ 0.9293, -0.0039, -0.2892, 0.2296 ]
     test_evalues = [14.443218483410508, 5, 5]
     [ _, _, test_ovalues] = bnmotiontrack.compute(test_node1_quat, test_node2_quat)
-    assert np.allclose(test_evalues, test_ovalues, rtol=1e-03, atol=1e-05)
+    assert np.allclose(test_evalues, test_ovalues, atol=1e-05, rtol=1e-03)
 
 
 def test_BnRobotArmZYY_IK():
@@ -95,38 +139,7 @@ def test_BnRobotArmZYY_IK():
     test_endpoint = [18.219124272891392, 3.8972461548699857, 1.6501078154541111]
     test_evalues = [0.21073373345528476,  1.118530930230784, 0.723883473845901]
     test_ovalues = bnaik.compute(test_endpoint)
-    assert np.allclose(test_evalues, test_ovalues, rtol=5e-03, atol=1e-04)
-
-def test_BnQuaternion():
-    q1 = bncommon.BnQuaternion([1, 2, 3, 4])  # Quaternion with w=1, x=2, y=3, z=4
-    q2 = bncommon.BnQuaternion([0, 1, 0, 0])  # Another quaternion
-
-    # Multiply quaternions using the @ operator
-    q3 = q1 @ q2
-    assert q3.to_list()  == [-2, 1, 4, -3]
-
-    # Conjugate and inverse
-    assert q1.conjugate().to_list() == [1, -2, -3, -4]
-    np.allclose(q1.inverse().to_list(), np.array([0.03333333333333333, -0.06666666666666667, -0.1, -0.13333333333333333]) )
-
-    bodynodes_axis_config = {
-        "new_w_sign" : 1,
-        "new_x_sign" : 1,
-        "new_y_sign" : 1,
-        "new_z_sign" : 1,
-        
-        "new_w_val" : 0,
-        "new_x_val" : 1,
-        "new_y_val" : 2,
-        "new_z_val" : 3
-    }
-    out = bncommon.transform_sensor_quat(
-        [0.4, 0.3, 0.2, 0.3],
-        [0.4, 0.3, 0.2, 0.3],
-        [0.4, 0.3, 0.2, 0.3],
-        [0.4, 0.3, 0.2, 0.3],
-        bodynodes_axis_config)
-    assert out == [[-0.2, 0.07800000000000001, 0.052000000000000005, 0.07800000000000003], [0.4, 0.3, 0.2, 0.3]]
+    assert np.allclose(test_evalues, test_ovalues, atol=1e-04, rtol=5e-03)
 
 
 def test_BlenderSimpleLinksProj1():
@@ -157,7 +170,7 @@ def test_BlenderSimpleLinksProj1():
 
 def test_BlenderSimpleLinksProj2():
     # Testing how to setup the blender utility functions to correspond to what Blender is giving as output. We want rotation XYZ
-    assert np.allclose(bncommon.blender_euler_to_rotation_matrix_degree(45,45,45) @ [0, 1, 0], np.array([-0.14644661,  0.85355339,  0.5  ]) )
+    assert np.allclose(bncommon.BnUtils.blender_euler_to_rotation_matrix_degree(45,45,45) @ [0, 1, 0], np.array([-0.14644661,  0.85355339,  0.5  ]) )
 
 
 def test_BlenderSimpleLinksProj3():
