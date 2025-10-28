@@ -228,10 +228,14 @@ class BnMotionTracking_2Nodes:
     # This is an example of locationConstraints
     # locationConstraints = [ [-1, 1], [-2, 2], [-3, 3] ]
     def __init__( self, initialPosition = [0,0,0], armVector1 = [1, 0, 0], armVector2  = [1, 0, 0], locationConstraints = None, units = "cm"):
-        self.initialPosition = initialPosition
+        self.initialPosition = initialPosition[:]
         self.armVector1 = armVector1
         self.armVector2 = armVector2
-        self.locationConstraints = locationConstraints
+        if locationConstraints != None:
+            self.locationConstraints = [item[:] for item in locationConstraints]
+        else:
+            self.locationConstraints = None
+        self.units = units
 
     def __quaternion_to_rotation_matrix(self, quat):
         return [
@@ -289,6 +293,7 @@ class BnRobotArmZYY_IK:
     # All angles are in radiants
     # This is an example of anglesConstraints
     # anglesConstraints = [ [ -math.pi/2, math.pi/2 ], [0 , math.pi/2], [0, math.pi/2 ] ]
+    # Starting Point is assumed to be [0, 0, 0]
     def __init__(self, lengthRA1 = 1, lengthRA2 = 1, lengthRA3 = 1, anglesConstraints = None, units = "cm"):
         self.lengthRA1 = lengthRA1
         self.lengthRA2 = lengthRA2
@@ -297,6 +302,7 @@ class BnRobotArmZYY_IK:
         self.theta_RA1 = None
         self.gamma_RA2 = None
         self.gamma_RA3 = None
+        self.units = units
 
     # The returned angles are made to work in blender
     # We are assuming the reset position is all arms along the global Z axis going upwards
@@ -311,7 +317,7 @@ class BnRobotArmZYY_IK:
     # endpoint always refers to the same origin
     def compute(self, endpoint):
     
-        # z rotation alpha 
+        # x rotation alpha 
         # y rotation gamma 
         # z rotation theta 
     
@@ -434,6 +440,11 @@ class BnUtils():
     def __new__(cls):
         raise TypeError("Class cannot be instantiated")
 
+    # Function to multiply two rotation matrices
+    @staticmethod
+    def multiply_matrices(R1, R2):
+        return np.dot(R1, R2)
+
     # Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in radians
     @staticmethod
     def blender_euler_to_rotation_matrix_rad(roll, pitch, yaw):
@@ -454,7 +465,7 @@ class BnUtils():
         #print(np.dot(R_y, R_x))
 
         # Overall rotation matrix (XYZ order)
-        R = np.dot(R_z, np.dot(R_y, R_x))
+        R = __class__.multiply_matrices(R_z, __class__.multiply_matrices(R_y, R_x))
         return R
 
     # Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in degrees
@@ -462,10 +473,6 @@ class BnUtils():
     def blender_euler_to_rotation_matrix_degree(roll, pitch, yaw):
         return __class__.blender_euler_to_rotation_matrix_rad(np.deg2rad(roll), np.deg2rad(pitch), np.deg2rad(yaw))
 
-    # Function to multiply two rotation matrices
-    @staticmethod
-    def multiply_rotation_matrices(R1, R2):
-        return np.dot(R1, R2)
         
     @staticmethod
     def create_quanternion(axis_config, values):

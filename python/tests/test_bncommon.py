@@ -64,7 +64,7 @@ def test_BnUtils():
 
     assert np.allclose(bncommon.BnUtils.blender_euler_to_rotation_matrix_degree(30, 40, 50),[[ 0.49240388, -0.45682599,  0.74084306], [ 0.58682409,  0.80287234,  0.10504046], [-0.64278761,  0.38302222,  0.66341395]], atol=1e-09)
 
-    assert np.allclose(bncommon.BnUtils.multiply_rotation_matrices([[1,2,3],[4,5,6],[1,2,3]], [[4,5,3],[1,5,8],[9,1,4]]), [[33, 18, 31], [75, 51, 76], [33, 18, 31]], atol=1e-09)
+    assert np.allclose(bncommon.BnUtils.multiply_matrices([[1,2,3],[4,5,6],[1,2,3]], [[4,5,3],[1,5,8],[9,1,4]]), [[33, 18, 31], [75, 51, 76], [33, 18, 31]], atol=1e-09)
 
     axis_config = {
         "new_w_sign" : 1,
@@ -79,6 +79,13 @@ def test_BnUtils():
     }
 
     assert np.allclose(bncommon.BnUtils.create_quanternion(axis_config, [3,4,2,1]).to_list(), [3.0, -4.0, -1.0, 2.0], atol=1e-09)
+
+    assert np.allclose(bncommon.BnUtils.transform_sensor_quat(
+        [0.4, 0.3, 0.2, 0.3],
+        None,
+        [0.4, 0.3, 0.2, 0.3],
+        [0.4, 0.3, 0.2, 0.3],
+        axis_config) , [[0.39999999999999997, 0.2999999999999999, 0.19999999999999998, 0.29999999999999993], [1.0526315789473684, -0.7894736842105263, -0.5263157894736842, -0.7894736842105263]], atol=1e-09)
 
     assert np.allclose(bncommon.BnUtils.transform_sensor_quat(
         [0.4, 0.3, 0.2, 0.3],
@@ -196,7 +203,7 @@ def test_BlenderSimpleLinksProj3():
     assert np.allclose(np.rad2deg(bnaik.compute([1.210, 1.210, 0.70])), np.array( [45, 45, 45] ) , atol=2)
     assert np.allclose(np.rad2deg(bnaik.compute([1.416094183921814, 1.416094183921814, 0.0])), np.array( [45, 90,  0] ) , atol=2)
 
-def test_BlenderSimpleLinksProj4():
+def test_BnRobotArm_MT():
     # Let's test the combination of BnMotionTracking_2Nodes and BnRobotArmZYY_IK
     # So we will decide specific SersorArm1 and SensorArm2 rotations which will move an immaginary point (BnMotionTracking_2Nodes)
     # The RobotArm1, RobotArm2, and RobotArm3 will follow that point (BnRobotArmZYY_IK)
@@ -243,7 +250,7 @@ def test_BlenderSimpleLinksProj4():
     assert np.allclose( np.rad2deg(robotangles), np.array([0, 9.99994606, 100.00004607] ))
 
 
-def test_BlenderSimpleLinksProj5():
+def test_BnRobotArm_MT_Constraints():
     # Let's test the combination of BnMotionTracking_2Nodes and BnRobotArmZYY_IK
     # and some contraints on the Robot.
     # Sensors can give any values but Robots have physical limitions
@@ -269,7 +276,7 @@ def test_BlenderSimpleLinksProj5():
     assert np.allclose( np.rad2deg(robotangles), np.array([45, 45.00005363, 44.99993373] ))
 
     # ---------
-    # Arms along the Y axis
+    # Arms along the X axis
     bnmotiontrack = bncommon.BnMotionTracking_2Nodes(
         initialPosition = [0,0,0], armVector1 = [1,0,0], armVector2 = [1,0,0] )
     # The Robot IK will always assume as a starting position the arms to be pointing upwards
