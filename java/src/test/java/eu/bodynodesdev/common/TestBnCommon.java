@@ -22,102 +22,461 @@
 # SOFTWARE.
 */
 
+import eu.bodynodesdev.common.BnConstants;
+import eu.bodynodesdev.common.BnQuaternion;
+import eu.bodynodesdev.common.BnAxisConfig;
+import eu.bodynodesdev.common.BnUtils;
 import eu.bodynodesdev.common.BnReorientAxis;
-import eu.bodynodesdev.common.BnTwoNodesMotionTracking;
-import eu.bodynodesdev.common.BnRobotIK_ZYY2Arms;
+import eu.bodynodesdev.common.BnMotionTracking_2Nodes;
+import eu.bodynodesdev.common.BnRobotArmZYY_IK;
+import eu.bodynodesdev.common.BnRobotArm_MT;
 
+
+import java.lang.reflect.Constructor;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Arrays;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-
 public class TestBnCommon {
 
+
+     @Test
+    public void test_BnConstants() throws IOException {
+
+        Constructor<BnConstants> constructor = null;
+        try {
+            constructor = BnConstants.class.getDeclaredConstructor();
+            constructor.setAccessible(true); // allow access to private constructor
+        } catch (NoSuchMethodException e) {
+             fail("Cannot access private constructor via reflection");
+        }
+
+        try {
+            constructor.newInstance(); // attempt instantiation
+            fail("Expected UnsupportedOperationException");
+        } catch (Exception e) {
+            // expected
+        }
+
+        try {
+            var field = BnConstants.class.getField("ACTION_BODYPART_TAG");
+            field.setAccessible(true);
+            field.set(null, "new value"); // should fail if truly final or guarded
+            fail("Expected IllegalAccessException or UnsupportedOperationException");
+        } catch (NoSuchFieldException e) {
+            fail("Expected field not found: ACTION_BODYPART_TAG");
+        } catch (IllegalAccessException | UnsupportedOperationException e) {
+             // expected
+        }
+
+        // Load JSON file (relative to project root)
+        Path jsonPath = Path.of("..", "BNCONSTANTS.json").toAbsolutePath().normalize();
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> allConstants = mapper.readValue(
+            Files.readString(jsonPath),
+            new TypeReference<Map<String, Object>>() {}
+        );
+
+        // Remove keys starting with "__"
+        allConstants.entrySet().removeIf(e -> e.getKey().startsWith("__"));
+
+        // Check all constants exist in BnConstants
+        List<String> missing = new ArrayList<>();
+        for (String key : allConstants.keySet()) {
+            try {
+                BnConstants.class.getField(key);
+            } catch (NoSuchFieldException e) {
+                missing.add(key);
+            }
+        }
+        assertTrue("Missing constants: " + missing, missing.isEmpty());
+
+        // Check values match
+        for (Map.Entry<String, Object> entry : allConstants.entrySet()) {
+            String key = entry.getKey();
+            Object expected = entry.getValue();
+            try {
+                Object actual = BnConstants.class.getField(key).get(null);
+                assertEquals("Mismatch for constant: " + key, expected, actual);
+            } catch (Exception e) {
+                fail("Error reading field '" + key + "': " + e.getMessage());
+            }
+        }
+    }
+
+
     @Test
-    public void testBnReorientAxis() {
+    public void test_BnQuaternion() {
+
+        BnQuaternion q1 = new BnQuaternion(1, 2, 3, 4);
+        BnQuaternion q2 = new BnQuaternion(0, 1, 0, 0);
+
+        // Multiply quaternions using the @ operator
+        BnQuaternion q3 = q1.mul(q2);
+        assertArrayEquals( q3.toList(), new double[] {-2, 1, 4, -3}, 1e-9);
+
+        // Conjugate and inverse
+        assertArrayEquals(q1.conjugate().toList(), new double[] {1, -2, -3, -4}, 1e-9);
+        assertArrayEquals(q1.inverse().toList(), new double[] {0.03333333333333333, -0.06666666666666667, -0.1, -0.13333333333333333}, 1e-9);
+
+    }
+
+
+    @Test
+    public void  test_BnUtils() {
+
+        double[][] actual = BnUtils.blender_euler_to_rotation_matrix_rad(0.123, 2.12, -3.11);
+        double[][] expected = new double[][] {{ 0.52174769, -0.07324637, -0.8499496 }, { 0.01648888, -0.99525533,  0.09589024}, {-0.85294048, -0.06404523, -0.51806442}};
+        double delta = 0.001;
+        for (int i = 0; i < expected.length; i++) {
+            assertArrayEquals( expected[i], expected[i] , delta);
+        }
+
+        actual = BnUtils.blender_euler_to_rotation_matrix_degree(30, 40, 50);
+        expected = new double[][] {{ 0.49240388, -0.45682599,  0.74084306 }, {0.58682409,  0.80287234,  0.10504046}, {-0.64278761,  0.38302222,  0.66341395}};
+        for (int i = 0; i < expected.length; i++) {
+            assertArrayEquals( expected[i], expected[i] , delta);
+        }
+
+        actual = BnUtils.multiplyRotationMatrices( new double[][] {{1,2,3}, {4,5,6}, {1,2,3}}, new double[][] {{4,5,3}, {1,5,8}, {9,1,4 }} );
+        expected = new double[][] {{ 33, 18, 31}, {75, 51, 76}, {33, 18, 31 }};
+
+        for (int i = 0; i < expected.length; i++) {
+            assertArrayEquals( expected[i], expected[i] , delta);
+        }
+
+        BnAxisConfig axisConfig = new BnAxisConfig( 1,-1,-1, 1, 0, 1, 3, 2); 
+        assertArrayEquals(BnUtils.createQuanternion(axisConfig, new double[] {3,4,2,1}).toList(), new BnQuaternion(3.0, -4.0, -1.0, 2.0).toList(), 1e-09);
+
+        double[] firstQuatVals = new double[] {0,0,0,0};
+        
+        assertArrayEquals(BnUtils.transformSensorQuat(
+            new double[] {0.4, 0.3, 0.2, 0.3},
+            firstQuatVals,
+            new double[] {0.4, 0.3, 0.2, 0.3},
+            new double[] {0.4, 0.3, 0.2, 0.3},
+            new int[]{ 1,-1,-1, 1, 0, 1, 3, 2 }) ,
+            new double[] { 0.39999999999999997, 0.2999999999999999, 0.19999999999999998, 0.29999999999999993 }, 1e-09);
+
+        assertArrayEquals(firstQuatVals, new double[]{ 1.0526315789473684, -0.7894736842105263, -0.5263157894736842, -0.7894736842105263} , 1e-09);
+
+        firstQuatVals = new double[] {0.4, 0.3, 0.2, 0.3};
+        assertArrayEquals(BnUtils.transformSensorQuat(
+            new double[] {0.4, 0.3, 0.2, 0.3},
+            firstQuatVals,
+            new double[] {0.4, 0.3, 0.2, 0.3},
+            new double[] {0.4, 0.3, 0.2, 0.3},
+            new int[]{ 1,-1,-1, 1, 0, 1, 3, 2 }) ,
+            new double[] { 0.048, -0.009999999999999974, -0.22799999999999995, 0.022000000000000006 }, 1e-09);
+
+        assertArrayEquals(firstQuatVals, new double[] {0.4, 0.3, 0.2, 0.3}, 1e-09);
+    }
+
+
+    @Test
+    public void test_BnReorientAxis() {
 
         int[] test_io_axis = new int[]{ 3, 2, 1, 0 };
         int[] test_io_sign = new int[]{ -1, -1, -1, -1 };
-        float[] test_ivalues = new float[]{ 3f, 4.5f, 2f, 10.2f };
-        float[] test_ovalues = new float[]{ 3f, 4.5f, 2f, 10.2f };
-        float[] test_evalues = new float[]{ -10.2f, -2f, -4.5f, -3f };
-
         BnReorientAxis test_obj = new BnReorientAxis();
         test_obj.config( test_io_axis, test_io_sign );
-        test_obj.apply( test_ovalues );
-        assertTrue(areArraysClose(test_evalues, test_ovalues, 1e-5f, 1e-3f ));
+
+        float[] test_ivaluesF = new float[]{ 3f, 4.5f, 2f, 10.2f };
+        //  ovalues are equal to ivalues for inplace operators
+        float[] test_ovaluesF = new float[]{ test_ivaluesF[0], test_ivaluesF[1], test_ivaluesF[2], test_ivaluesF[3] };
+        float[] test_evaluesF = new float[]{ -10.2f, -2f, -4.5f, -3f };
+        test_obj.apply( test_ovaluesF );
+        assertArrayEquals(test_evaluesF, test_ovaluesF, 1e-9f);
+
+        double[] test_ivaluesD = new double[]{ 3, 4.5, 2, 10.2 };
+        //  ovalues are equal to ivalues for inplace operators
+        double[] test_ovaluesD = new double[]{ test_ivaluesD[0], test_ivaluesD[1], test_ivaluesD[2], test_ivaluesD[3] };
+        double[] test_evaluesD = new double[]{ -10.2, -2, -4.5, -3 };
+        test_obj.apply( test_ovaluesD );
+        assertArrayEquals(test_evaluesD, test_ovaluesD, 1e-9f);
+
+        int[] test_ivaluesI = new int[]{ 3, 4, 2, 10 };
+        //  ovalues are equal to ivalues for inplace operators
+        int[] test_ovaluesI = new int[]{ test_ivaluesI[0], test_ivaluesI[1], test_ivaluesI[2], test_ivaluesI[3] };
+        int[] test_evaluesI = new int[]{ -10, -2, -4, -3 };
+        test_obj.apply( test_ovaluesI );
+        assertArrayEquals(test_evaluesI, test_ovaluesI);
+
+    }
+
+
+    @Test
+    public void test_BnMotionTracking_2Nodes() {
+
+        BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
+            new double[]{ 0,0,0}, new double[]{ 10,0,0}, new double[]{ 10,0,0}, new double[][] { { 10, 20 }, { -5, 5}, { -5, 5} }, "cm" );
+
+        double[] test_node1_quat = new double[] { 0.9926, 0.0329, 0.0973, 0.0640 };
+        double[] test_node2_quat = new double[] { 0.9583, -0.1367, -0.0595, -0.2439 };
+        double[] test_evalues = new double[] { 18.468636171839087, -3.1761790635934757, -0.08354223767877755 };
+
+        double[] test_ovalues1 = new double[]{0, 0, 0};
+        double[] test_ovalues2 = new double[]{0, 0, 0};
+        double[] test_ovalues3 = new double[]{0, 0, 0};
+        bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues1, test_ovalues2, test_ovalues3 );
+        assertArrayEquals(test_evalues, test_ovalues3, 1e-2f);
+    }
+
+
+    @Test
+    public void test_BnMotionTracking_2NodesConstraint() {
+
+        BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
+            new double[]{ 0,0,0}, new double[]{ 10,0,0}, new double[]{ 10,0,0}, new double[][] { { 10, 20 }, { -5, 5}, { -5, 5} }, "cm" );
+
+        double[] test_node1_quat = new double[] { 0.8504, 0.3678, -0.1840, 0.3281 };
+        double[] test_node2_quat = new double[] { 0.9293, -0.0039, -0.2892, 0.2296 };
+        double[] test_evalues = new double[] { 14.443218483410508, 5, 5 };
+
+        double[] test_ovalues1 = new double[]{0, 0, 0};
+        double[] test_ovalues2 = new double[]{0, 0, 0};
+        double[] test_ovalues3 = new double[]{0, 0, 0};
+        bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues1, test_ovalues2, test_ovalues3 );
+        assertArrayEquals(test_evalues, test_ovalues3, 1e-3f);
     }
 
     @Test
-    public void testBnTwoNodesMotionTracking() {
+    public void test_BnRobotArmZYY_IK() {
 
-        float[] test_node1_quat = new float[] { 0.9926f, 0.0329f, 0.0973f, 0.0640f };
-        float[] test_node2_quat = new float[] { 0.9583f, -0.1367f, -0.0595f, -0.2439f };
-        float[] test_evalues = new float[] { 18.468636171839087f, -3.1761790635934757f, -0.08354223767877755f };
+        double[] test_endpoint = new double[] { 18.219124272891392, 3.8972461548699857, 1.6501078154541111 };
+        double[] test_evalues = new double[] { 0.21073373345528476,  1.120530930230784, 0.723883473845901 };
 
-        BnTwoNodesMotionTracking bnmotiontrack = new BnTwoNodesMotionTracking(
-            new float[]{ 0,0,0}, 10, 10, new float[][] { { 10, 20 }, { -5, 5}, { -5, 5} }, "cm" );
+        BnRobotArmZYY_IK bnaik = new BnRobotArmZYY_IK(
+            0, 10, 10, null, "cm" );
 
-        float[] test_ovalues = {0, 0, 0};
-        bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues );
-        assertTrue(areArraysClose(test_evalues, test_ovalues, 1e-2f, 1e-2f ));
-    }
-
-    @Test
-    public void testBnTwoNodesMotionTrackingConstraint() {
-
-        float[] test_node1_quat = new float[] { 0.8504f, 0.3678f, -0.1840f, 0.3281f };
-        float[] test_node2_quat = new float[] { 0.9293f, -0.0039f, -0.2892f, 0.2296f };
-        float[] test_evalues = new float[] { 14.443218483410508f, 5f, 5f };
-
-        BnTwoNodesMotionTracking bnmotiontrack = new BnTwoNodesMotionTracking(
-            new float[]{ 0, 0, 0 }, 10, 10, new float[][] { { 10, 20 }, { -5, 5}, { -5, 5} }, "cm" );
-
-        float[] test_ovalues = { 0, 0, 0 };
-        bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues );
-        assertTrue(areArraysClose(test_evalues, test_ovalues, 1e-2f, 1e-2f ));
-    }
-
-    @Test
-    public void testBnRobotIK_ZYY2Arms() {
-
-        float[] test_endpoint = new float[] { 18.219124272891392f, 3.8972461548699857f, 1.6501078154541111f };
-        float[] test_evalues = new float[] { 0.21073373345528476f, -0.4522653965641126f, 0.723883473845901f };
-
-        BnRobotIK_ZYY2Arms bnaik = new BnRobotIK_ZYY2Arms(
-            10, 10, new float[]{ 0, 0, 0 }, "cm" );
-
-        float[] test_ovalues = { 0, 0, 0 };
+        double[] test_ovalues = { 0, 0, 0 };
         bnaik.compute( test_endpoint, test_ovalues );
-        assertTrue(areArraysClose(test_evalues, test_ovalues, 1e-5f, 1e-3f ));
+        assertArrayEquals(test_evalues, test_ovalues, 1e-3f);
     }
 
-    /**
-     * Checks if two arrays are close to each other within given absolute and relative tolerances.
-     * 
-     * @param actual Array of actual values.
-     * @param expected Array of expected values.
-     * @param absError Absolute error tolerance.
-     * @param relError Relative error tolerance.
-     * @return True if arrays are close within tolerances, false otherwise.
-     */
-    public static boolean areArraysClose(float[] expected, float[] actual, float absError, float relError) {
-        if (actual.length != expected.length) {
-            throw new IllegalArgumentException("Arrays must be of the same length.");
-        }
+    @Test
+    public void test_BlenderSimpleLinksProj1() {
 
-        for (int i = 0; i < actual.length; i++) {
-            float diff = Math.abs(actual[i] - expected[i]);
-            float expectedValue = Math.abs(expected[i]);
+        BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
+            new double[]{ 0,0,2}, new double[]{ 0,1,0}, new double[]{ 0,1,0}, null, "cm");
 
-            // Check if the difference is within absolute or relative error bounds
-            if (diff > absError && (expectedValue == 0 || diff / expectedValue > relError)) {
-                return false;
-            }
-        }
+        // X rotation -90, -90
+        double[] node1_quat = new double[] { 0.707107, -0.707107, 0, 0 };
+        double[] node2_quat = new double[] {  0.707107, -0.707107, 0, 0 };
 
-        return true;
+        double[] test_evalues1 = new double[]{0, 0, 2};
+        double[] test_evalues2 = new double[]{0.0, -6.188980001819999e-07, 0.9999993811019998};
+        double[] test_evalues3 = new double[]{0.0, -1.2377960003639998e-06, -1.2377960003639998e-06};
+        double[] test_ovalues1 = new double[]{0, 0, 0};
+        double[] test_ovalues2 = new double[]{0, 0, 0};
+        double[] test_ovalues3 = new double[]{0, 0, 0};
+        bnmotiontrack.compute( node1_quat, node2_quat, test_ovalues1, test_ovalues2, test_ovalues3 );
+        assertArrayEquals(test_evalues1, test_ovalues1, 1e-3f);
+        assertArrayEquals(test_evalues2, test_ovalues2, 1e-3f);
+        assertArrayEquals(test_evalues3, test_ovalues3, 1e-3f);
+    }
+
+    @Test
+    public void test_BlenderSimpleLinksProj2() {
+        // Testing how to setup the blender utility functions to correspond to what Blender is giving as output. We want rotation XYZ
+        double[][] rot1 = BnUtils.blender_euler_to_rotation_matrix_degree(45,45,45);
+        double[] vec1 = new double[]{0, 1, 0};
+        double[] test_evalues = new double[]{-0.14644661,  0.85355339,  0.5 };        
+        assertArrayEquals( test_evalues, BnUtils.multiplyRotationMatrixWithVector(rot1, vec1), 1e-6f);
+    }
+
+    @Test
+    public void test_BlenderSimpleLinksProj3(){
+        // Let's check the BnRobotArmZYY_IK
+        // The arms length are 0,1,1
+        // For this type of test on Blender the Y is the python X axis
+        // This is because Blender is forcing me to do this
+        BnRobotArmZYY_IK bnaik = new BnRobotArmZYY_IK(
+            0, 1, 1, null, "cm");
+
+        double[] test_evalues = new double[]{Double.NaN,0,0};
+        double[] test_ovalues = new double[]{0, 0, 0};
+        bnaik.compute( new double[]{0, 0, 2}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+
+        test_evalues = new double[]{0, Math.toRadians(90), 0};
+        bnaik.compute( new double[]{2, 0, 0 }, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+
+        test_evalues = new double[]{0, Math.toRadians(45), Math.toRadians(45)};
+        bnaik.compute( new double[]{1.711, 0.0, 0.703}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-2f);
+
+        test_evalues = new double[]{0, Math.toRadians(45), 0};
+        bnaik.compute( new double[]{1.416, 0.0, 1.416}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+
+        test_evalues = new double[]{0, Math.toRadians(90), Math.toRadians(45)};
+        bnaik.compute( new double[]{1.707, 0.0, -0.713}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-2f);
+
+        test_evalues = new double[]{0, 0, Math.toRadians(135)};
+        bnaik.compute( new double[]{0.713, 0.0, 0.281}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-1f);
+
+        test_evalues = new double[]{Double.NaN, 0, Math.toRadians(180)};
+        bnaik.compute( new double[]{0.0, 0.0, 0.0}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+
+        test_evalues = new double[]{0, Math.toRadians(-60), Math.toRadians(150)};
+        bnaik.compute( new double[]{0.1472482681274414, 0.0, 0.497156023979187}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-1f);
+
+        test_evalues = new double[]{Math.toRadians(90), Math.toRadians(90), 0};
+        bnaik.compute( new double[]{0, 2, 0}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+
+        test_evalues = new double[]{Math.toRadians(-90), Math.toRadians(90), 0};
+        bnaik.compute( new double[]{0, -2, 0}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+
+        test_evalues = new double[]{Math.toRadians(180), Math.toRadians(90), 0};
+        bnaik.compute( new double[]{-2, 0, 0}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+
+        test_evalues = new double[]{Math.toRadians(45), Math.toRadians(45), Math.toRadians(45)};
+        bnaik.compute( new double[]{1.210, 1.210, 0.70}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-2f);
+
+        test_evalues = new double[]{Math.toRadians(45), Math.toRadians(90), Math.toRadians(0)};
+        bnaik.compute( new double[]{1.416094183921814, 1.416094183921814, 0.0}, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+    }
+
+
+    @Test
+    public void test_BnRobotArm_MT() {
+
+        // Arms along the Y axis
+        BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
+            new double[]{ 0,0,0}, new double[]{ 0,1,0}, new double[]{ 0,1,0}, null, "cm");
+
+        BnRobotArmZYY_IK bnaik = new BnRobotArmZYY_IK(
+            0, 1, 1, null, "cm");
+
+        // X rotation 45, 0 -> [ 0.0, 1.711, 0.703 ]
+        double[] node1_quat = new double[] { 0.92388, 0.382683, 0, 0 };
+        double[] node2_quat = new double[] { 1, 0, 0, 0  };
+
+        BnRobotArm_MT robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
+
+        // [90.         45.00005363 44.99993373]]
+        double[] test_evalues = new double[]{Math.toRadians(90), Math.toRadians(45.00005363), Math.toRadians(44.99993373)};
+        double[] test_ovalues = new double[]{0, 0, 0};
+
+        robotMT.compute(node1_quat, node2_quat, test_ovalues);
+        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+
+        // ---------
+        // Arms along the X axis
+        bnmotiontrack = new BnMotionTracking_2Nodes(
+            new double[]{ 0,0,0}, new double[]{ 1,0,0}, new double[]{ 1,0,0}, null, "cm");
+
+        bnaik  = new BnRobotArmZYY_IK(
+            0, 1, 1, null, "cm");
+
+        // Y rotation 80, -20 -> [ 1.12019681930542, 0.0, 0.634331464767456 ]
+        node1_quat = new double[] { 0.766044, 0, -0.642788, 0 };
+        node2_quat = new double[] { 0.984808, 0, 0.173648, 0  };
+
+        robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
+
+        // [0.         10. 100.]]
+        test_evalues = new double[]{0, Math.toRadians(9.99994606), Math.toRadians(100.00004607)};
+        test_ovalues = new double[]{0, 0, 0};
+        robotMT.compute(node1_quat, node2_quat, test_ovalues);
+        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+    }
+
+    @Test
+    public void test_BnRobotArm_MT_Constraints() {
+
+        // Arms along the Y axis
+        BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
+            new double[]{ 0,0,0}, new double[]{ 0,1,0}, new double[]{ 0,1,0}, null, "cm");
+
+        BnRobotArmZYY_IK bnaik = new BnRobotArmZYY_IK(
+            0, 1, 1,
+            new double[][]{{ Math.toRadians(-45), Math.toRadians(45) },{ 0 , Math.toRadians(90)},{0 , Math.toRadians(90)}},
+            "cm");
+
+        // X rotation 45, 0 -> [ 0.0, 1.711, 0.703 ]
+        double[] node1_quat = new double[] { 0.92388, 0.382683, 0, 0 };
+        double[] node2_quat = new double[] { 1, 0, 0, 0  };
+
+        BnRobotArm_MT robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
+
+        // [45.         45.00005363 44.99993373]]
+        double[] test_evalues = new double[]{Math.toRadians(45), Math.toRadians(45.00005363), Math.toRadians(44.99993373)};
+        double[] test_ovalues = new double[]{0, 0, 0};
+
+        robotMT.compute(node1_quat, node2_quat, test_ovalues);
+        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+
+        // ---------
+        // Arms along the X axis
+        bnmotiontrack = new BnMotionTracking_2Nodes(
+            new double[]{ 0,0,0}, new double[]{ 1,0,0}, new double[]{ 1,0,0}, null, "cm");
+
+        // The Robot IK will always assume as a starting position the arms to be pointing upwards
+        bnaik = new BnRobotArmZYY_IK(
+            0, 1, 1,
+            new double[][]{{ Math.toRadians(-90), Math.toRadians(90) },{ 0 , Math.toRadians(90)},{0 , Math.toRadians(90)}},
+            "cm");
+
+        // Z rotation 135
+        // Y rotation 10, 20 -> [ -1.3624130487442017, 1.3624131679534912, -0.5175356268882751 ]
+        node1_quat = new double[] { 0.381227, -0.080521, 0.033353, 0.920364 };
+        node2_quat = new double[] { 0.37687, -0.16043, 0.066452, 0.909844 };
+
+        robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
+
+        // [90.         90 30]]
+        test_evalues = new double[]{Math.toRadians(90), Math.toRadians(90), Math.toRadians(29.15184909)};
+        test_ovalues = new double[]{0, 0, 0};
+
+        robotMT.compute(node1_quat, node2_quat, test_ovalues);
+        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+
+        bnaik = new BnRobotArmZYY_IK(
+            0, 1, 1,
+            new double[][]{{ Math.toRadians(-90), Math.toRadians(90) },{ 0 , Math.toRadians(100)},{0 , Math.toRadians(90)}},
+            "cm");
+
+        robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
+
+        // [90.         100 10]]
+        test_evalues = new double[]{Math.toRadians(90), Math.toRadians(100), Math.toRadians(9.9999254)};
+        test_ovalues = new double[]{0, 0, 0};
+
+        robotMT.compute(node1_quat, node2_quat, test_ovalues);
+        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+
+        bnaik = new BnRobotArmZYY_IK(
+            0, 1, 1,
+            new double[][]{{ Math.toRadians(-90), Math.toRadians(90) },{ 0 , Math.toRadians(180)},{0 , Math.toRadians(90)}},
+            "cm");
+
+        robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
+
+        // [90.         100 10]]
+        test_evalues = new double[]{Math.toRadians(90), Math.toRadians(100.00035347), Math.toRadians(9.99922384)};
+        test_ovalues = new double[]{0, 0, 0};
+
+        robotMT.compute(node1_quat, node2_quat, test_ovalues);
+        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
     }
 
 }

@@ -1,7 +1,7 @@
-#!/bin/bash
+/*
 # MIT License
 # 
-# Copyright (c) 2025 Manuel Bottini
+# Copyright (c) 2024-2025 Manuel Bottini
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,29 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+*/
 
-build:
-	mvn clean compile
+package eu.bodynodesdev.common;
 
-test:
-	mvn test
+public class BnRobotArm_MT {
 
+    private BnMotionTracking_Interface mMotionTraker;
+    private BnRobotIK_Interface mRobotIK;
+
+    public BnRobotArm_MT(BnMotionTracking_Interface motionTraker, BnRobotIK_Interface robotIK){
+        mMotionTraker = motionTraker;
+        mRobotIK = robotIK;
+    }
+
+    // It only needs the angles, the endpoint is computed internally
+    // node1_quat and node2_quat are inputs
+    // outAngles in an output
+    public void compute(double[] node1_quat, double[] node2_quat, double[] outAngles) {
+        double[] initialPosition = new double[3];
+        double[] point1Position = new double[3];
+        double[] point2Position = new double[3];
+        mMotionTraker.compute( node1_quat, node2_quat, initialPosition, point1Position, point2Position );
+        mRobotIK.compute(point2Position, outAngles);
+    }
+
+}

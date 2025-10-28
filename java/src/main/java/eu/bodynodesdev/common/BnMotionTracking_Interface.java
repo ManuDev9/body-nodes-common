@@ -1,4 +1,4 @@
-#!/bin/bash
+/*
 # MIT License
 # 
 # Copyright (c) 2025 Manuel Bottini
@@ -20,10 +20,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+*/
 
-build:
-	mvn clean compile
+package eu.bodynodesdev.common;
 
-test:
-	mvn test
-
+public interface BnMotionTracking_Interface {
+    void compute(double[] node1Quat, double[] node2Quat,
+            double[] initialPosition, double[] point1Position, double[] point2Position);
+}

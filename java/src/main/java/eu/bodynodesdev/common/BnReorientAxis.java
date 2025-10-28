@@ -50,6 +50,16 @@ public class BnReorientAxis {
         }
     }
 
+    public void apply(double[] iovalues ) {
+        double[] ovalues = new double[iovalues.length];
+        for( int idv = 0; idv < iovalues.length; ++idv ) {
+            ovalues[idv] = iovalues[ mReorientAxis[idv] ] * mReorientSign[idv];
+        }
+        for( int idv = 0; idv < iovalues.length; ++idv ) {
+            iovalues[idv] = ovalues[idv];
+        }
+    }
+
     public void apply(int[] iovalues ) {
         int[] ovalues = new int[iovalues.length];
         for( int idv = 0; idv < iovalues.length; ++idv ) {

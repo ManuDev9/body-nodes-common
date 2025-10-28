@@ -26,22 +26,23 @@ package eu.bodynodesdev.common;
 
 import java.util.Arrays;
 
-public class BnTwoNodesMotionTracking {
+public class BnMotionTracking_2Nodes implements BnMotionTracking_Interface {
 
-    private float mInitialPosition[];
-    private float mLengthArm1;
-    private float mLengthArm2;
-    private float mLocationConstraints[][];
+    private double[] mInitialPosition;
+    private double[] mArmVector1;
+    private double[] mArmVector2;
+    private double[][] mLocationConstraints;
+    private String mUnits;
 
-    public BnTwoNodesMotionTracking(
-          float initialPosition[], float lengthArm1, float lengthArm2,
-          float locationConstraints[][], String units ) {
+    public BnMotionTracking_2Nodes(
+          double[] initialPosition, double[] armVector1, double[] armVector2,
+          double[][] locationConstraints, String units ) {
 
         mInitialPosition = Arrays.copyOf(initialPosition, initialPosition.length);
-        mLengthArm1 = lengthArm1;
-        mLengthArm2 = lengthArm2;
+        mArmVector1 = Arrays.copyOf(armVector1, armVector1.length);
+        mArmVector2 = Arrays.copyOf(armVector2, armVector2.length);
         if( locationConstraints != null ){
-            mLocationConstraints = new float[locationConstraints.length][];
+            mLocationConstraints = new double[locationConstraints.length][];
             for (int i = 0; i < locationConstraints.length; i++) {
                 mLocationConstraints[i] = Arrays.copyOf(locationConstraints[i], locationConstraints[i].length);
             }
@@ -49,9 +50,10 @@ public class BnTwoNodesMotionTracking {
         } else {
             mLocationConstraints = null;
         }
+        mUnits = units;
     }
   
-    private void quaternion_to_rotation_matrix( float quat[], float rotationMatrix[][] ) {
+    private void quaternion_to_rotation_matrix( double[] quat, double[][] rotationMatrix ) {
         rotationMatrix[0][0] = 1 - 2*(quat[2]*quat[2] + quat[3]*quat[3]);
         rotationMatrix[0][1] = 2*(quat[1]*quat[2] - quat[0]*quat[3]);
         rotationMatrix[0][2] = 2*(quat[1]*quat[3] + quat[0]*quat[2]);
@@ -65,45 +67,56 @@ public class BnTwoNodesMotionTracking {
         rotationMatrix[2][2] = 1 - 2*(quat[1]*quat[1] + quat[2]*quat[2]);
     }
 
-    private void matrix_multiply_3x3( float matrix[][], float vector[], float result[]) {
+    private void matrix_multiply_3x3( double[][] matrix, double[] vector, double[] result) {
         result[0] = matrix[0][0] * vector[0] + matrix[0][1] * vector[1] + matrix[0][2] * vector[2];
         result[1] = matrix[1][0] * vector[0] + matrix[1][1] * vector[1] + matrix[1][2] * vector[2];
         result[2] = matrix[2][0] * vector[0] + matrix[2][1] * vector[1] + matrix[2][2] * vector[2];
     }
 
-    public void compute( float node1Quat[], float node2Quat[], float finalPosition[] ) {
+    @Override
+    public void compute( double[] node1Quat, double[] node2Quat,
+            double[] initialPosition, double[] point1Position, double[] point2Position
+            ) {
 
-        float node1RM[][] = new float[3][3];
-        float node2RM[][] = new float[3][3];
+        double[][] node1RM = new double[3][3];
+        double[][] node2RM = new double[3][3];
         quaternion_to_rotation_matrix(node1Quat, node1RM);
         quaternion_to_rotation_matrix(node2Quat, node2RM);
 
-        float rotatedArm1[] = new float[3];
-        float rotatedArm2[] = new float[3];
-        matrix_multiply_3x3(node1RM, new float[]{ mLengthArm1, 0, 0 }, rotatedArm1 );
-        matrix_multiply_3x3(node2RM, new float[]{ mLengthArm2, 0, 0 }, rotatedArm2 );
+        double[] rotatedArm1 = new double[3];
+        double[] rotatedArm2 = new double[3];
+        matrix_multiply_3x3(node1RM, mArmVector1, rotatedArm1 );
+        matrix_multiply_3x3(node2RM, mArmVector2, rotatedArm2 );
+
+        initialPosition[0] = mInitialPosition[0];
+        initialPosition[1] = mInitialPosition[1];
+        initialPosition[2] = mInitialPosition[2];
         
-        finalPosition[0] = mInitialPosition[0] + rotatedArm1[0] + rotatedArm2[0];
-        finalPosition[1] = mInitialPosition[1] + rotatedArm1[1] + rotatedArm2[1];
-        finalPosition[2] = mInitialPosition[2] + rotatedArm1[2] + rotatedArm2[2];
+        point1Position[0] = initialPosition[0] + rotatedArm1[0];
+        point1Position[1] = initialPosition[1] + rotatedArm1[1];
+        point1Position[2] = initialPosition[2] + rotatedArm1[2];
+
+        point2Position[0] = point1Position[0] + rotatedArm2[0];
+        point2Position[1] = point1Position[1] + rotatedArm2[1];
+        point2Position[2] = point1Position[2] + rotatedArm2[2];
 
         if( mLocationConstraints != null ) {
-            if( finalPosition[0] < mLocationConstraints[0][0] ) {
-                finalPosition[0] = mLocationConstraints[0][0];
-            } else if( finalPosition[0] > mLocationConstraints[0][1] ) {
-                finalPosition[0] = mLocationConstraints[0][1];
+            if( point2Position[0] < mLocationConstraints[0][0] ) {
+                point2Position[0] = mLocationConstraints[0][0];
+            } else if( point2Position[0] > mLocationConstraints[0][1] ) {
+                point2Position[0] = mLocationConstraints[0][1];
             }
 
-            if( finalPosition[1] < mLocationConstraints[1][0] ) {
-                finalPosition[1] = mLocationConstraints[1][0];
-            } else if( finalPosition[1] > mLocationConstraints[1][1] ) {
-                finalPosition[1] = mLocationConstraints[1][1];
+            if( point2Position[1] < mLocationConstraints[1][0] ) {
+                point2Position[1] = mLocationConstraints[1][0];
+            } else if( point2Position[1] > mLocationConstraints[1][1] ) {
+                point2Position[1] = mLocationConstraints[1][1];
             }
 
-            if( finalPosition[2] < mLocationConstraints[2][0] ) {
-                finalPosition[2] = mLocationConstraints[2][0];
-            } else if( finalPosition[2] > mLocationConstraints[2][1] ) {
-                finalPosition[2] = mLocationConstraints[2][1];
+            if( point2Position[2] < mLocationConstraints[2][0] ) {
+                point2Position[2] = mLocationConstraints[2][0];
+            } else if( point2Position[2] > mLocationConstraints[2][1] ) {
+                point2Position[2] = mLocationConstraints[2][1];
             }
         }
     }
