@@ -288,7 +288,7 @@ class BnMotionTracking_2Nodes:
         return [self.initialPosition, point1Position, point2Position]
 
 
-class BnRobotArmZYY_IK:
+class BnRobotIK_ArmZYY:
 
     # All angles are in radiants
     # This is an example of anglesConstraints

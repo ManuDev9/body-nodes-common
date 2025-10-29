@@ -138,8 +138,8 @@ def test_BnMotionTracking_2Nodes_Constraints():
     assert np.allclose(test_evalues, test_ovalues, atol=1e-05, rtol=1e-03)
 
 
-def test_BnRobotArmZYY_IK():
-    bnaik = bncommon.BnRobotArmZYY_IK(
+def test_BnRobotIK_ArmZYY():
+    bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 10, lengthRA3 = 10,
         units = "cm")
 
@@ -181,11 +181,11 @@ def test_BlenderSimpleLinksProj2():
 
 
 def test_BlenderSimpleLinksProj3():
-    # Let's check the BnRobotArmZYY_IK
+    # Let's check the BnRobotIK_ArmZYY
     # The arms length are 0,1,1
     # For this type of test on Blender the Y is the python X axis
     # This is because Blender is forcing me to do this
-    bnaik = bncommon.BnRobotArmZYY_IK(
+    bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
         units = "cm")
 
@@ -204,9 +204,9 @@ def test_BlenderSimpleLinksProj3():
     assert np.allclose(np.rad2deg(bnaik.compute([1.416094183921814, 1.416094183921814, 0.0])), np.array( [45, 90,  0] ) , atol=2)
 
 def test_BnRobotArm_MT():
-    # Let's test the combination of BnMotionTracking_2Nodes and BnRobotArmZYY_IK
+    # Let's test the combination of BnMotionTracking_2Nodes and BnRobotIK_ArmZYY
     # So we will decide specific SersorArm1 and SensorArm2 rotations which will move an immaginary point (BnMotionTracking_2Nodes)
-    # The RobotArm1, RobotArm2, and RobotArm3 will follow that point (BnRobotArmZYY_IK)
+    # The RobotArm1, RobotArm2, and RobotArm3 will follow that point (BnRobotIK_ArmZYY)
     # The point is valid and no contraints apply at the moment
 
     # Remember that one makes use of global angles, the second of local angles
@@ -216,7 +216,7 @@ def test_BnRobotArm_MT():
     # Arms along the Y axis
     bnmotiontrack = bncommon.BnMotionTracking_2Nodes(
         initialPosition = [0,0,0], armVector1 = [0,1,0], armVector2 = [0,1,0] )
-    bnaik = bncommon.BnRobotArmZYY_IK(
+    bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
         units = "cm")
 
@@ -235,7 +235,7 @@ def test_BnRobotArm_MT():
     # Arms along the X axis
     bnmotiontrack = bncommon.BnMotionTracking_2Nodes(
         initialPosition = [0,0,0], armVector1 = [1,0,0], armVector2 = [1,0,0] )
-    bnaik = bncommon.BnRobotArmZYY_IK(
+    bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
         units = "cm")
 
@@ -251,7 +251,7 @@ def test_BnRobotArm_MT():
 
 
 def test_BnRobotArm_MT_Constraints():
-    # Let's test the combination of BnMotionTracking_2Nodes and BnRobotArmZYY_IK
+    # Let's test the combination of BnMotionTracking_2Nodes and BnRobotIK_ArmZYY
     # and some contraints on the Robot.
     # Sensors can give any values but Robots have physical limitions
 
@@ -260,7 +260,7 @@ def test_BnRobotArm_MT_Constraints():
     # Arms along the Y axis
     bnmotiontrack = bncommon.BnMotionTracking_2Nodes(
         initialPosition = [0,0,0], armVector1 = [0,1,0], armVector2 = [0,1,0] )
-    bnaik = bncommon.BnRobotArmZYY_IK(
+    bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
         anglesConstraints = np.deg2rad([ [ -45, 45 ], [0 , 90], [0, 90 ] ]).tolist(),
         units = "cm")
@@ -280,7 +280,7 @@ def test_BnRobotArm_MT_Constraints():
     bnmotiontrack = bncommon.BnMotionTracking_2Nodes(
         initialPosition = [0,0,0], armVector1 = [1,0,0], armVector2 = [1,0,0] )
     # The Robot IK will always assume as a starting position the arms to be pointing upwards
-    bnaik = bncommon.BnRobotArmZYY_IK(
+    bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
         anglesConstraints = np.deg2rad([ [ -90, 90 ], [0 , 90], [0, 90 ] ]).tolist(),
         units = "cm")
@@ -296,7 +296,7 @@ def test_BnRobotArm_MT_Constraints():
     robotangles = robotMT.compute(node1_quat, node2_quat)
     assert np.allclose( np.rad2deg(robotangles), np.array([90, 90, 29.15184909] ))
 
-    bnaik = bncommon.BnRobotArmZYY_IK(
+    bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
         anglesConstraints = np.deg2rad([ [ -90, 90 ], [0 , 100], [0, 90 ] ]).tolist(),
         units = "cm")
@@ -305,7 +305,7 @@ def test_BnRobotArm_MT_Constraints():
     robotangles = robotMT.compute(node1_quat, node2_quat)
     assert np.allclose( np.rad2deg(robotangles), np.array([90, 100, 9.9999254] ))
 
-    bnaik = bncommon.BnRobotArmZYY_IK(
+    bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
         anglesConstraints = np.deg2rad([ [ -90, 90 ], [0 , 180], [0, 90 ] ]).tolist(),
         units = "cm")

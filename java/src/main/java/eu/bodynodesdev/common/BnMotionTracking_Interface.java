@@ -25,6 +25,5 @@
 package eu.bodynodesdev.common;
 
 public interface BnMotionTracking_Interface {
-    void compute(double[] node1Quat, double[] node2Quat,
-            double[] initialPosition, double[] point1Position, double[] point2Position);
+    void compute(double[] node1Quat, double[] node2Quat, double[][] endpositions);
 }

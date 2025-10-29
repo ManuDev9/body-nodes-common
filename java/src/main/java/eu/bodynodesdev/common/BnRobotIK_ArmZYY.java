@@ -26,7 +26,7 @@ package eu.bodynodesdev.common;
 
 import java.util.Arrays;
 
-public class BnRobotArmZYY_IK implements BnRobotIK_Interface {
+public class BnRobotIK_ArmZYY implements BnRobotIK_Interface {
 
     private double mTheta_RA1;
     private double mGamma_RA2;
@@ -41,7 +41,7 @@ public class BnRobotArmZYY_IK implements BnRobotIK_Interface {
     // This is an example of anglesConstraints
     // anglesConstraints = [ [ -math.pi/2, math.pi/2 ], [0 , math.pi/2], [0, math.pi/2 ] ]
     // Starting Point is assumed to be [0, 0, 0]
-    public BnRobotArmZYY_IK( double lengthRA1, double lengthRA2, double lengthRA3, double[][] anglesConstraints, String units ) {
+    public BnRobotIK_ArmZYY( double lengthRA1, double lengthRA2, double lengthRA3, double[][] anglesConstraints, String units ) {
         mTheta_RA1 = 0;
         mGamma_RA2 = 0;
         mGamma_RA3 = 0;
@@ -66,9 +66,10 @@ public class BnRobotArmZYY_IK implements BnRobotIK_Interface {
     // y rotation gamma 
     // z rotation theta 
     // endpoint is expected to be an array of 3 elements: [ x, y, z ]. It is an input parameter
-    // outAngles is expected to be an array of 3 elements: [ theta_RA1, gamma_RA2, gamma_RA3 ]. It is the output paramater
+    // outAngles is expected to be an array of 3 x 3 elements: [ [0,0,theta_RA1] , [0, gamma_RA2,0], [0,gamma_RA3,0 ]
+    //           it is the output paramater
     @Override
-    public void compute( double[] endpoint, double[] outAngles ) {
+    public void compute( double[] endpoint, double[][] outAngles ) {
 
         // First let'z find the Z rotation of Arm1 [ x, y, z ]
         if(endpoint[0] == 0 && endpoint[1] == 0) {
@@ -157,9 +158,9 @@ public class BnRobotArmZYY_IK implements BnRobotIK_Interface {
             }
         }
 
-        outAngles[0] = mTheta_RA1;
-        outAngles[1] = mGamma_RA2;
-        outAngles[2] = mGamma_RA3;
+        outAngles[0][2] = mTheta_RA1;
+        outAngles[1][1] = mGamma_RA2;
+        outAngles[2][1] = mGamma_RA3;
 
     }
 

@@ -37,12 +37,10 @@ public class BnRobotArm_MT {
     // It only needs the angles, the endpoint is computed internally
     // node1_quat and node2_quat are inputs
     // outAngles in an output
-    public void compute(double[] node1_quat, double[] node2_quat, double[] outAngles) {
-        double[] initialPosition = new double[3];
-        double[] point1Position = new double[3];
-        double[] point2Position = new double[3];
-        mMotionTraker.compute( node1_quat, node2_quat, initialPosition, point1Position, point2Position );
-        mRobotIK.compute(point2Position, outAngles);
+    // positions is just to store data, so the MT does not need to do guess what should be the size
+    public void compute(double[] node1_quat, double[] node2_quat, double[][] positions, double[][] outAngles) {
+        mMotionTraker.compute( node1_quat, node2_quat, positions );
+        mRobotIK.compute(positions[positions.length-1], outAngles);
     }
 
 }

@@ -25,5 +25,5 @@
 package eu.bodynodesdev.common;
 
 public interface BnRobotIK_Interface {
-    void compute(double[] endpoint, double[] outAngles);
+    void compute(double[] endpoint, double[][] outAngles);
 }

@@ -74,9 +74,11 @@ public class BnMotionTracking_2Nodes implements BnMotionTracking_Interface {
     }
 
     @Override
-    public void compute( double[] node1Quat, double[] node2Quat,
-            double[] initialPosition, double[] point1Position, double[] point2Position
-            ) {
+    public void compute( double[] node1Quat, double[] node2Quat, double[][] endpositions) {
+
+        double[] initialPosition = endpositions[0];
+        double[] point1Position = endpositions[1];
+        double[] point2Position = endpositions[2];
 
         double[][] node1RM = new double[3][3];
         double[][] node2RM = new double[3][3];

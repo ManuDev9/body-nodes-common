@@ -28,7 +28,7 @@ import eu.bodynodesdev.common.BnAxisConfig;
 import eu.bodynodesdev.common.BnUtils;
 import eu.bodynodesdev.common.BnReorientAxis;
 import eu.bodynodesdev.common.BnMotionTracking_2Nodes;
-import eu.bodynodesdev.common.BnRobotArmZYY_IK;
+import eu.bodynodesdev.common.BnRobotIK_ArmZYY;
 import eu.bodynodesdev.common.BnRobotArm_MT;
 
 
@@ -222,11 +222,13 @@ public class TestBnCommon {
         double[] test_node2_quat = new double[] { 0.9583, -0.1367, -0.0595, -0.2439 };
         double[] test_evalues = new double[] { 18.468636171839087, -3.1761790635934757, -0.08354223767877755 };
 
-        double[] test_ovalues1 = new double[]{0, 0, 0};
-        double[] test_ovalues2 = new double[]{0, 0, 0};
-        double[] test_ovalues3 = new double[]{0, 0, 0};
-        bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues1, test_ovalues2, test_ovalues3 );
-        assertArrayEquals(test_evalues, test_ovalues3, 1e-2f);
+        double[][] test_ovalues = new double[][] { 
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0},
+        };
+        bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues );
+        assertArrayEquals(test_evalues, test_ovalues[2], 1e-2f);
     }
 
 
@@ -240,25 +242,35 @@ public class TestBnCommon {
         double[] test_node2_quat = new double[] { 0.9293, -0.0039, -0.2892, 0.2296 };
         double[] test_evalues = new double[] { 14.443218483410508, 5, 5 };
 
-        double[] test_ovalues1 = new double[]{0, 0, 0};
-        double[] test_ovalues2 = new double[]{0, 0, 0};
-        double[] test_ovalues3 = new double[]{0, 0, 0};
-        bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues1, test_ovalues2, test_ovalues3 );
-        assertArrayEquals(test_evalues, test_ovalues3, 1e-3f);
+        double[][] test_ovalues = new double[][] { 
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0},
+        };
+        bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues);
+        assertArrayEquals(test_evalues, test_ovalues[2], 1e-3f);
     }
 
     @Test
-    public void test_BnRobotArmZYY_IK() {
+    public void test_BnRobotIK_ArmZYY() {
 
         double[] test_endpoint = new double[] { 18.219124272891392, 3.8972461548699857, 1.6501078154541111 };
-        double[] test_evalues = new double[] { 0.21073373345528476,  1.120530930230784, 0.723883473845901 };
 
-        BnRobotArmZYY_IK bnaik = new BnRobotArmZYY_IK(
+        BnRobotIK_ArmZYY bnaik = new BnRobotIK_ArmZYY(
             0, 10, 10, null, "cm" );
 
-        double[] test_ovalues = { 0, 0, 0 };
+        double[][] test_evalues = new double[][] {
+            { 0, 0, 0.21073373345528476 },
+            { 0, 1.120530930230784, 0 },
+            { 0, 0.723883473845901, 0 }};
+        double[][] test_ovalues =  new double[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }};
         bnaik.compute( test_endpoint, test_ovalues );
-        assertArrayEquals(test_evalues, test_ovalues, 1e-3f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-3f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-3f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-3f);
     }
 
     @Test
@@ -271,16 +283,21 @@ public class TestBnCommon {
         double[] node1_quat = new double[] { 0.707107, -0.707107, 0, 0 };
         double[] node2_quat = new double[] {  0.707107, -0.707107, 0, 0 };
 
-        double[] test_evalues1 = new double[]{0, 0, 2};
-        double[] test_evalues2 = new double[]{0.0, -6.188980001819999e-07, 0.9999993811019998};
-        double[] test_evalues3 = new double[]{0.0, -1.2377960003639998e-06, -1.2377960003639998e-06};
-        double[] test_ovalues1 = new double[]{0, 0, 0};
-        double[] test_ovalues2 = new double[]{0, 0, 0};
-        double[] test_ovalues3 = new double[]{0, 0, 0};
-        bnmotiontrack.compute( node1_quat, node2_quat, test_ovalues1, test_ovalues2, test_ovalues3 );
-        assertArrayEquals(test_evalues1, test_ovalues1, 1e-3f);
-        assertArrayEquals(test_evalues2, test_ovalues2, 1e-3f);
-        assertArrayEquals(test_evalues3, test_ovalues3, 1e-3f);
+        double[][] test_evalues = new double[][] {
+            {0, 0, 2},
+            {0.0, -6.188980001819999e-07, 0.9999993811019998},
+            {0.0, -1.2377960003639998e-06, -1.2377960003639998e-06},
+        };
+
+        double[][] test_ovalues = new double[][] { 
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0},
+        };
+        bnmotiontrack.compute( node1_quat, node2_quat, test_ovalues );
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-3f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-3f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-3f);
     }
 
     @Test
@@ -294,65 +311,133 @@ public class TestBnCommon {
 
     @Test
     public void test_BlenderSimpleLinksProj3(){
-        // Let's check the BnRobotArmZYY_IK
+        // Let's check the BnRobotIK_ArmZYY
         // The arms length are 0,1,1
         // For this type of test on Blender the Y is the python X axis
         // This is because Blender is forcing me to do this
-        BnRobotArmZYY_IK bnaik = new BnRobotArmZYY_IK(
+        BnRobotIK_ArmZYY bnaik = new BnRobotIK_ArmZYY(
             0, 1, 1, null, "cm");
 
-        double[] test_evalues = new double[]{Double.NaN,0,0};
-        double[] test_ovalues = new double[]{0, 0, 0};
+       double[][] test_evalues = new double[][] {
+            { 0, 0, Double.NaN },
+            { 0, 0, 0 },
+            { 0, 0, 0 }};
+        double[][] test_ovalues =  new double[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }};
         bnaik.compute( new double[]{0, 0, 2}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        test_evalues = new double[]{0, Math.toRadians(90), 0};
+        test_evalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, Math.toRadians(90), 0 },
+            { 0, 0, 0 }};
         bnaik.compute( new double[]{2, 0, 0 }, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        test_evalues = new double[]{0, Math.toRadians(45), Math.toRadians(45)};
+        test_evalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, Math.toRadians(45), 0 },
+            { 0, Math.toRadians(45), 0 }};
         bnaik.compute( new double[]{1.711, 0.0, 0.703}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-2f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-2f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-2f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-2f);
 
-        test_evalues = new double[]{0, Math.toRadians(45), 0};
+        test_evalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, Math.toRadians(45), 0 },
+            { 0, 0, 0 }};
         bnaik.compute( new double[]{1.416, 0.0, 1.416}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        test_evalues = new double[]{0, Math.toRadians(90), Math.toRadians(45)};
+        test_evalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, Math.toRadians(90), 0 },
+            { 0, Math.toRadians(45), 0 }};
         bnaik.compute( new double[]{1.707, 0.0, -0.713}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-2f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-2f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-2f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-2f);
 
-        test_evalues = new double[]{0, 0, Math.toRadians(135)};
+        test_evalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, Math.toRadians(135), 0 }};
         bnaik.compute( new double[]{0.713, 0.0, 0.281}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-1f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-1f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-1f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-1f);
 
-        test_evalues = new double[]{Double.NaN, 0, Math.toRadians(180)};
+        test_evalues = new double[][] {
+            { 0, 0, Double.NaN },
+            { 0, 0, 0 },
+            { 0, Math.toRadians(180), 0 }};
         bnaik.compute( new double[]{0.0, 0.0, 0.0}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        test_evalues = new double[]{0, Math.toRadians(-60), Math.toRadians(150)};
+        test_evalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, Math.toRadians(-60), 0 },
+            { 0, Math.toRadians(150), 0 }};
         bnaik.compute( new double[]{0.1472482681274414, 0.0, 0.497156023979187}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-1f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-1f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-1f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-1f);
 
-        test_evalues = new double[]{Math.toRadians(90), Math.toRadians(90), 0};
+        test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(90) },
+            { 0, Math.toRadians(90), 0 },
+            { 0, 0, 0 }};
         bnaik.compute( new double[]{0, 2, 0}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        test_evalues = new double[]{Math.toRadians(-90), Math.toRadians(90), 0};
+        test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(-90) },
+            { 0, Math.toRadians(90), 0 },
+            { 0, 0, 0 }};
         bnaik.compute( new double[]{0, -2, 0}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        test_evalues = new double[]{Math.toRadians(180), Math.toRadians(90), 0};
+        test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(180) },
+            { 0, Math.toRadians(90), 0 },
+            { 0, 0, 0 }};
         bnaik.compute( new double[]{-2, 0, 0}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        test_evalues = new double[]{Math.toRadians(45), Math.toRadians(45), Math.toRadians(45)};
+        test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(45) },
+            { 0, Math.toRadians(45), 0 },
+            { 0, Math.toRadians(45), 0 }};
         bnaik.compute( new double[]{1.210, 1.210, 0.70}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-2f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-2f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-2f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-2f);
 
-        test_evalues = new double[]{Math.toRadians(45), Math.toRadians(90), Math.toRadians(0)};
+        test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(45) },
+            { 0, Math.toRadians(90), 0 },
+            { 0, 0, 0 }};
         bnaik.compute( new double[]{1.416094183921814, 1.416094183921814, 0.0}, test_ovalues);
-        assertArrayEquals(test_evalues, test_ovalues, 1e-6f);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
     }
 
 
@@ -363,28 +448,40 @@ public class TestBnCommon {
         BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
             new double[]{ 0,0,0}, new double[]{ 0,1,0}, new double[]{ 0,1,0}, null, "cm");
 
-        BnRobotArmZYY_IK bnaik = new BnRobotArmZYY_IK(
+        BnRobotIK_ArmZYY bnaik = new BnRobotIK_ArmZYY(
             0, 1, 1, null, "cm");
 
         // X rotation 45, 0 -> [ 0.0, 1.711, 0.703 ]
+        double[][] endpos = new double[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }};
         double[] node1_quat = new double[] { 0.92388, 0.382683, 0, 0 };
         double[] node2_quat = new double[] { 1, 0, 0, 0  };
 
         BnRobotArm_MT robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
 
         // [90.         45.00005363 44.99993373]]
-        double[] test_evalues = new double[]{Math.toRadians(90), Math.toRadians(45.00005363), Math.toRadians(44.99993373)};
-        double[] test_ovalues = new double[]{0, 0, 0};
+        double[][] test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(90) },
+            { 0, Math.toRadians(45.00005363), 0 },
+            { 0,  Math.toRadians(44.99993373), 0 }};
+        double[][] test_ovalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }};
 
-        robotMT.compute(node1_quat, node2_quat, test_ovalues);
-        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+        robotMT.compute(node1_quat, node2_quat, endpos, test_ovalues);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
         // ---------
         // Arms along the X axis
         bnmotiontrack = new BnMotionTracking_2Nodes(
             new double[]{ 0,0,0}, new double[]{ 1,0,0}, new double[]{ 1,0,0}, null, "cm");
 
-        bnaik  = new BnRobotArmZYY_IK(
+        bnaik  = new BnRobotIK_ArmZYY(
             0, 1, 1, null, "cm");
 
         // Y rotation 80, -20 -> [ 1.12019681930542, 0.0, 0.634331464767456 ]
@@ -394,10 +491,15 @@ public class TestBnCommon {
         robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
 
         // [0.         10. 100.]]
-        test_evalues = new double[]{0, Math.toRadians(9.99994606), Math.toRadians(100.00004607)};
-        test_ovalues = new double[]{0, 0, 0};
-        robotMT.compute(node1_quat, node2_quat, test_ovalues);
-        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+        test_evalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, Math.toRadians(9.99994606), 0 },
+            { 0,  Math.toRadians(100.00004607), 0 }};
+
+        robotMT.compute(node1_quat, node2_quat, endpos, test_ovalues);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
     }
 
     @Test
@@ -407,10 +509,15 @@ public class TestBnCommon {
         BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
             new double[]{ 0,0,0}, new double[]{ 0,1,0}, new double[]{ 0,1,0}, null, "cm");
 
-        BnRobotArmZYY_IK bnaik = new BnRobotArmZYY_IK(
+        BnRobotIK_ArmZYY bnaik = new BnRobotIK_ArmZYY(
             0, 1, 1,
             new double[][]{{ Math.toRadians(-45), Math.toRadians(45) },{ 0 , Math.toRadians(90)},{0 , Math.toRadians(90)}},
             "cm");
+
+        double[][] endpos = new double[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }};
 
         // X rotation 45, 0 -> [ 0.0, 1.711, 0.703 ]
         double[] node1_quat = new double[] { 0.92388, 0.382683, 0, 0 };
@@ -419,19 +526,26 @@ public class TestBnCommon {
         BnRobotArm_MT robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
 
         // [45.         45.00005363 44.99993373]]
-        double[] test_evalues = new double[]{Math.toRadians(45), Math.toRadians(45.00005363), Math.toRadians(44.99993373)};
-        double[] test_ovalues = new double[]{0, 0, 0};
+        double[][] test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(45) },
+            { 0, Math.toRadians(45.00005363), 0 },
+            { 0,  Math.toRadians(44.99993373), 0 }};
+         double[][] test_ovalues = new double[][] {
+            { 0, 0, 0 },
+            { 0, 0, 0 },
+            { 0, 0, 0 }};
 
-        robotMT.compute(node1_quat, node2_quat, test_ovalues);
-        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
-
+        robotMT.compute(node1_quat, node2_quat, endpos, test_ovalues);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
         // ---------
         // Arms along the X axis
         bnmotiontrack = new BnMotionTracking_2Nodes(
             new double[]{ 0,0,0}, new double[]{ 1,0,0}, new double[]{ 1,0,0}, null, "cm");
 
         // The Robot IK will always assume as a starting position the arms to be pointing upwards
-        bnaik = new BnRobotArmZYY_IK(
+        bnaik = new BnRobotIK_ArmZYY(
             0, 1, 1,
             new double[][]{{ Math.toRadians(-90), Math.toRadians(90) },{ 0 , Math.toRadians(90)},{0 , Math.toRadians(90)}},
             "cm");
@@ -444,13 +558,17 @@ public class TestBnCommon {
         robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
 
         // [90.         90 30]]
-        test_evalues = new double[]{Math.toRadians(90), Math.toRadians(90), Math.toRadians(29.15184909)};
-        test_ovalues = new double[]{0, 0, 0};
+        test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(90) },
+            { 0, Math.toRadians(90), 0 },
+            { 0,  Math.toRadians(29.15184909), 0 }};
 
-        robotMT.compute(node1_quat, node2_quat, test_ovalues);
-        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+        robotMT.compute(node1_quat, node2_quat, endpos, test_ovalues);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        bnaik = new BnRobotArmZYY_IK(
+        bnaik = new BnRobotIK_ArmZYY(
             0, 1, 1,
             new double[][]{{ Math.toRadians(-90), Math.toRadians(90) },{ 0 , Math.toRadians(100)},{0 , Math.toRadians(90)}},
             "cm");
@@ -458,13 +576,17 @@ public class TestBnCommon {
         robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
 
         // [90.         100 10]]
-        test_evalues = new double[]{Math.toRadians(90), Math.toRadians(100), Math.toRadians(9.9999254)};
-        test_ovalues = new double[]{0, 0, 0};
+        test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(90) },
+            { 0, Math.toRadians(100), 0 },
+            { 0,  Math.toRadians(9.9999254), 0 }};
 
-        robotMT.compute(node1_quat, node2_quat, test_ovalues);
-        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+        robotMT.compute(node1_quat, node2_quat, endpos, test_ovalues);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
 
-        bnaik = new BnRobotArmZYY_IK(
+        bnaik = new BnRobotIK_ArmZYY(
             0, 1, 1,
             new double[][]{{ Math.toRadians(-90), Math.toRadians(90) },{ 0 , Math.toRadians(180)},{0 , Math.toRadians(90)}},
             "cm");
@@ -472,11 +594,15 @@ public class TestBnCommon {
         robotMT = new BnRobotArm_MT( bnmotiontrack, bnaik );
 
         // [90.         100 10]]
-        test_evalues = new double[]{Math.toRadians(90), Math.toRadians(100.00035347), Math.toRadians(9.99922384)};
-        test_ovalues = new double[]{0, 0, 0};
+        test_evalues = new double[][] {
+            { 0, 0, Math.toRadians(90) },
+            { 0, Math.toRadians(100.00035347), 0 },
+            { 0,  Math.toRadians(9.99922384), 0 }};
 
-        robotMT.compute(node1_quat, node2_quat, test_ovalues);
-        assertArrayEquals( test_ovalues, test_ovalues , 1e-6f);
+        robotMT.compute(node1_quat, node2_quat, endpos, test_ovalues);
+        assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-6f);
+        assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-6f);
+        assertArrayEquals(test_evalues[2], test_ovalues[2], 1e-6f);
     }
 
 }
