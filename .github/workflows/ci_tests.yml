@@ -42,7 +42,7 @@ jobs:
       run: pip install pytest
 
     - name: Install dependencies
-      run: pip install -r python/requirements
+      run: pip install -r python/requirements.txt
       
     - name: Run Python Tests
       working-directory: ./python
