@@ -46,7 +46,6 @@ public class BnMotionTracking_2Nodes implements BnMotionTracking_Interface {
             for (int i = 0; i < locationConstraints.length; i++) {
                 mLocationConstraints[i] = Arrays.copyOf(locationConstraints[i], locationConstraints[i].length);
             }
-            mLocationConstraints = Arrays.copyOf(locationConstraints, locationConstraints.length);
         } else {
             mLocationConstraints = null;
         }

@@ -26,7 +26,6 @@ import eu.bodynodesdev.common.BnConstants;
 import eu.bodynodesdev.common.BnQuaternion;
 import eu.bodynodesdev.common.BnAxisConfig;
 import eu.bodynodesdev.common.BnUtils;
-import eu.bodynodesdev.common.BnReorientAxis;
 import eu.bodynodesdev.common.BnMotionTracking_2Nodes;
 import eu.bodynodesdev.common.BnRobotIK_ArmZYY;
 import eu.bodynodesdev.common.BnRobotArm_MT;
@@ -181,11 +180,11 @@ public class TestBnCommon {
 
 
     @Test
-    public void test_BnReorientAxis() {
+    public void test_BnAxisConfig() {
 
         int[] test_io_axis = new int[]{ 3, 2, 1, 0 };
         int[] test_io_sign = new int[]{ -1, -1, -1, -1 };
-        BnReorientAxis test_obj = new BnReorientAxis();
+        BnAxisConfig test_obj = new BnAxisConfig();
         test_obj.config( test_io_axis, test_io_sign );
 
         float[] test_ivaluesF = new float[]{ 3f, 4.5f, 2f, 10.2f };
