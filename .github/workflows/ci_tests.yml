@@ -38,9 +38,11 @@ jobs:
       with:
         python-version: '3.12.X'
         
+    - name: Install pytest
+      run: pip install pytest
+
     - name: Install dependencies
       run: pip install -r python/requirements
-      run: pip install pytest
       
     - name: Run Python Tests
       working-directory: ./python
