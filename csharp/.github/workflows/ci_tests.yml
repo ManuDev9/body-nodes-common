@@ -1,0 +1,46 @@
+name: Testing all libraries
+
+# Trigger the workflow on pushes to main and any pull request
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  # -----------------------------------------------------------------
+  # Testing Java ( Maven and JUnit )
+  # -----------------------------------------------------------------
+  java_tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+
+    - name: Run Maven Tests
+      working-directory: ./java
+      run: make test
+
+  # -----------------------------------------------------------------
+  # Testing Python ( pytest)
+  # -----------------------------------------------------------------
+  python_tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12.X'
+        
+    - name: Install dependencies
+      run: pip install pytest
+      
+    - name: Run Python Tests
+      working-directory: ./python
+      run: make test
