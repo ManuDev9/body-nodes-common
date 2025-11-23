@@ -40,6 +40,7 @@ class BnConstants(metaclass=_ConstMeta):
     PLAYER_ALL_TAG =     "all"
     PLAYER_NONE_TAG =    "none"
 
+    BODYPART_NONE_TAG =            "none"
     BODYPART_HEAD_TAG =            "head"
     BODYPART_HAND_LEFT_TAG =       "hand_left"
     BODYPART_LOWERARM_LEFT_TAG =   "lowerarm_left"

@@ -36,7 +36,7 @@ popd
 
 echo "Testing csharp"
 pushd csharp
-output_txt+=$(./run_tests.sh)$'\n'
+output_txt+=$(make test)$'\n'
 popd
 
 echo "Testing cpp"

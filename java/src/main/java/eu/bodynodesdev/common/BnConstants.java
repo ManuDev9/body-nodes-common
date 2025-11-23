@@ -39,6 +39,7 @@ public class BnConstants {
     public static final String PLAYER_NONE_TAG =    "none";
 
     // BODYPARTS
+    public static final String BODYPART_NONE_TAG =            "none";
     public static final String BODYPART_HEAD_TAG =            "head";
     public static final String BODYPART_HAND_LEFT_TAG =       "hand_left";
     public static final String BODYPART_LOWERARM_LEFT_TAG =   "lowerarm_left";
