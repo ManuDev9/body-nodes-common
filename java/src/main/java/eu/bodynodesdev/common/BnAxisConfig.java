@@ -25,43 +25,59 @@
 package eu.bodynodesdev.common;
 
 public class BnAxisConfig {
-    
-    public int newWsign = 1;
-    public int newXsign = 1;
-    public int newYsign = 1;
-    public int newZsign = 1;
-        
-    public int newWval = 0;
-    public int newXval = 1;
-    public int newYval = 2;
-    public int newZval = 3;
 
-    // Config with default values
-    public BnAxisConfig(){}
+    private int[] mAxis;
+    private int[] mSign;
+
+    public BnAxisConfig() {
+        mAxis = new int[]{ 0, 1, 2, 3 };
+        mSign = new int[]{ 1, 1, 1, 1 };
+    }
 
     public BnAxisConfig( int[] pureArray ){
-        newWsign = pureArray[0];
-        newXsign = pureArray[1];
-        newYsign = pureArray[2];
-        newZsign = pureArray[3];
-
-        newWval = pureArray[4];
-        newXval = pureArray[5];
-        newYval = pureArray[6];
-        newZval = pureArray[7];
+        mSign = new int[]{ pureArray[0], pureArray[1], pureArray[2], pureArray[3] };
+        mAxis = new int[]{ pureArray[4], pureArray[5], pureArray[6], pureArray[7] };
     }
 
     public BnAxisConfig( int signW, int signX, int signY, int signZ, int valW, int valX, int valY, int valZ){
-        newWsign = signW;
-        newXsign = signX;
-        newYsign = signY;
-        newZsign = signZ;
-
-        newWval = valW;
-        newXval = valX;
-        newYval = valY;
-        newZval = valZ;
+        mSign = new int[]{ signW, signX, signY, signZ };
+        mAxis = new int[]{ valW, valX, valY, valZ };
     }
 
+    public void config( int[] ioAxis, int[] ioSign ) {
+        for( int idv = 0; idv < ioAxis.length; ++idv ) {
+            mAxis[idv] = ioAxis[idv];
+            mSign[idv] = ioSign[idv];
+        }
+    }
 
+    public void apply( float[] iovalues ) {
+        float[] ovalues = new float[iovalues.length];
+        for( int idv = 0; idv < iovalues.length; ++idv ) {
+            ovalues[idv] = iovalues[ mAxis[idv] ] * mSign[idv] ;
+        }
+        for( int idv = 0; idv < iovalues.length; ++idv ) {
+            iovalues[idv] = ovalues[idv];
+        }
+    }
+
+    public void apply( double[] iovalues ) {
+        double[] ovalues = new double[iovalues.length];
+        for( int idv = 0; idv < iovalues.length; ++idv ) {
+            ovalues[idv] = iovalues[ mAxis[idv] ] * mSign[idv] ;
+        }
+        for( int idv = 0; idv < iovalues.length; ++idv ) {
+            iovalues[idv] = ovalues[idv];
+        }
+    }
+
+    public void apply( int[] iovalues ) {
+        int[] ovalues = new int[iovalues.length];
+        for( int idv = 0; idv < iovalues.length; ++idv ) { 
+            ovalues[idv] = iovalues[ mAxis[idv] ] * mSign[idv] ;
+        }
+        for( int idv = 0; idv < iovalues.length; ++idv ) {
+            iovalues[idv] = ovalues[idv];
+        }
+    }
 }

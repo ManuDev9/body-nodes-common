@@ -93,12 +93,8 @@ public class BnUtils {
     }
 
     public static BnQuaternion createQuanternion(BnAxisConfig axis_config, double[] values) {
-        return new BnQuaternion(
-            axis_config.newWsign * values[axis_config.newWval],
-            axis_config.newXsign * values[axis_config.newXval],
-            axis_config.newYsign * values[axis_config.newYval],
-            axis_config.newZsign * values[axis_config.newZval]
-        );
+        axis_config.apply(values);
+        return new BnQuaternion(values);
     }
 
     /** This trasformation ignores what is the local axis of the object once rotated, we don't trust those axis system which might be compromised
