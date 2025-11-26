@@ -28,7 +28,7 @@ public class BnUtils {
 
     // Prevent instantiation
     private BnUtils() {
-        throw new UnsupportedOperationException("Class cannot be instantiated");
+        throw new UnsupportedOperationException("This is a static class. It cannot be instantiated.");
     }
 
     // Function to multiply two rotation matrices

@@ -31,7 +31,7 @@ public class BnConstants {
 
     // Prevent instantiation
      private BnConstants() {
-        throw new UnsupportedOperationException("Class cannot be instantiated");
+        throw new UnsupportedOperationException("This is a static class. It cannot be instantiated.");
     }
 
     // PLAYER NAMES CASES

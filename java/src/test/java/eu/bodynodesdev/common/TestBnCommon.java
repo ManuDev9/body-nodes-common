@@ -46,7 +46,7 @@ import static org.junit.Assert.*;
 public class TestBnCommon {
 
 
-     @Test
+    @Test
     public void test_BnConstants() throws IOException {
 
         Constructor<BnConstants> constructor = null;
@@ -135,20 +135,20 @@ public class TestBnCommon {
         double[][] expected = new double[][] {{ 0.52174769, -0.07324637, -0.8499496 }, { 0.01648888, -0.99525533,  0.09589024}, {-0.85294048, -0.06404523, -0.51806442}};
         double delta = 0.001;
         for (int i = 0; i < expected.length; i++) {
-            assertArrayEquals( expected[i], expected[i] , delta);
+            assertArrayEquals( actual[i], expected[i] , delta);
         }
 
         actual = BnUtils.blender_euler_to_rotation_matrix_degree(30, 40, 50);
         expected = new double[][] {{ 0.49240388, -0.45682599,  0.74084306 }, {0.58682409,  0.80287234,  0.10504046}, {-0.64278761,  0.38302222,  0.66341395}};
         for (int i = 0; i < expected.length; i++) {
-            assertArrayEquals( expected[i], expected[i] , delta);
+            assertArrayEquals( actual[i], expected[i] , delta);
         }
 
         actual = BnUtils.multiplyRotationMatrices( new double[][] {{1,2,3}, {4,5,6}, {1,2,3}}, new double[][] {{4,5,3}, {1,5,8}, {9,1,4 }} );
         expected = new double[][] {{ 33, 18, 31}, {75, 51, 76}, {33, 18, 31 }};
 
         for (int i = 0; i < expected.length; i++) {
-            assertArrayEquals( expected[i], expected[i] , delta);
+            assertArrayEquals( actual[i], expected[i] , delta);
         }
 
         BnAxisConfig axisConfig = new BnAxisConfig( 1,-1,-1, 1, 0, 1, 3, 2); 
@@ -207,7 +207,6 @@ public class TestBnCommon {
         int[] test_evaluesI = new int[]{ -10, -2, -4, -3 };
         test_obj.apply( test_ovaluesI );
         assertArrayEquals(test_evaluesI, test_ovaluesI);
-
     }
 
 
