@@ -15,9 +15,16 @@ file. Raise an issue if you find any problems.
 
 
 Modules:
-  - BnReorientAxis: This is an utility object to easily reorient the axis of bodynodes data to the main
-                    application in cases where the axis references are different 
-  - TODO
-
-
+  - BnConstants: It contains all the main constants values in use by all the projects. Version dependent
+  - BnAxisConfig: This is an utility object to easily reorient the axis of bodynodes data to the main
+                  application in cases where the axis references are different 
+  - BnUtils: It contains various utility functions
+  - MotionTracking:
+    - BnMotionTracking_2Nodes: Motion Tracking object for two bodynodes. It returns the endpoint given arms data
+  - RobotIK:
+    - BnRobotIK_ArmZYY: Simple Inverse Kinematic object for a basic 3DoF robotic arm.
+                        It returns three angles along local Z, Y, and Y given an endpoint
+  - RobotMT: End to End Motion Tracking and Inverse Kinematic object. It is generic and can be constructed with any Tracking and IK object
+             Given arms data returns the angles for the robot
+  - BnTestCommon: It contains all the tests for the library
 
