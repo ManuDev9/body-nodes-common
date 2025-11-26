@@ -1,0 +1,12 @@
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/csharp.GeneratedMSBuildEditorConfig.editorconfig
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/csharp.AssemblyInfoInputs.cache
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/csharp.AssemblyInfo.cs
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/csharp.csproj.CoreCompileInputs.cache
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/csharp.sourcelink.json
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/bin/Debug/net8.0/csharp.deps.json
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/bin/Debug/net8.0/csharp.dll
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/bin/Debug/net8.0/csharp.pdb
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/csharp.dll
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/refint/csharp.dll
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/csharp.pdb
+/home/manu/workspace/bodynodes/body-nodes-common/csharp/src/obj/Debug/net8.0/ref/csharp.dll
