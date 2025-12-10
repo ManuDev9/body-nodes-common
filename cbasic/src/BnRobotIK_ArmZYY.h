@@ -27,22 +27,43 @@
 
 #include "stdint.h"
 
-typedef struct BnRobotIK_ZYY2Arms_st {    
-    float lengthRA2;
-    float lengthRA3;
-    float displSP[3];
-} BnRobotIK_ZYY2Arms_t;
+#define UNITS_BUFF_SIZE 10
+
+typedef struct BnRobotIK_ArmZYY_st {    
+    double theta_RA1;
+    double gamma_RA2;
+    double gamma_RA3;
+    double lengthRA1;
+    double lengthRA2;
+    double lengthRA3;
+    double anglesConstraints[3][2];
+    uint8_t hasAnglesConstraints;
+    char units[UNITS_BUFF_SIZE];
+} BnRobotIK_ArmZYY_t;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// Starting Point is assumed to be [0, 0, 0]
-void BnRobotIK_ZYY2Arms_create( BnRobotIK_ZYY2Arms_t *data,
-    float const lengthRA2, float const lengthRA3, float const displSP[3], char const *units );
+BnRobotIK_ArmZYY_t BnRobotIK_ArmZYY_create(
+    double const lengthRA1,
+    double const lengthRA2,
+    double const lengthRA3,
+    double const (* const anglesConstraints)[2],
+    char const * const units );
 
-// The returned angles refer to the X axis
-void BnRobotIK_ZYY2Arms_compute( BnRobotIK_ZYY2Arms_t *data, float const endpoint[3], float outAngles[3] );
+//    double const endpoint[3],
+//    double outAngles[3][3] 
+void BnRobotIK_ArmZYY_compute(
+    BnRobotIK_ArmZYY_t * const data,
+    double const * const endpoint,
+    double (* const outAngles)[3] );
+
+//    double endpoints[3][3]
+void BnRobotIK_ArmZYY_getEndpoints(
+    BnRobotIK_ArmZYY_t * const data,
+    double (*const endpoints)[3]);
+
 
 #ifdef __cplusplus
 }

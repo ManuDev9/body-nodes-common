@@ -1,10 +1,16 @@
 
 cbasic/testBnCommon
-cpp/build/
 cbasic/build/
-csharp/bin/
-csharp/obj/
+
+csharp/src/bin/
+csharp/src/obj/
+csharp/Tests/csharp.Tests/bin/
+csharp/Tests/csharp.Tests/obj
+
+cpp/build/
+
 java/target/
+
 
 *.o
 *.class

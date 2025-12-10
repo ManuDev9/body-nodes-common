@@ -28,21 +28,45 @@
 buildir:
 > mkdir -p build
 
-BnRobotIK_ZYY2Arms.o: buildir BnRobotIK_ZYY2Arms.c BnRobotIK_ZYY2Arms.h
-> gcc -c BnRobotIK_ZYY2Arms.c -o build/BnRobotIK_ZYY2Arms.o
+BnAxisConfig.o: buildir src/BnAxisConfig.c src/BnAxisConfig.h
+> gcc -fPIC -c src/BnAxisConfig.c -o build/BnAxisConfig.o
 
-BnTwoNodesMotionTracking.o: buildir BnTwoNodesMotionTracking.c BnTwoNodesMotionTracking.h
-> gcc -c BnTwoNodesMotionTracking.c -o build/BnTwoNodesMotionTracking.o
+BnMotionTracking_2Nodes.o: buildir src/BnMotionTracking_2Nodes.c src/BnMotionTracking_2Nodes.h
+> gcc -fPIC -c src/BnMotionTracking_2Nodes.c -o build/BnMotionTracking_2Nodes.o
 
-BnReorientAxis.o: buildir BnReorientAxis.c BnReorientAxis.h
-> gcc -c BnReorientAxis.c -o build/BnReorientAxis.o
+BnQuaternion.o: buildir src/BnQuaternion.c src/BnQuaternion.h
+> gcc -fPIC -c src/BnQuaternion.c -o build/BnQuaternion.o
 
-build: buildir BnReorientAxis.o BnTwoNodesMotionTracking.o BnRobotIK_ZYY2Arms.o
-> g++ testBnCommon.cpp build/BnReorientAxis.o build/BnTwoNodesMotionTracking.o build/BnRobotIK_ZYY2Arms.o -o build/testBnCommon
+BnRobotIK_ArmZYY.o: buildir src/BnRobotIK_ArmZYY.c src/BnRobotIK_ArmZYY.h
+> gcc -fPIC -c src/BnRobotIK_ArmZYY.c -o build/BnRobotIK_ArmZYY.o
+
+BnRobotArm_MT.o: buildir src/BnRobotArm_MT.c src/BnRobotArm_MT.h BnRobotIK_ArmZYY.o BnMotionTracking_2Nodes.o
+> gcc -fPIC -c src/BnRobotArm_MT.c -Isrc -o build/BnRobotArm_MT.o
+
+BnUtils.o: buildir src/BnUtils.c src/BnUtils.h
+> gcc -fPIC -c src/BnUtils.c -Isrc -o build/BnUtils.o
+
+library: buildir BnAxisConfig.o BnMotionTracking_2Nodes.o BnRobotIK_ArmZYY.o BnQuaternion.o BnRobotArm_MT.o BnUtils.o
+> gcc -shared -o build/libBnCommon.so \
+    build/BnAxisConfig.o \
+    build/BnMotionTracking_2Nodes.o \
+    build/BnQuaternion.o \
+    build/BnRobotIK_ArmZYY.o \
+    build/BnRobotArm_MT.o \
+    build/BnUtils.o \
+    -lm
+
+unity.o: buildir
+> gcc -c test/unity/unity.c -DUNITY_INCLUDE_DOUBLE -o build/unity.o
+
+cJSON.o: buildir
+> gcc -c test/json/cJSON.c -o build/cJSON.o
+
+build: buildir library unity.o cJSON.o
+> gcc -o build/TestBnCommon test/TestBnCommon.c -Isrc -Itest/unity -Itest/json build/unity.o build/cJSON.o -Lbuild -lBnCommon -lm
 
 test: buildir build
-> ./build/testBnCommon
+> @LD_LIBRARY_PATH=build ./build/TestBnCommon
 
 clean:
 > rm -r build
-

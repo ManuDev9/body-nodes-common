@@ -22,30 +22,36 @@
 # SOFTWARE.
 */
 
-#ifndef BN_REORIENT_AXIS_C
-#define BN_REORIENT_AXIS_C
+#ifndef BN_AXIS_CONFIG_C
+#define BN_AXIS_CONFIG_C
 
 #define MAX_NUMBER_AXIS 4
 
 #include "stdint.h"
 
-typedef struct BnReorientAxisData_st {
-    int reorientAxis[MAX_NUMBER_AXIS];
-    int reorientSign[MAX_NUMBER_AXIS];
+typedef struct BnAxisConfig_st {
+    int axis[MAX_NUMBER_AXIS];
+    int sign[MAX_NUMBER_AXIS];
     uint8_t length;
-} BnReorientAxisData_t;
+} BnAxisConfig_t;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void BnReorientAxis_config( BnReorientAxisData_t* data, int const ioAxis[], int const ioSign[], uint8_t const length );
-void BnReorientAxis_apply_float( BnReorientAxisData_t* data, float iovalues[] );
-void BnReorientAxis_apply_int( BnReorientAxisData_t* data, int iovalues[] );
+// All input arrays are expected to be of size 4
+void BnAxisConfig_config( BnAxisConfig_t * const data, int const * const ioAxis, int const * const ioSign);
+void BnAxisConfig_config_purearray( BnAxisConfig_t * const data, int const * const pureArray);
+void BnAxisConfig_config_vals( BnAxisConfig_t * const data,
+    int const ioAxisW, int const ioAxisX, int const ioAxisY, int const ioAxisZ,
+    int const ioSignW, int const ioSignX, int const ioSignY, int const ioSignZ);
+void BnAxisConfig_apply_float( BnAxisConfig_t const * const data, float * const iovalues );
+void BnAxisConfig_apply_double( BnAxisConfig_t const * const data, double * const iovalues );
+void BnAxisConfig_apply_int( BnAxisConfig_t const * const data, int * const iovalues );
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // BN_REORIENT_AXIS_C
+#endif // BN_AXIS_CONFIG_C
 
