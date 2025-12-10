@@ -210,7 +210,6 @@ public class TestBnCommon
         BnQuaternion q1 = new BnQuaternion(1, 2, 3, 4);
         BnQuaternion q2 = new BnQuaternion(0, 1, 0, 0);
 
-        // Multiply quaternions using the @ operator
         BnQuaternion q3 = q1.Mul(q2);
         Assert.That(ArraysAreClose(q3.ToList(), new double[] {-2, 1, 4, -3}, 1e-9, 1e-6f));
 
@@ -222,7 +221,7 @@ public class TestBnCommon
 
 
     [Test]
-    public void  test_BnUtils() {
+    public void  Test_BnUtils() {
 
         double[][] actual = BnUtils.blender_euler_to_rotation_matrix_rad(0.123, 2.12, -3.11);
         double[][] expected = new double[][] {
@@ -294,7 +293,7 @@ public class TestBnCommon
 
 
     [Test]
-    public void test_BnAxisConfig() {
+    public void Test_BnAxisConfig() {
 
         int[] test_io_axis = new int[]{ 3, 2, 1, 0 };
         int[] test_io_sign = new int[]{ -1, -1, -1, -1 };
@@ -324,7 +323,7 @@ public class TestBnCommon
     }
 
     [Test]
-    public void test_BnMotionTracking_2Nodes() {
+    public void Test_BnMotionTracking_2Nodes() {
 
         BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
             new double[]{ 0,0,0}, new double[]{ 10,0,0}, new double[]{ 10,0,0}, null, "cm" );
@@ -343,7 +342,7 @@ public class TestBnCommon
     }
 
     [Test]
-    public void test_BnMotionTracking_2NodesConstraint() {
+    public void Test_BnMotionTracking_2NodesConstraint() {
 
         BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
             new double[]{ 0,0,0}, new double[]{ 10,0,0}, new double[]{ 10,0,0},
@@ -367,7 +366,7 @@ public class TestBnCommon
 
 
     [Test]
-    public void test_BnRobotIK_ArmZYY() {
+    public void Test_BnRobotIK_ArmZYY() {
 
         double[] test_endpoint = new double[] { 18.219124272891392, 3.8972461548699857, 1.6501078154541111 };
         BnRobotIK_ArmZYY bnaik = new BnRobotIK_ArmZYY( 0, 10, 10, null, "cm" );
@@ -388,7 +387,7 @@ public class TestBnCommon
 
 
     [Test]
-    public void test_BlenderSimpleLinksProj1() {
+    public void Test_BlenderSimpleLinksProj1() {
 
         BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
             new double[]{ 0,0,2}, new double[]{ 0,1,0}, new double[]{ 0,1,0}, null, "cm");
@@ -415,7 +414,7 @@ public class TestBnCommon
     }
 
     [Test]
-    public void test_BlenderSimpleLinksProj2() {
+    public void Test_BlenderSimpleLinksProj2() {
         // Testing how to setup the blender utility functions to correspond to what Blender is giving as output. We want rotation XYZ
         double[][] rot1 = BnUtils.blender_euler_to_rotation_matrix_degree(45,45,45);
         double[] vec1 = new double[]{0, 1, 0};
@@ -425,7 +424,7 @@ public class TestBnCommon
 
 
     [Test]
-        public void test_BlenderSimpleLinksProj3(){
+    public void Test_BlenderSimpleLinksProj3(){
         // Let's check the BnRobotIK_ArmZYY
         // The arms length are 0,1,1
         // For this type of test on Blender the Y is the python X axis
@@ -557,7 +556,7 @@ public class TestBnCommon
 
 
     [Test]
-    public void test_BnRobotArm_MT() {
+    public void Test_BnRobotArm_MT() {
 
         // Arms along the Y axis
         BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(
@@ -619,7 +618,7 @@ public class TestBnCommon
 
 
     [Test]
-    public void test_BnRobotArm_MT_Constraints() {
+    public void Test_BnRobotArm_MT_Constraints() {
 
         // Arms along the Y axis
         BnMotionTracking_2Nodes bnmotiontrack = new BnMotionTracking_2Nodes(

@@ -74,7 +74,7 @@ namespace BodynodesDev.Common
 
         public override string ToString() {
             //  Represent quaternion as a string
-            return string.Format("BnQuaternion(w=%.5f, x=%.5f, y=%.5f, z=%.5f)", pQvalues[0], pQvalues[1], pQvalues[2], pQvalues[3]);
+            return string.Format("BnQuaternion(w={0:F5}, x={1:F5}, y={2:F5}, z={3:F5})", pQvalues[0], pQvalues[1], pQvalues[2], pQvalues[3]);
         }
 
         //  Allows accessing the quaternion components using getW(), getX(), getY(), getZ()

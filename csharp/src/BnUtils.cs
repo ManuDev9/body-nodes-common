@@ -133,11 +133,12 @@ namespace BodynodesDev.Common
                 firstQuatVals[3] = firstQuat.GetZ();
             }
 
+
             BnQuaternion rotationRealQuat = firstQuat.Mul(sensorQuat);
             BnQuaternion rotationRealaxisQuat = CreateQuanternion(
                     axisConfig,
                     rotationRealQuat.ToList());
-            
+
             BnQuaternion objectNewQuat = envQuat.Mul(rotationRealaxisQuat.Mul(envQuat.Inverse().Mul(startingQuat)));
             return objectNewQuat.ToList();
         }
