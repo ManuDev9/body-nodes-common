@@ -221,9 +221,9 @@ public class TestBnCommon {
         double[] test_evalues = new double[] { 18.468636171839087, -3.1761790635934757, -0.08354223767877755 };
 
         double[][] test_ovalues = new double[][] { 
-            {0, 0, 0},
-            {0, 0, 0},
-            {0, 0, 0},
+            {1, 2, 3},
+            {1, 2, 3},
+            {1, 2, 3},
         };
         bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues );
         assertArrayEquals(test_evalues, test_ovalues[2], 1e-2f);
@@ -241,9 +241,9 @@ public class TestBnCommon {
         double[] test_evalues = new double[] { 14.443218483410508, 5, 5 };
 
         double[][] test_ovalues = new double[][] { 
-            {0, 0, 0},
-            {0, 0, 0},
-            {0, 0, 0},
+            {1, 2, 3},
+            {1, 2, 3},
+            {1, 2, 3},
         };
         bnmotiontrack.compute( test_node1_quat, test_node2_quat, test_ovalues);
         assertArrayEquals(test_evalues, test_ovalues[2], 1e-3f);
@@ -262,9 +262,10 @@ public class TestBnCommon {
             { 0, 1.120530930230784, 0 },
             { 0, 0.723883473845901, 0 }};
         double[][] test_ovalues =  new double[][] {
-            { 0, 0, 0 },
-            { 0, 0, 0 },
-            { 0, 0, 0 }};
+            {1, 2, 3},
+            {1, 2, 3},
+            {1, 2, 3},
+        };
         bnaik.compute( test_endpoint, test_ovalues );
         assertArrayEquals(test_evalues[0], test_ovalues[0], 1e-3f);
         assertArrayEquals(test_evalues[1], test_ovalues[1], 1e-3f);
