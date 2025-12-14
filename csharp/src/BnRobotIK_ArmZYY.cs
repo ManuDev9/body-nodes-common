@@ -155,9 +155,15 @@ namespace BodynodesDev.Common
                 }
             }
 
+            outAngles[0][0] = 0;
+            outAngles[0][1] = 0;
             outAngles[0][2] = mTheta_RA1;
+            outAngles[1][0] = 0;
             outAngles[1][1] = mGamma_RA2;
+            outAngles[1][2] = 0;
+            outAngles[2][0] = 0;
             outAngles[2][1] = mGamma_RA3;
+            outAngles[2][2] = 0;
 
         }
 

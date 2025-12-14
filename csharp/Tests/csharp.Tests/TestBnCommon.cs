@@ -333,10 +333,9 @@ public class TestBnCommon
         double[] test_evalues = new double[] { 18.468636171839087, -3.1761790635934757, -0.08354223767877755 };
 
         double[][] test_ovalues = new double[][] { 
-            new double[]{0, 0, 0},
-            new double[]{0, 0, 0},
-            new double[]{0, 0, 0},
-        };
+            new double[] { 1, 1, 1 },
+            new double[] { 2, 2, 2 },
+            new double[] { 3, 3, 3 }};
         bnmotiontrack.Compute( test_node1_quat, test_node2_quat, test_ovalues );
         Assert.That(ArraysAreClose(test_ovalues[2], test_evalues, 1e-2f, 1e-2f));
     }
@@ -356,10 +355,9 @@ public class TestBnCommon
         double[] test_evalues = new double[] { 14.443218483410508, 5, 5 };
 
         double[][] test_ovalues = new double[][] { 
-            new double[] {0, 0, 0},
-            new double[] {0, 0, 0},
-            new double[] {0, 0, 0},
-        };
+            new double[] { 1, 1, 1 },
+            new double[] { 2, 2, 2 },
+            new double[] { 3, 3, 3 }};
         bnmotiontrack.Compute( test_node1_quat, test_node2_quat, test_ovalues);
         Assert.That(ArraysAreClose(test_ovalues[2], test_evalues, 1e-2f, 1e-2f));
     }
@@ -376,9 +374,9 @@ public class TestBnCommon
             new double[] { 0, 1.120530930230784, 0 },
             new double[] { 0, 0.723883473845901, 0 }};
         double[][] test_ovalues =  new double[][] {
-            new double[] { 0, 0, 0 },
-            new double[] { 0, 0, 0 },
-            new double[] { 0, 0, 0 }};
+            new double[] { 1, 1, 1 },
+            new double[] { 2, 2, 2 },
+            new double[] { 3, 3, 3 }};
         bnaik.Compute( test_endpoint, test_ovalues );
         Assert.That(ArraysAreClose(test_ovalues[0], test_evalues[0], 1e-2f, 1e-2f));
         Assert.That(ArraysAreClose(test_ovalues[1], test_evalues[1], 1e-2f, 1e-2f));
