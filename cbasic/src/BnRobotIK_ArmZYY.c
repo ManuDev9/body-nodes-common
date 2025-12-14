@@ -163,9 +163,15 @@ void BnRobotIK_ArmZYY_compute(
         }
     }
 
+    outAngles[0][0] = 0;
+    outAngles[0][1] = 0;
     outAngles[0][2] = data->theta_RA1;
+    outAngles[1][0] = 0;
     outAngles[1][1] = data->gamma_RA2;
+    outAngles[1][2] = 0;
+    outAngles[2][0] = 0;
     outAngles[2][1] = data->gamma_RA3;
+    outAngles[2][2] = 0;
 }
 
 void BnRobotIK_ArmZYY_getEndpoints(

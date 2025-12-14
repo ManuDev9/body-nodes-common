@@ -22,7 +22,6 @@
 # SOFTWARE.
 */
 
-
 #include "BnQuaternion.h"
 #include "BnUtils.h"
 #include "BnAxisConfig.h"
@@ -32,11 +31,78 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #define UNITY_INCLUDE_DOUBLE
 #include "unity.h"
 #include "cJSON.h"
 
+
+// Finds the value defined after a macro key in the header content.
+// Returns a dynamically allocated string containing the value, or NULL on failure.
+char* extract_macro_value_c(const char* headerContent, const char* key) {
+    const char *prefix = "#define BN_";
+    const char *suffix = " ";
+    
+    // Construct the search string: #define BN_KEY 
+    size_t search_len = strlen(prefix) + strlen(key) + strlen(suffix) + 1;
+    char* search_string = (char*)malloc(search_len);
+    if (search_string == NULL) return NULL;
+    
+    snprintf(search_string, search_len, "%s%s%s", prefix, key, suffix);
+    
+    // 1. Find the start of the macro definition
+    char* start_ptr = strstr(headerContent, search_string);
+    free(search_string); // Done with the search string
+    
+    if (start_ptr == NULL) return NULL; // Macro not found
+    
+    // 2. Locate the start of the VALUE
+    char* value_start = start_ptr + strlen(prefix) + strlen(key) + strlen(suffix);
+    
+    // 3. Find the end of the line (where the value ends)
+    char* value_end = value_start;
+    while (*value_end != '\n' && *value_end != '\r' && *value_end != '\0') {
+        value_end++;
+    }
+    
+    // 4. Extract the raw value string
+    size_t raw_len = value_end - value_start;
+    char* raw_value = (char*)malloc(raw_len + 1);
+    if (raw_value == NULL) return NULL;
+    strncpy(raw_value, value_start, raw_len);
+    raw_value[raw_len] = '\0';
+    
+    // 5. Trim leading and trailing spaces
+    char* trimmed_start = raw_value;
+    while (isspace((unsigned char)*trimmed_start)) trimmed_start++;
+    
+    char* trimmed_end = raw_value + strlen(raw_value) - 1;
+    while (trimmed_end > trimmed_start && isspace((unsigned char)*trimmed_end)) trimmed_end--;
+    *(trimmed_end + 1) = '\0';
+    
+    // 6. Check and strip outer quotes (for string constants)
+    char* final_value = trimmed_start;
+    size_t final_len = strlen(final_value);
+    
+    if (final_len >= 2 && final_value[0] == '"' && final_value[final_len - 1] == '"') {
+        // Create new string without quotes (need new allocation for safety)
+        char* unquoted_value = (char*)malloc(final_len - 1);
+        if (unquoted_value == NULL) { free(raw_value); return NULL; }
+        
+        strncpy(unquoted_value, final_value + 1, final_len - 2);
+        unquoted_value[final_len - 2] = '\0';
+        
+        // Use the unquoted string as the final result
+        free(raw_value); 
+        return unquoted_value;
+    }
+
+    // Otherwise, return the original trimmed string
+    char* result = strdup(final_value);
+    free(raw_value);
+    return result;
+}
 
 /**
  * Checks if two arrays are close to each other within given absolute and relative tolerances.
@@ -141,7 +207,8 @@ void Test_BnConstants(void) {
     buffer_header[file_size] = '\0';
     fclose(fp_header);
 
-    int missing_count = 0;    
+    int missing_count = 0;
+    int mismatch_count = 0;
     cJSON* json_item = allConstants->child;
 
     const char *prefix = "#define BN_";
@@ -152,7 +219,7 @@ void Test_BnConstants(void) {
     while (json_item != NULL) {
         const char* key = json_item->string;
 
-        // Filter: Skip keys starting with "__" (from C# original)
+        // Filter: Skip keys starting with "__"
         if (strncmp(key, "__", 2) == 0) {
             json_item = json_item->next;
             continue;
@@ -190,11 +257,48 @@ void Test_BnConstants(void) {
         if (strstr(buffer_header, string_to_seach) == NULL) {
             printf("    [MISSING] Constant: %s\n", key); 
             missing_count++;
+        }else {
+            
+            // Get the value from the Header file
+            char* header_value = extract_macro_value_c(buffer_header, key);
+            if (header_value == NULL) {
+                // If the helper failed to allocate memory or find the value 
+                // (shouldn't happen if strstr passed), skip/fail.
+                mismatch_count++;
+                free(string_to_seach);
+                json_item = json_item->next;
+                continue; 
+            }
+            
+            // Get the value from the JSON item
+            char json_value_buffer[256] = {0}; 
+            
+            if (cJSON_IsString(json_item)) {
+                // For strings, use the stored valuestring directly
+                strncpy(json_value_buffer, json_item->valuestring, sizeof(json_value_buffer) - 1);
+                
+            } else if (cJSON_IsNumber(json_item)) {
+                // For numbers, convert to a string for comparison
+                snprintf(json_value_buffer, sizeof(json_value_buffer), "%.f", json_item->valuedouble);
+
+            } else {
+                // Handle other types (e.g., bool/null/array) if necessary
+                strncpy(json_value_buffer, "UNSUPPORTED_TYPE", sizeof(json_value_buffer) - 1);
+            }
+
+            // Compare the strings
+            if (strcmp(header_value, json_value_buffer) != 0) {
+                printf("    [MISMATCH] %s: JSON='%s', Header='%s'\n", key, json_value_buffer, header_value);
+                mismatch_count++;
+            }
+            
+            free(header_value); // Clean up helper function allocation
         }
         
+        free(string_to_seach); // Clean up allocation in the loop
         json_item = json_item->next;
     }
-
+        
     free(buffer_header);
     cJSON_Delete(allConstants);
 
@@ -202,6 +306,11 @@ void Test_BnConstants(void) {
     char msg[128];
     snprintf(msg, sizeof(msg), "Total %d constants found in JSON are missing in C code.", missing_count);
     TEST_ASSERT_EQUAL_INT_MESSAGE(0, missing_count, msg);
+
+    // Asser the values are all identical
+    char msg_mismatch[128];
+    snprintf(msg_mismatch, sizeof(msg_mismatch), "Total %d constants found in JSON have mismatching values in C code.", mismatch_count);
+    TEST_ASSERT_EQUAL_INT_MESSAGE(0, mismatch_count, msg_mismatch);
 }
 
 void Test_BnQuaternion(void) {
@@ -380,11 +489,11 @@ void Test_BnMotionTracking_2NodesConstraint(void) {
     double const test_node2_quat[4] = { 0.9293, -0.0039, -0.2892, 0.2296 };
     double const test_evalues[3] = { 14.443218483410508, 5, 5 };
 
-    double test_ovalues[3][3] = { 
-        {0, 0, 0},
-        {0, 0, 0},
-        {0, 0, 0},
-    };
+    double test_ovalues[3][3] = {
+        { 1, 2, 3 },
+        { 1, 2, 3 },
+        { 1, 2, 3 }};
+
     BnMotionTracking_2Nodes_compute( &bnmotiontrack, test_node1_quat, test_node2_quat, test_ovalues );
     TEST_ASSERT_DOUBLE_ARRAY( test_evalues, test_ovalues[2], 4, 1e-2f, 1e-2f);
 }
@@ -403,9 +512,9 @@ void Test_BnRobotIK_ArmZYY(void) {
         { 0, 1.120530930230784, 0 },
         { 0, 0.723883473845901, 0 }};
     double test_ovalues[3][3] = {
-        { 0, 0, 0 },
-        { 0, 0, 0 },
-        { 0, 0, 0 }};
+        { 1, 2, 3 },
+        { 1, 2, 3 },
+        { 1, 2, 3 }};
 
     BnRobotIK_ArmZYY_compute( &bnaik, test_endpoint, test_ovalues );
     TEST_ASSERT_DOUBLE_ARRAY( test_evalues[0], test_ovalues[0], 3, 1e-2f, 1e-2f);

@@ -26,7 +26,7 @@ output_txt=""
 
 echo "Testing cbasic"
 pushd cbasic
-output_txt+=$(./run_tests.sh)$'\n'
+output_txt+=$(make test)$'\n'
 popd
 
 echo "Testing java"
