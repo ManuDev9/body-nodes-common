@@ -144,7 +144,7 @@ def test_BnRobotIK_ArmZYY():
         units = "cm")
 
     test_endpoint = [18.219124272891392, 3.8972461548699857, 1.6501078154541111]
-    test_evalues = [0.21073373345528476,  1.118530930230784, 0.723883473845901]
+    test_evalues = [[0, 0, 0.21073373345528476], [0, 1.118530930230784, 0], [0, 0.723883473845901, 0]]
     test_ovalues = bnaik.compute(test_endpoint)
     assert np.allclose(test_evalues, test_ovalues, atol=1e-04, rtol=5e-03)
 
@@ -189,19 +189,19 @@ def test_BlenderSimpleLinksProj3():
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
         units = "cm")
 
-    assert np.allclose(np.rad2deg(bnaik.compute([0, 0, 2])), np.array( [np.nan,0,0] ), equal_nan=True )
-    assert np.allclose(np.rad2deg(bnaik.compute([2, 0, 0])), np.array( [0,90,0]  ) )
-    assert np.allclose(np.rad2deg(bnaik.compute([1.711, 0.0, 0.703])), np.array( [0, 45, 45] ), atol=1 )
-    assert np.allclose(np.rad2deg(bnaik.compute([1.416, 0.0, 1.416])), np.array( [0, 45, 0] ), atol=1 )
-    assert np.allclose(np.rad2deg(bnaik.compute([1.707, 0.0, -0.713])), np.array( [0, 90, 45] ), atol=1 )
-    assert np.allclose(np.rad2deg(bnaik.compute([0.713, 0.0, 0.281])), np.array( [0, 0, 135] ), atol=2 )
-    assert np.allclose(np.rad2deg(bnaik.compute([0.0, 0.0, 0.0])), np.array( [np.nan, 0, 180] ), atol=2, equal_nan=True )
-    assert np.allclose(np.rad2deg(bnaik.compute([0.1472482681274414, 0.0, 0.497156023979187])), np.array( [0, -60, 150] ) , atol=2)
-    assert np.allclose(np.rad2deg(bnaik.compute([0, 2, 0])), np.array( [90,90,0] ) , atol=2)
-    assert np.allclose(np.rad2deg(bnaik.compute([0, -2, 0])), np.array( [-90,90,0] ) , atol=2)
-    assert np.allclose(np.rad2deg(bnaik.compute([-2, 0, 0])), np.array( [180,90,0] ) , atol=2)
-    assert np.allclose(np.rad2deg(bnaik.compute([1.210, 1.210, 0.70])), np.array( [45, 45, 45] ) , atol=2)
-    assert np.allclose(np.rad2deg(bnaik.compute([1.416094183921814, 1.416094183921814, 0.0])), np.array( [45, 90,  0] ) , atol=2)
+    assert np.allclose(np.rad2deg(bnaik.compute([0, 0, 2])), np.array( [[0,0,np.nan],[0,0,0],[0,0,0]] ), equal_nan=True )
+    assert np.allclose(np.rad2deg(bnaik.compute([2, 0, 0])), np.array( [[0,0,0],[0,90,0],[0,0,0]]  ) )
+    assert np.allclose(np.rad2deg(bnaik.compute([1.711, 0.0, 0.703])), np.array( [[0,0,0], [0,45,0], [0,45,0]] ), atol=1 )
+    assert np.allclose(np.rad2deg(bnaik.compute([1.416, 0.0, 1.416])), np.array( [[0,0,0], [0,45,0], [0,0,0]] ), atol=1 )
+    assert np.allclose(np.rad2deg(bnaik.compute([1.707, 0.0, -0.713])), np.array( [[0,0,0], [0,90,0], [0,45,0]] ), atol=1 )
+    assert np.allclose(np.rad2deg(bnaik.compute([0.713, 0.0, 0.281])), np.array( [[0,0,0], [0,0,0], [0,135,0]] ), atol=2 )
+    assert np.allclose(np.rad2deg(bnaik.compute([0.0, 0.0, 0.0])), np.array( [[0,0,np.nan], [0,0,0], [0,180,0]] ), atol=2, equal_nan=True )
+    assert np.allclose(np.rad2deg(bnaik.compute([0.1472482681274414, 0.0, 0.497156023979187])), np.array( [[0,0,0], [0,-60,0], [0,150,0]] ) , atol=2)
+    assert np.allclose(np.rad2deg(bnaik.compute([0, 2, 0])), np.array( [[0,0,90],[0,90,0],[0,0,0]] ) , atol=2)
+    assert np.allclose(np.rad2deg(bnaik.compute([0, -2, 0])), np.array( [[0,0,-90],[0,90,0],[0,0,0]] ) , atol=2)
+    assert np.allclose(np.rad2deg(bnaik.compute([-2, 0, 0])), np.array( [[0,0,180],[0,90,0],[0,0,0]] ) , atol=2)
+    assert np.allclose(np.rad2deg(bnaik.compute([1.210, 1.210, 0.70])), np.array( [[0,0,45], [0,45,0], [0,45,0]] ) , atol=2)
+    assert np.allclose(np.rad2deg(bnaik.compute([1.416094183921814, 1.416094183921814, 0.0])), np.array( [[0,0,45], [0,90,0], [0,0,0]] ) , atol=2)
 
 def test_BnRobotArm_MT():
     # Let's test the combination of BnMotionTracking_2Nodes and BnRobotIK_ArmZYY
@@ -228,7 +228,7 @@ def test_BnRobotArm_MT():
 
     # [90.         45.00005363 44.99993373]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
-    assert np.allclose( np.rad2deg(robotangles), np.array([90, 45.00005363, 44.99993373] ))
+    assert np.allclose( np.rad2deg(robotangles), np.array([[0,0,90], [0,45.00005363,0], [0,44.99993373,0]] ))
 
 
     # ---------
@@ -247,7 +247,7 @@ def test_BnRobotArm_MT():
 
     # [0.         10. 100.]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
-    assert np.allclose( np.rad2deg(robotangles), np.array([0, 9.99994606, 100.00004607] ))
+    assert np.allclose( np.rad2deg(robotangles), np.array([[0,0,0], [0,9.99994606,0], [0,100.00004607,0]] ))
 
 
 def test_BnRobotArm_MT_Constraints():
@@ -273,7 +273,7 @@ def test_BnRobotArm_MT_Constraints():
 
     # [45.         45.00005363 44.99993373]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
-    assert np.allclose( np.rad2deg(robotangles), np.array([45, 45.00005363, 44.99993373] ))
+    assert np.allclose( np.rad2deg(robotangles), np.array([[0, 0, 45], [0,45.00005363,0], [0,44.99993373,0]] ))
 
     # ---------
     # Arms along the X axis
@@ -294,7 +294,7 @@ def test_BnRobotArm_MT_Constraints():
 
     # [90.         90 30]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
-    assert np.allclose( np.rad2deg(robotangles), np.array([90, 90, 29.15184909] ))
+    assert np.allclose( np.rad2deg(robotangles), np.array([ [0,0,90],[0, 90, 0], [0, 29.15184909, 0]] ))
 
     bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
@@ -303,7 +303,7 @@ def test_BnRobotArm_MT_Constraints():
     robotMT =  bncommon.BnRobotArm_MT( bnmotiontrack, bnaik )
     # [90.         100 10]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
-    assert np.allclose( np.rad2deg(robotangles), np.array([90, 100, 9.9999254] ))
+    assert np.allclose( np.rad2deg(robotangles), np.array([[0,0,90], [0,100,0], [0,9.9999254,0]] ))
 
     bnaik = bncommon.BnRobotIK_ArmZYY(
         lengthRA1 = 0, lengthRA2 = 1, lengthRA3 = 1,
@@ -312,4 +312,4 @@ def test_BnRobotArm_MT_Constraints():
     robotMT =  bncommon.BnRobotArm_MT( bnmotiontrack, bnaik )
     # [90.         100 10]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
-    assert np.allclose( np.rad2deg(robotangles), np.array([90, 100.00035347, 9.99922384] ))
+    assert np.allclose( np.rad2deg(robotangles), np.array([[0,0,90], [0,100.00035347,0], [0,9.99922384,0]] ))

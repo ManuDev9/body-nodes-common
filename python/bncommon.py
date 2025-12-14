@@ -394,7 +394,7 @@ class BnRobotIK_ArmZYY:
         self.theta_RA1 = theta_RA1
         self.gamma_RA2 = gamma_RA2
         self.gamma_RA3 = gamma_RA3
-        return [ theta_RA1, gamma_RA2, gamma_RA3 ]
+        return [ [0, 0, theta_RA1], [0, gamma_RA2,0], [0, gamma_RA3,0] ]
 
 
     def getEndpoints(self):
