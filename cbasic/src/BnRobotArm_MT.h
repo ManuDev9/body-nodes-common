@@ -25,6 +25,9 @@
 #include "BnRobotIK_ArmZYY.h"
 #include "BnMotionTracking_2Nodes.h"
 
+#ifndef BN_ROBOT_ARM_MT_H
+#define BN_ROBOT_ARM_MT_H
+
 typedef struct BnRobotArm_MT_ArmZYY_2Nodes_st {    
     BnMotionTracking_2Nodes_t motionTraker;
     BnRobotIK_ArmZYY_t robotIK;
@@ -44,3 +47,5 @@ void BnRobotArm_MT_ArmZYY_2Nodes_compute(
     double const * const node2Quat,
     double (* const endpositions)[3],
     double (* const outAngles)[3]);
+
+#endif // BN_ROBOT_ARM_MT_H

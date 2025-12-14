@@ -22,8 +22,8 @@
 # SOFTWARE.
 */
 
-#ifndef BN_AXIS_CONFIG_C
-#define BN_AXIS_CONFIG_C
+#ifndef BN_AXIS_CONFIG_H
+#define BN_AXIS_CONFIG_H
 
 #define MAX_NUMBER_AXIS 4
 
@@ -53,5 +53,5 @@ void BnAxisConfig_apply_int( BnAxisConfig_t const * const data, int * const iova
 }
 #endif
 
-#endif // BN_AXIS_CONFIG_C
+#endif // BN_AXIS_CONFIG_H
 

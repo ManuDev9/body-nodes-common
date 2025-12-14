@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef BN_QUATERNION_C
-#define BN_QUATERNION_C
+#ifndef BN_QUATERNION_H
+#define BN_QUATERNION_H
 
 #include "stdint.h"
 #include <stddef.h>
@@ -56,5 +56,4 @@ uint8_t BnQuaternion_is_empty( BnQuaternion_t const * const quat );
 }
 #endif
 
-#endif // BN_QUATERNION_C
-
+#endif // BN_QUATERNION_H

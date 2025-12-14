@@ -22,8 +22,9 @@
 # SOFTWARE.
 */
 
-#ifndef BN_TWO_NODES_MOTION_TRACKING_C
-#define BN_TWO_NODES_MOTION_TRACKING_C
+
+#ifndef BN_MOTION_TRACKING_2_NODES_H
+#define BN_MOTION_TRACKING_2_NODES_H
 
 #include "stdint.h"
 
@@ -69,5 +70,4 @@ void BnMotionTracking_2Nodes_compute(
 }
 #endif
 
-#endif // BN_TWO_NODES_MOTION_TRACKING_C
-
+#endif // BN_MOTION_TRACKING_2_NODES_H

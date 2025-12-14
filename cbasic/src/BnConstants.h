@@ -23,7 +23,7 @@
 */
 
 #ifndef __BN_CONSTANTS_H
-#define BN___BN_CONSTANTS_H
+#define __BN_CONSTANTS_H
 
 #define BN_PLAYER_ALL_TAG      "all"
 #define BN_PLAYER_NONE_TAG     "none"
@@ -163,7 +163,6 @@
 /////////////////// GENERIC
 
 #define BN_M_PI 3.141592653589793
-
 
 
 #endif //__BN_CONSTANTS_H

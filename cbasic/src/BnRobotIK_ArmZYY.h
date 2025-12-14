@@ -22,8 +22,8 @@
 # SOFTWARE.
 */
 
-#ifndef BN_ROBOT_IK_ZYY_2ARMS_C
-#define BN_ROBOT_IK_ZYY_2ARMS_C
+#ifndef BN_ROBOT_IK_ARM_ZYY_H
+#define BN_ROBOT_IK_ARM_ZYY_H
 
 #include "stdint.h"
 
@@ -69,4 +69,4 @@ void BnRobotIK_ArmZYY_getEndpoints(
 }
 #endif
 
-#endif // BN_ROBOT_IK_ZYY_2ARMS_C
+#endif // BN_ROBOT_IK_ARM_ZYY_H
