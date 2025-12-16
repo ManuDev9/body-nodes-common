@@ -69,8 +69,31 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint:unchecked</arg>
-                        <arg>-Xlint:deprecation</arg> <!-- optional -->
+                        <arg>-Xlint:deprecation</arg>
                     </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.32.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <java>
+                        <googleJavaFormat>
+                            <version>1.17.0</version>
+                        </googleJavaFormat>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                    </java>
                 </configuration>
             </plugin>
         </plugins>

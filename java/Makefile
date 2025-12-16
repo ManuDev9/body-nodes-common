@@ -21,9 +21,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-build:
+format:
+	mvn spotless:apply
+
+build: format
 	mvn clean compile
 
-test:
+test: build
 	mvn test
 

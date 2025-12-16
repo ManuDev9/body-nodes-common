@@ -44,6 +44,10 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
+    - name: Spotless Format Check
+      working-directory: ./java
+      run: mvn spotless:check
+    
     - name: Run Maven Tests
       working-directory: ./java
       run: make test
