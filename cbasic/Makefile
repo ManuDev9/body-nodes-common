@@ -43,19 +43,19 @@ BnQuaternion.o: buildir src/BnQuaternion.c src/BnQuaternion.h
 BnRobotIK_ArmZYY.o: buildir src/BnRobotIK_ArmZYY.c src/BnRobotIK_ArmZYY.h
 > gcc -fPIC -c src/BnRobotIK_ArmZYY.c -o build/BnRobotIK_ArmZYY.o
 
-BnRobotArm_MT.o: buildir src/BnRobotArm_MT.c src/BnRobotArm_MT.h BnRobotIK_ArmZYY.o BnMotionTracking_2Nodes.o
-> gcc -fPIC -c src/BnRobotArm_MT.c -Isrc -o build/BnRobotArm_MT.o
+BnRobotArm_IKMT.o: buildir src/BnRobotArm_IKMT.c src/BnRobotArm_IKMT.h BnRobotIK_ArmZYY.o BnMotionTracking_2Nodes.o
+> gcc -fPIC -c src/BnRobotArm_IKMT.c -Isrc -o build/BnRobotArm_IKMT.o
 
 BnUtils.o: buildir src/BnUtils.c src/BnUtils.h
 > gcc -fPIC -c src/BnUtils.c -Isrc -o build/BnUtils.o
 
-library: buildir BnAxisConfig.o BnMotionTracking_2Nodes.o BnRobotIK_ArmZYY.o BnQuaternion.o BnRobotArm_MT.o BnUtils.o
+library: buildir BnAxisConfig.o BnMotionTracking_2Nodes.o BnRobotIK_ArmZYY.o BnQuaternion.o BnRobotArm_IKMT.o BnUtils.o
 > gcc -shared -o build/libBnCommon.so \
     build/BnAxisConfig.o \
     build/BnMotionTracking_2Nodes.o \
     build/BnQuaternion.o \
     build/BnRobotIK_ArmZYY.o \
-    build/BnRobotArm_MT.o \
+    build/BnRobotArm_IKMT.o \
     build/BnUtils.o \
     -lm
 

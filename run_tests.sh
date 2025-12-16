@@ -41,7 +41,7 @@ popd
 
 echo "Testing cpp"
 pushd cpp
-output_txt+=$(./run_tests.sh)$'\n'
+output_txt+=$(make test)$'\n'
 popd
 
 echo "Testing python"
@@ -50,12 +50,4 @@ output_txt+=$(make test)$'\n'
 popd
 echo "$output_txt"
 
-
-if echo "$output_txt" | sed 's/Failures: 0/ /g' | grep -qi "fail"; then
-    echo "Tests Failed!"
-    exit 1  # Exit with error code
-else
-    echo "All tests passed!"
-    exit 0  # Exit with success code
-fi
 

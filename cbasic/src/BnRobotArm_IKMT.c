@@ -10,7 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
 
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+ all
  * copies or substantial portions of the Software.
 
  * THE SOFTWARE IS PROVIDED "AS IS"; WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -22,31 +23,24 @@
  * SOFTWARE.
  */
 
-#include "BnRobotArm_MT.h"
+#include "BnRobotArm_IKMT.h"
 
-namespace bodynodesdev {
+BnRobotArm_IKMT_ArmZYY_2Nodes_t
+BnRobotArm_IKMT_ArmZYY_2Nodes_create(BnMotionTracking_2Nodes_t const *const motionTraker,
+                                     BnRobotIK_ArmZYY_t const *const robotIK) {
 
-namespace common {
-
-BnRobotArm_MT::BnRobotArm_MT(std::unique_ptr<BnMotionTracking_Interface> &&motionTraker,
-                             std::unique_ptr<BnRobotIK_Interface> &&robotIK)
-    : motionTraker(std::move(motionTraker)), robotIK(std::move(robotIK)) {}
+    BnRobotArm_IKMT_ArmZYY_2Nodes_t data = {*motionTraker, *robotIK};
+    return data;
+}
 
 //    double const node1Quat[4],
 //    double const node2Quat[4],
 //    double endpositions[3][3],
 //    double outAngles[3][3]
-void BnRobotArm_MT::compute(double const *const node1Quat, double const *const node2Quat,
-                            double (*const endpositions)[3], double (*const outAngles)[3]) {
+void BnRobotArm_IKMT_ArmZYY_2Nodes_compute(BnRobotArm_IKMT_ArmZYY_2Nodes_t *const robotMT,
+                                           double const *const node1Quat, double const *const node2Quat,
+                                           double (*const endpositions)[3], double (*const outAngles)[3]) {
 
-    motionTraker->compute(node1Quat, node2Quat, endpositions);
-    robotIK->compute(endpositions[2], outAngles);
+    BnMotionTracking_2Nodes_compute(&(robotMT->motionTraker), node1Quat, node2Quat, endpositions);
+    BnRobotIK_ArmZYY_compute(&(robotMT->robotIK), endpositions[2], outAngles);
 }
-
-void BnRobotArm_MT::setMotionTraker(std::unique_ptr<BnMotionTracking_Interface> &&mt) { motionTraker = std::move(mt); }
-
-void BnRobotArm_MT::setRobotIK(std::unique_ptr<BnRobotIK_Interface> &&rik) { robotIK = std::move(rik); }
-
-} // namespace common
-
-} // namespace bodynodesdev

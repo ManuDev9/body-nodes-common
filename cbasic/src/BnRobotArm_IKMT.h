@@ -23,23 +23,25 @@
  * SOFTWARE.
  */
 
-#include "BnRobotArm_MT.h"
+#include "BnMotionTracking_2Nodes.h"
+#include "BnRobotIK_ArmZYY.h"
 
-BnRobotArm_MT_ArmZYY_2Nodes_t BnRobotArm_MT_ArmZYY_2Nodes_create(BnMotionTracking_2Nodes_t const *const motionTraker,
-                                                                 BnRobotIK_ArmZYY_t const *const robotIK) {
+#ifndef BN_ROBOT_ARM_MT_H
+#define BN_ROBOT_ARM_MT_H
 
-    BnRobotArm_MT_ArmZYY_2Nodes_t data = {*motionTraker, *robotIK};
-    return data;
-}
+typedef struct BnRobotArm_IKMT_ArmZYY_2Nodes_st {
+    BnMotionTracking_2Nodes_t motionTraker;
+    BnRobotIK_ArmZYY_t robotIK;
+} BnRobotArm_IKMT_ArmZYY_2Nodes_t;
 
-//    double const node1Quat[4],
-//    double const node2Quat[4],
-//    double endpositions[3][3],
-//    double outAngles[3][3]
-void BnRobotArm_MT_ArmZYY_2Nodes_compute(BnRobotArm_MT_ArmZYY_2Nodes_t *const robotMT, double const *const node1Quat,
-                                         double const *const node2Quat, double (*const endpositions)[3],
-                                         double (*const outAngles)[3]) {
+// It contains common RobotIK and MotionTracking associations
 
-    BnMotionTracking_2Nodes_compute(&(robotMT->motionTraker), node1Quat, node2Quat, endpositions);
-    BnRobotIK_ArmZYY_compute(&(robotMT->robotIK), endpositions[2], outAngles);
-}
+BnRobotArm_IKMT_ArmZYY_2Nodes_t
+BnRobotArm_IKMT_ArmZYY_2Nodes_create(BnMotionTracking_2Nodes_t const *const motionTraker,
+                                     BnRobotIK_ArmZYY_t const *const robotIK);
+
+void BnRobotArm_IKMT_ArmZYY_2Nodes_compute(BnRobotArm_IKMT_ArmZYY_2Nodes_t *const robotMT,
+                                           double const *const node1Quat, double const *const node2Quat,
+                                           double (*const endpositions)[3], double (*const outAngles)[3]);
+
+#endif // BN_ROBOT_ARM_MT_H

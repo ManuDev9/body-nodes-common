@@ -43,19 +43,19 @@ BnQuaternion.o: buildir src/BnQuaternion.cpp src/BnQuaternion.h
 BnRobotIK_ArmZYY.o: buildir src/BnRobotIK_ArmZYY.cpp src/BnRobotIK_ArmZYY.h
 > g++ -fPIC -std=c++11 -c src/BnRobotIK_ArmZYY.cpp -o build/BnRobotIK_ArmZYY.o
 
-BnRobotArm_MT.o: buildir src/BnRobotArm_MT.cpp src/BnRobotArm_MT.h
-> g++ -fPIC -std=c++11 -c src/BnRobotArm_MT.cpp -Isrc -o build/BnRobotArm_MT.o
+BnRobotArm_IKMT.o: buildir src/BnRobotArm_IKMT.cpp src/BnRobotArm_IKMT.h
+> g++ -fPIC -std=c++11 -c src/BnRobotArm_IKMT.cpp -Isrc -o build/BnRobotArm_IKMT.o
 
 BnUtils.o: buildir src/BnUtils.cpp src/BnUtils.h
 > g++ -fPIC -std=c++11 -c src/BnUtils.cpp -Isrc -o build/BnUtils.o
 
-library: buildir BnAxisConfig.o BnMotionTracking_2Nodes.o BnRobotIK_ArmZYY.o BnQuaternion.o BnRobotArm_MT.o BnUtils.o
+library: buildir BnAxisConfig.o BnMotionTracking_2Nodes.o BnRobotIK_ArmZYY.o BnQuaternion.o BnRobotArm_IKMT.o BnUtils.o
 > g++ -std=c++11 -shared -o build/libBnCommon.so \
     build/BnAxisConfig.o \
     build/BnMotionTracking_2Nodes.o \
     build/BnQuaternion.o \
     build/BnRobotIK_ArmZYY.o \
-    build/BnRobotArm_MT.o \
+    build/BnRobotArm_IKMT.o \
     build/BnUtils.o \
     -lm
 

@@ -25,7 +25,7 @@
 #include "BnAxisConfig.h"
 #include "BnMotionTracking_2Nodes.h"
 #include "BnQuaternion.h"
-#include "BnRobotArm_MT.h"
+#include "BnRobotArm_IKMT.h"
 #include "BnRobotIK_ArmZYY.h"
 #include "BnUtils.h"
 
@@ -580,7 +580,7 @@ TEST_CASE("Test_BlenderSimpleLinksProj3") {
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues13[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
 }
 
-TEST_CASE("Test_BnRobotArm_MT") {
+TEST_CASE("Test_BnRobotArm_IKMT") {
 
     // Arms along the Y axis
     double const initialPosition_1[3] = {0, 0, 0};
@@ -593,7 +593,7 @@ TEST_CASE("Test_BnRobotArm_MT") {
 
     std::unique_ptr<BnRobotIK_ArmZYY> bnaik_ptr(new BnRobotIK_ArmZYY(0, 1, 1, nullptr, units));
 
-    BnRobotArm_MT robotMT(std::move(bnmotiontrack_ptr), std::move(bnaik_ptr));
+    BnRobotArm_IKMT robotMT(std::move(bnmotiontrack_ptr), std::move(bnaik_ptr));
 
     // X rotation 45, 0 -> [ 0.0, 1.711, 0.703 ]
     double endpos[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
@@ -626,7 +626,7 @@ TEST_CASE("Test_BnRobotArm_MT") {
     double const node1_quat2[4] = {0.766044, 0, -0.642788, 0};
     double const node2_quat2[4] = {0.984808, 0, 0.173648, 0};
 
-    robotMT = BnRobotArm_MT(std::move(bnmotiontrack_ptr), std::move(bnaik_ptr));
+    robotMT = BnRobotArm_IKMT(std::move(bnmotiontrack_ptr), std::move(bnaik_ptr));
 
     // [0.         10. 100.]]
     double const test_evalues2[3][3] = {
@@ -638,7 +638,7 @@ TEST_CASE("Test_BnRobotArm_MT") {
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues2[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
 }
 
-TEST_CASE("Test_BnRobotArm_MT_Constraints") {
+TEST_CASE("Test_BnRobotArm_IKMT_Constraints") {
 
     // Arms along the Y axis
     double const initialPosition_1[3] = {0, 0, 0};
@@ -653,7 +653,7 @@ TEST_CASE("Test_BnRobotArm_MT_Constraints") {
         {BnUtils::toRadians(-45), BnUtils::toRadians(45)}, {0, BnUtils::toRadians(90)}, {0, BnUtils::toRadians(90)}};
     std::unique_ptr<BnRobotIK_ArmZYY> bnaik_ptr(new BnRobotIK_ArmZYY(0, 1, 1, anglesConstraints1, units));
 
-    BnRobotArm_MT robotMT(std::move(bnmotiontrack_ptr), std::move(bnaik_ptr));
+    BnRobotArm_IKMT robotMT(std::move(bnmotiontrack_ptr), std::move(bnaik_ptr));
 
     // X rotation 45, 0 -> [ 0.0, 1.711, 0.703 ]
     double endpos[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
@@ -684,7 +684,7 @@ TEST_CASE("Test_BnRobotArm_MT_Constraints") {
         {BnUtils::toRadians(-90), BnUtils::toRadians(90)}, {0, BnUtils::toRadians(90)}, {0, BnUtils::toRadians(90)}};
     bnaik_ptr = std::unique_ptr<BnRobotIK_ArmZYY>(new BnRobotIK_ArmZYY(0, 1, 1, anglesConstraints2, units));
 
-    robotMT = BnRobotArm_MT(std::move(bnmotiontrack_ptr), std::move(bnaik_ptr));
+    robotMT = BnRobotArm_IKMT(std::move(bnmotiontrack_ptr), std::move(bnaik_ptr));
 
     // Z rotation 135
     // Y rotation 10, 20 -> [ -1.3624130487442017, 1.3624131679534912, -0.5175356268882751 ]

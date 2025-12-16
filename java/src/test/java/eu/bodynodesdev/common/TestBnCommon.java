@@ -30,7 +30,7 @@ import eu.bodynodesdev.common.BnAxisConfig;
 import eu.bodynodesdev.common.BnConstants;
 import eu.bodynodesdev.common.BnMotionTracking_2Nodes;
 import eu.bodynodesdev.common.BnQuaternion;
-import eu.bodynodesdev.common.BnRobotArm_MT;
+import eu.bodynodesdev.common.BnRobotArm_IKMT;
 import eu.bodynodesdev.common.BnRobotIK_ArmZYY;
 import eu.bodynodesdev.common.BnUtils;
 import java.io.IOException;
@@ -508,7 +508,7 @@ public class TestBnCommon {
   }
 
   @Test
-  public void test_BnRobotArm_MT() {
+  public void test_BnRobotArm_IKMT() {
 
     // Arms along the Y axis
     BnMotionTracking_2Nodes bnmotiontrack =
@@ -527,7 +527,7 @@ public class TestBnCommon {
     double[] node1_quat = new double[] {0.92388, 0.382683, 0, 0};
     double[] node2_quat = new double[] {1, 0, 0, 0};
 
-    BnRobotArm_MT robotMT = new BnRobotArm_MT(bnmotiontrack, bnaik);
+    BnRobotArm_IKMT robotMT = new BnRobotArm_IKMT(bnmotiontrack, bnaik);
 
     // [90.         45.00005363 44.99993373]]
     double[][] test_evalues =
@@ -560,7 +560,7 @@ public class TestBnCommon {
     node1_quat = new double[] {0.766044, 0, -0.642788, 0};
     node2_quat = new double[] {0.984808, 0, 0.173648, 0};
 
-    robotMT = new BnRobotArm_MT(bnmotiontrack, bnaik);
+    robotMT = new BnRobotArm_IKMT(bnmotiontrack, bnaik);
 
     // [0.         10. 100.]]
     test_evalues =
@@ -577,7 +577,7 @@ public class TestBnCommon {
   }
 
   @Test
-  public void test_BnRobotArm_MT_Constraints() {
+  public void test_BnRobotArm_IKMT_Constraints() {
 
     // Arms along the Y axis
     BnMotionTracking_2Nodes bnmotiontrack =
@@ -607,7 +607,7 @@ public class TestBnCommon {
     double[] node1_quat = new double[] {0.92388, 0.382683, 0, 0};
     double[] node2_quat = new double[] {1, 0, 0, 0};
 
-    BnRobotArm_MT robotMT = new BnRobotArm_MT(bnmotiontrack, bnaik);
+    BnRobotArm_IKMT robotMT = new BnRobotArm_IKMT(bnmotiontrack, bnaik);
 
     // [45.         45.00005363 44.99993373]]
     double[][] test_evalues =
@@ -651,7 +651,7 @@ public class TestBnCommon {
     node1_quat = new double[] {0.381227, -0.080521, 0.033353, 0.920364};
     node2_quat = new double[] {0.37687, -0.16043, 0.066452, 0.909844};
 
-    robotMT = new BnRobotArm_MT(bnmotiontrack, bnaik);
+    robotMT = new BnRobotArm_IKMT(bnmotiontrack, bnaik);
 
     // [90.         90 30]]
     test_evalues =
@@ -678,7 +678,7 @@ public class TestBnCommon {
             },
             "cm");
 
-    robotMT = new BnRobotArm_MT(bnmotiontrack, bnaik);
+    robotMT = new BnRobotArm_IKMT(bnmotiontrack, bnaik);
 
     // [90.         100 10]]
     test_evalues =
@@ -705,7 +705,7 @@ public class TestBnCommon {
             },
             "cm");
 
-    robotMT = new BnRobotArm_MT(bnmotiontrack, bnaik);
+    robotMT = new BnRobotArm_IKMT(bnmotiontrack, bnaik);
 
     // [90.         100 10]]
     test_evalues =

@@ -335,7 +335,7 @@ def test_BlenderSimpleLinksProj3():
     )
 
 
-def test_BnRobotArm_MT():
+def test_BnRobotArm_IKMT():
     # Let's test the combination of BnMotionTracking_2Nodes and BnRobotIK_ArmZYY
     # So we will decide specific SersorArm1 and SensorArm2 rotations which will move an immaginary point (BnMotionTracking_2Nodes)
     # The RobotArm1, RobotArm2, and RobotArm3 will follow that point (BnRobotIK_ArmZYY)
@@ -355,7 +355,7 @@ def test_BnRobotArm_MT():
     node1_quat = [0.92388, 0.382683, 0, 0]
     node2_quat = [1, 0, 0, 0]
 
-    robotMT = bncommon.BnRobotArm_MT(bnmotiontrack, bnaik)
+    robotMT = bncommon.BnRobotArm_IKMT(bnmotiontrack, bnaik)
 
     # [90.         45.00005363 44.99993373]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
@@ -375,7 +375,7 @@ def test_BnRobotArm_MT():
     node1_quat = [0.766044, 0, -0.642788, 0]
     node2_quat = [0.984808, 0, 0.173648, 0]
 
-    robotMT = bncommon.BnRobotArm_MT(bnmotiontrack, bnaik)
+    robotMT = bncommon.BnRobotArm_IKMT(bnmotiontrack, bnaik)
 
     # [0.         10. 100.]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
@@ -385,7 +385,7 @@ def test_BnRobotArm_MT():
     )
 
 
-def test_BnRobotArm_MT_Constraints():
+def test_BnRobotArm_IKMT_Constraints():
     # Let's test the combination of BnMotionTracking_2Nodes and BnRobotIK_ArmZYY
     # and some contraints on the Robot.
     # Sensors can give any values but Robots have physical limitions
@@ -408,7 +408,7 @@ def test_BnRobotArm_MT_Constraints():
     node1_quat = [0.92388, 0.382683, 0, 0]
     node2_quat = [1, 0, 0, 0]
 
-    robotMT = bncommon.BnRobotArm_MT(bnmotiontrack, bnaik)
+    robotMT = bncommon.BnRobotArm_IKMT(bnmotiontrack, bnaik)
 
     # [45.         45.00005363 44.99993373]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
@@ -436,7 +436,7 @@ def test_BnRobotArm_MT_Constraints():
     node1_quat = [0.381227, -0.080521, 0.033353, 0.920364]
     node2_quat = [0.37687, -0.16043, 0.066452, 0.909844]
 
-    robotMT = bncommon.BnRobotArm_MT(bnmotiontrack, bnaik)
+    robotMT = bncommon.BnRobotArm_IKMT(bnmotiontrack, bnaik)
 
     # [90.         90 30]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
@@ -451,7 +451,7 @@ def test_BnRobotArm_MT_Constraints():
         anglesConstraints=np.deg2rad([[-90, 90], [0, 100], [0, 90]]).tolist(),
         units="cm",
     )
-    robotMT = bncommon.BnRobotArm_MT(bnmotiontrack, bnaik)
+    robotMT = bncommon.BnRobotArm_IKMT(bnmotiontrack, bnaik)
     # [90.         100 10]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
     assert np.allclose(
@@ -465,7 +465,7 @@ def test_BnRobotArm_MT_Constraints():
         anglesConstraints=np.deg2rad([[-90, 90], [0, 180], [0, 90]]).tolist(),
         units="cm",
     )
-    robotMT = bncommon.BnRobotArm_MT(bnmotiontrack, bnaik)
+    robotMT = bncommon.BnRobotArm_IKMT(bnmotiontrack, bnaik)
     # [90.         100 10]]
     robotangles = robotMT.compute(node1_quat, node2_quat)
     assert np.allclose(

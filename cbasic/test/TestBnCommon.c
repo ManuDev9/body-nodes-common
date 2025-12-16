@@ -25,7 +25,7 @@
 #include "BnAxisConfig.h"
 #include "BnMotionTracking_2Nodes.h"
 #include "BnQuaternion.h"
-#include "BnRobotArm_MT.h"
+#include "BnRobotArm_IKMT.h"
 #include "BnRobotIK_ArmZYY.h"
 #include "BnUtils.h"
 
@@ -633,7 +633,7 @@ void Test_BlenderSimpleLinksProj3(void) {
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues13[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
 }
 
-void Test_BnRobotArm_MT(void) {
+void Test_BnRobotArm_IKMT(void) {
 
     // Arms along the Y axis
     double const initialPosition_1[3] = {0, 0, 0};
@@ -646,7 +646,7 @@ void Test_BnRobotArm_MT(void) {
 
     BnRobotIK_ArmZYY_t bnaik = BnRobotIK_ArmZYY_create(0, 1, 1, NULL, units);
 
-    BnRobotArm_MT_ArmZYY_2Nodes_t robotMT = BnRobotArm_MT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
+    BnRobotArm_IKMT_ArmZYY_2Nodes_t robotMT = BnRobotArm_IKMT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
 
     // X rotation 45, 0 -> [ 0.0, 1.711, 0.703 ]
     double endpos[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
@@ -658,7 +658,7 @@ void Test_BnRobotArm_MT(void) {
         {0, 0, BnUtils_toRadians(90)}, {0, BnUtils_toRadians(45.00005363), 0}, {0, BnUtils_toRadians(44.99993373), 0}};
     double test_ovalues[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 
-    BnRobotArm_MT_ArmZYY_2Nodes_compute(&robotMT, node1_quat1, node2_quat1, endpos, test_ovalues);
+    BnRobotArm_IKMT_ArmZYY_2Nodes_compute(&robotMT, node1_quat1, node2_quat1, endpos, test_ovalues);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues1[0], test_ovalues[0], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues1[1], test_ovalues[1], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues1[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
@@ -677,19 +677,19 @@ void Test_BnRobotArm_MT(void) {
     double const node1_quat2[4] = {0.766044, 0, -0.642788, 0};
     double const node2_quat2[4] = {0.984808, 0, 0.173648, 0};
 
-    robotMT = BnRobotArm_MT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
+    robotMT = BnRobotArm_IKMT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
 
     // [0.         10. 100.]]
     double const test_evalues2[3][3] = {
         {0, 0, 0}, {0, BnUtils_toRadians(9.99994606), 0}, {0, BnUtils_toRadians(100.00004607), 0}};
 
-    BnRobotArm_MT_ArmZYY_2Nodes_compute(&robotMT, node1_quat2, node2_quat2, endpos, test_ovalues);
+    BnRobotArm_IKMT_ArmZYY_2Nodes_compute(&robotMT, node1_quat2, node2_quat2, endpos, test_ovalues);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues2[0], test_ovalues[0], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues2[1], test_ovalues[1], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues2[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
 }
 
-void Test_BnRobotArm_MT_Constraints(void) {
+void Test_BnRobotArm_IKMT_Constraints(void) {
 
     // Arms along the Y axis
     double const initialPosition_1[3] = {0, 0, 0};
@@ -704,7 +704,7 @@ void Test_BnRobotArm_MT_Constraints(void) {
         {BnUtils_toRadians(-45), BnUtils_toRadians(45)}, {0, BnUtils_toRadians(90)}, {0, BnUtils_toRadians(90)}};
     BnRobotIK_ArmZYY_t bnaik = BnRobotIK_ArmZYY_create(0, 1, 1, anglesConstraints1, units);
 
-    BnRobotArm_MT_ArmZYY_2Nodes_t robotMT = BnRobotArm_MT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
+    BnRobotArm_IKMT_ArmZYY_2Nodes_t robotMT = BnRobotArm_IKMT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
 
     // X rotation 45, 0 -> [ 0.0, 1.711, 0.703 ]
     double endpos[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
@@ -716,7 +716,7 @@ void Test_BnRobotArm_MT_Constraints(void) {
         {0, 0, BnUtils_toRadians(45)}, {0, BnUtils_toRadians(45.00005363), 0}, {0, BnUtils_toRadians(44.99993373), 0}};
     double test_ovalues[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 
-    BnRobotArm_MT_ArmZYY_2Nodes_compute(&robotMT, node1_quat1, node2_quat1, endpos, test_ovalues);
+    BnRobotArm_IKMT_ArmZYY_2Nodes_compute(&robotMT, node1_quat1, node2_quat1, endpos, test_ovalues);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues1[0], test_ovalues[0], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues1[1], test_ovalues[1], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues1[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
@@ -733,7 +733,7 @@ void Test_BnRobotArm_MT_Constraints(void) {
         {BnUtils_toRadians(-90), BnUtils_toRadians(90)}, {0, BnUtils_toRadians(90)}, {0, BnUtils_toRadians(90)}};
     bnaik = BnRobotIK_ArmZYY_create(0, 1, 1, anglesConstraints2, units);
 
-    robotMT = BnRobotArm_MT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
+    robotMT = BnRobotArm_IKMT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
 
     // Z rotation 135
     // Y rotation 10, 20 -> [ -1.3624130487442017, 1.3624131679534912,
@@ -745,7 +745,7 @@ void Test_BnRobotArm_MT_Constraints(void) {
     double const test_evalues2[3][3] = {
         {0, 0, BnUtils_toRadians(90)}, {0, BnUtils_toRadians(90), 0}, {0, BnUtils_toRadians(29.15184909), 0}};
 
-    BnRobotArm_MT_ArmZYY_2Nodes_compute(&robotMT, node1_quat2, node2_quat2, endpos, test_ovalues);
+    BnRobotArm_IKMT_ArmZYY_2Nodes_compute(&robotMT, node1_quat2, node2_quat2, endpos, test_ovalues);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues2[0], test_ovalues[0], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues2[1], test_ovalues[1], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues2[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
@@ -754,13 +754,13 @@ void Test_BnRobotArm_MT_Constraints(void) {
         {BnUtils_toRadians(-90), BnUtils_toRadians(90)}, {0, BnUtils_toRadians(100)}, {0, BnUtils_toRadians(90)}};
     bnaik = BnRobotIK_ArmZYY_create(0, 1, 1, anglesConstraints3, units);
 
-    robotMT = BnRobotArm_MT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
+    robotMT = BnRobotArm_IKMT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
 
     // [90.         100 10]]
     double const test_evalues3[3][3] = {
         {0, 0, BnUtils_toRadians(90)}, {0, BnUtils_toRadians(100), 0}, {0, BnUtils_toRadians(9.9999254), 0}};
 
-    BnRobotArm_MT_ArmZYY_2Nodes_compute(&robotMT, node1_quat2, node2_quat2, endpos, test_ovalues);
+    BnRobotArm_IKMT_ArmZYY_2Nodes_compute(&robotMT, node1_quat2, node2_quat2, endpos, test_ovalues);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues3[0], test_ovalues[0], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues3[1], test_ovalues[1], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues3[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
@@ -769,13 +769,13 @@ void Test_BnRobotArm_MT_Constraints(void) {
         {BnUtils_toRadians(-90), BnUtils_toRadians(90)}, {0, BnUtils_toRadians(180)}, {0, BnUtils_toRadians(90)}};
     bnaik = BnRobotIK_ArmZYY_create(0, 1, 1, anglesConstraints4, units);
 
-    robotMT = BnRobotArm_MT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
+    robotMT = BnRobotArm_IKMT_ArmZYY_2Nodes_create(&bnmotiontrack, &bnaik);
 
     // [90.         100 10]]
     double const test_evalues4[3][3] = {
         {0, 0, BnUtils_toRadians(90)}, {0, BnUtils_toRadians(100.00035347), 0}, {0, BnUtils_toRadians(9.99922384), 0}};
 
-    BnRobotArm_MT_ArmZYY_2Nodes_compute(&robotMT, node1_quat2, node2_quat2, endpos, test_ovalues);
+    BnRobotArm_IKMT_ArmZYY_2Nodes_compute(&robotMT, node1_quat2, node2_quat2, endpos, test_ovalues);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues4[0], test_ovalues[0], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues4[1], test_ovalues[1], 3, 1e-6f, 1e-6f);
     TEST_ASSERT_DOUBLE_ARRAY(test_evalues4[2], test_ovalues[2], 3, 1e-6f, 1e-6f);
@@ -804,8 +804,8 @@ int main(void) {
     RUN_TEST(Test_BlenderSimpleLinksProj1);
     RUN_TEST(Test_BlenderSimpleLinksProj2);
     RUN_TEST(Test_BlenderSimpleLinksProj3);
-    RUN_TEST(Test_BnRobotArm_MT);
-    RUN_TEST(Test_BnRobotArm_MT_Constraints);
+    RUN_TEST(Test_BnRobotArm_IKMT);
+    RUN_TEST(Test_BnRobotArm_IKMT_Constraints);
 
     return UNITY_END();
 }

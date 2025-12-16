@@ -488,7 +488,7 @@ class BnRobotIK_ArmZYY:
 
 
 # Generic class that can take any IK and MotionTracking algo for a robotic arm
-class BnRobotArm_MT:
+class BnRobotArm_IKMT:
 
     def __init__(self, motionTraker, robotIK):
         self.motionTraker = motionTraker

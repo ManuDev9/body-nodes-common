@@ -22,36 +22,33 @@
  * SOFTWARE.
  */
 
-#include "BnMotionTracking_2Nodes.h"
-#include "BnRobotIK_ArmZYY.h"
-#include <memory>
-
-#ifndef BN_ROBOT_ARM_MT_H
-#define BN_ROBOT_ARM_MT_H
+#include "BnRobotArm_IKMT.h"
 
 namespace bodynodesdev {
 
 namespace common {
 
-class BnRobotArm_MT {
+BnRobotArm_IKMT::BnRobotArm_IKMT(std::unique_ptr<BnMotionTracking_Interface> &&motionTraker,
+                                 std::unique_ptr<BnRobotIK_Interface> &&robotIK)
+    : motionTraker(std::move(motionTraker)), robotIK(std::move(robotIK)) {}
 
-  public:
-    BnRobotArm_MT(std::unique_ptr<BnMotionTracking_Interface> &&motionTraker,
-                  std::unique_ptr<BnRobotIK_Interface> &&robotIK);
+//    double const node1Quat[4],
+//    double const node2Quat[4],
+//    double endpositions[3][3],
+//    double outAngles[3][3]
+void BnRobotArm_IKMT::compute(double const *const node1Quat, double const *const node2Quat,
+                              double (*const endpositions)[3], double (*const outAngles)[3]) {
 
-    void compute(double const *const node1Quat, double const *const node2Quat, double (*const endpositions)[3],
-                 double (*const outAngles)[3]);
+    motionTraker->compute(node1Quat, node2Quat, endpositions);
+    robotIK->compute(endpositions[2], outAngles);
+}
 
-    void setMotionTraker(std::unique_ptr<BnMotionTracking_Interface> &&mt);
-    void setRobotIK(std::unique_ptr<BnRobotIK_Interface> &&rik);
+void BnRobotArm_IKMT::setMotionTraker(std::unique_ptr<BnMotionTracking_Interface> &&mt) {
+    motionTraker = std::move(mt);
+}
 
-  private:
-    std::unique_ptr<BnMotionTracking_Interface> motionTraker;
-    std::unique_ptr<BnRobotIK_Interface> robotIK;
-};
+void BnRobotArm_IKMT::setRobotIK(std::unique_ptr<BnRobotIK_Interface> &&rik) { robotIK = std::move(rik); }
 
 } // namespace common
 
 } // namespace bodynodesdev
-
-#endif // BN_ROBOT_ARM_MT_H
