@@ -21,6 +21,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-test:
+format:
+	black bncommon.py tests/
+
+test: format
 	python3 -m pytest -v
 
