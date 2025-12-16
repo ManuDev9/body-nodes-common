@@ -26,8 +26,8 @@
 #define BN_QUATERNION_H
 
 #include "stdint.h"
-#include <stddef.h>
 #include <iostream>
+#include <stddef.h>
 
 namespace bodynodesdev {
 
@@ -35,33 +35,33 @@ namespace common {
 
 class BnQuaternion {
 
-    public:
-        BnQuaternion( double const vals[4]);
-        BnQuaternion( double const w, double const x, double const y, double const z );
+  public:
+    BnQuaternion(double const vals[4]);
+    BnQuaternion(double const w, double const x, double const y, double const z);
 
-        BnQuaternion mul( BnQuaternion const &quat2 ) const;
-        BnQuaternion div( double const scalar ) const;
-        BnQuaternion conjugate() const;
-        double norm() const;
-        BnQuaternion inverse() const;
-        friend std::ostream& operator<<(std::ostream& os, const BnQuaternion& quat);
-        void toList( double valsOut[4] ) const;
-        bool isEmpty() const;
+    BnQuaternion mul(BnQuaternion const &quat2) const;
+    BnQuaternion div(double const scalar) const;
+    BnQuaternion conjugate() const;
+    double norm() const;
+    BnQuaternion inverse() const;
+    friend std::ostream &operator<<(std::ostream &os, const BnQuaternion &quat);
+    void toList(double valsOut[4]) const;
+    bool isEmpty() const;
 
-        double w() const;
-        double x() const;
-        double y() const;
-        double z() const;
+    double w() const;
+    double x() const;
+    double y() const;
+    double z() const;
 
-    private:
-        double mW;
-        double mX;
-        double mY;
-        double mZ;
+  private:
+    double mW;
+    double mX;
+    double mY;
+    double mZ;
 };
 
-} //namespace common
+} // namespace common
 
-} //namespace bodynodesdev
+} // namespace bodynodesdev
 
 #endif // BN_QUATERNION_H
