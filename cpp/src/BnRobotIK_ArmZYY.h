@@ -22,37 +22,53 @@
 # SOFTWARE.
 */
 
-#ifndef BN_ROBOT_IK_ZYY_2ARMS_CPP
-#define BN_ROBOT_IK_ZYY_2ARMS_CPP
+#ifndef BN_ROBOT_IK_ARM_ZYY_H
+#define BN_ROBOT_IK_ARM_ZYY_H
 
-#include <cstdint>
-#include <cstring>
-#include <string>
+#include "stdint.h"
+#include "BnRobotIK_Interface.h"
+
+#define UNITS_BUFF_SIZE 10
 
 namespace bodynodesdev {
 
 namespace common {
-    
-class BnRobotIK_ZYY2Arms {
+
+class BnRobotIK_ArmZYY : public BnRobotIK_Interface {
 
     public:
+        BnRobotIK_ArmZYY(
+            double const lengthRA1,
+            double const lengthRA2,
+            double const lengthRA3,
+            double const (* const anglesConstraints)[2],
+            char const * const units );
 
-        // Starting Point is assumed to be [0, 0, 0]
-        BnRobotIK_ZYY2Arms( float const lengthRA2, float const lengthRA3, float const displSP[3], std::string const units );
+        //    double const endpoint[3],
+        //    double outAngles[3][3] 
+        void compute(
+            double const * const endpoint,
+            double (* const outAngles)[3] ) override;
 
-        // The returned angles refer to the X axis
-        void compute( float const endpoint[3], float outAngles[3] );
+        //    double endpoints[3][3]
+        void getEndpoints( double (*const endpoints)[3] ) const;
+
+        BnRobotIK_Interface* clone() const override;
 
     private:
-
-        float mLengthRA2;
-        float mLengthRA3;
-        float mDisplSP[3];
-
+        double mTheta_RA1;
+        double mGamma_RA2;
+        double mGamma_RA3;
+        double mLengthRA1;
+        double mLengthRA2;
+        double mLengthRA3;
+        double mAnglesConstraints[3][2];
+        bool mHasAnglesConstraints;
+        char mUnits[UNITS_BUFF_SIZE];
 };
 
 } //namespace common
 
 } //namespace bodynodesdev
 
-#endif // BN_ROBOT_IK_ZYY_2ARMS_CPP
+#endif // BN_ROBOT_IK_ARM_ZYY_H

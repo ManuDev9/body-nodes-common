@@ -22,46 +22,41 @@
 # SOFTWARE.
 */
 
-#ifndef BN_TWO_NODES_MOTION_TRACKING_CPP
-#define BN_TWO_NODES_MOTION_TRACKING_CPP
+#ifndef BN_AXIS_CONFIG_H
+#define BN_AXIS_CONFIG_H
+
+#define MAX_NUMBER_AXIS 4
 
 #include <cstdint>
-#include <cstring>
-#include <string>
 
 namespace bodynodesdev {
 
 namespace common {
 
-class BnTwoNodesMotionTracking {
+class BnAxisConfig {
 
     public:
+        BnAxisConfig();
 
-        // *locationConstraints => locationConstraints[6] = { minX, maxX, minY, maxY, minZ, maxZ };
-        BnTwoNodesMotionTracking(
-            float const initialPosition[3], float const lengthArm1, float const lengthArm2,
-            float const *locationConstraints, std::string const units);
-        
-        void compute( float const node1Quat[4], float const node2Quat[4], float finalPosition[3] );
+        void config( int const * const ioAxis, int const * const ioSign);
+        void config( int const * const pureArray);
+        void config(
+            int const ioAxisW, int const ioAxisX, int const ioAxisY, int const ioAxisZ,
+            int const ioSignW, int const ioSignX, int const ioSignY, int const ioSignZ );
+
+        void apply( double iovalues[] ) const ;
+        void apply( float iovalues[] ) const ;
+        void apply( int iovalues[] ) const ;
 
     private:
 
-        void quaternion_to_rotation_matrix( float const quat[4], float rotationMatrix[3][3] );
-        void matrix_multiply_3x3( float const matrix[3][3], float const vector[3], float result[3]);
-
-    private:
-
-        float mInitialPosition[3];
-        float mLengthArm1;
-        float mLengthArm2;
-        float mLocationConstraints[6];
-        bool mHasLocationConstraints;
-
+        int mAxis[MAX_NUMBER_AXIS];
+        int mSign[MAX_NUMBER_AXIS];
+        uint8_t mLength;
 };
 
 } //namespace common
 
 } //namespace bodynodesdev
 
-#endif // BN_TWO_NODES_MOTION_TRACKING_CPP
-
+#endif // BN_AXIS_CONFIG_H
