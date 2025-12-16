@@ -30,9 +30,9 @@
 #include "stdint.h"
 
 typedef struct BnAxisConfig_st {
-  int axis[MAX_NUMBER_AXIS];
-  int sign[MAX_NUMBER_AXIS];
-  uint8_t length;
+    int axis[MAX_NUMBER_AXIS];
+    int sign[MAX_NUMBER_AXIS];
+    uint8_t length;
 } BnAxisConfig_t;
 
 #ifdef __cplusplus
@@ -40,21 +40,14 @@ extern "C" {
 #endif
 
 // All input arrays are expected to be of size 4
-void BnAxisConfig_config(BnAxisConfig_t *const data, int const *const ioAxis,
-                         int const *const ioSign);
-void BnAxisConfig_config_purearray(BnAxisConfig_t *const data,
-                                   int const *const pureArray);
-void BnAxisConfig_config_vals(BnAxisConfig_t *const data, int const ioAxisW,
-                              int const ioAxisX, int const ioAxisY,
-                              int const ioAxisZ, int const ioSignW,
-                              int const ioSignX, int const ioSignY,
+void BnAxisConfig_config(BnAxisConfig_t *const data, int const *const ioAxis, int const *const ioSign);
+void BnAxisConfig_config_purearray(BnAxisConfig_t *const data, int const *const pureArray);
+void BnAxisConfig_config_vals(BnAxisConfig_t *const data, int const ioAxisW, int const ioAxisX, int const ioAxisY,
+                              int const ioAxisZ, int const ioSignW, int const ioSignX, int const ioSignY,
                               int const ioSignZ);
-void BnAxisConfig_apply_float(BnAxisConfig_t const *const data,
-                              float *const iovalues);
-void BnAxisConfig_apply_double(BnAxisConfig_t const *const data,
-                               double *const iovalues);
-void BnAxisConfig_apply_int(BnAxisConfig_t const *const data,
-                            int *const iovalues);
+void BnAxisConfig_apply_float(BnAxisConfig_t const *const data, float *const iovalues);
+void BnAxisConfig_apply_double(BnAxisConfig_t const *const data, double *const iovalues);
+void BnAxisConfig_apply_int(BnAxisConfig_t const *const data, int *const iovalues);
 
 #ifdef __cplusplus
 }

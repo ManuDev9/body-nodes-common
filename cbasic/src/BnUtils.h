@@ -32,54 +32,45 @@
 
 //////////////// MOTION TRACKING AND IK
 
-static inline double BnUtils_toRadians(double const degrees) {
-  return degrees * (BN_M_PI / 180.0);
-}
+static inline double BnUtils_toRadians(double const degrees) { return degrees * (BN_M_PI / 180.0); }
 
 // Function to multiply two rotation matrices
 // double const R1[3][3], double const R2[3][3], double Ro[3][3]
-static inline void BnUtils_multiplyRotationMatrices(double const (*const R1)[3],
-                                                    double const (*const R2)[3],
+static inline void BnUtils_multiplyRotationMatrices(double const (*const R1)[3], double const (*const R2)[3],
                                                     double (*const Ro)[3]) {
 
-  Ro[0][0] = R1[0][0] * R2[0][0] + R1[0][1] * R2[1][0] + R1[0][2] * R2[2][0];
-  Ro[0][1] = R1[0][0] * R2[0][1] + R1[0][1] * R2[1][1] + R1[0][2] * R2[2][1];
-  Ro[0][2] = R1[0][0] * R2[0][2] + R1[0][1] * R2[1][2] + R1[0][2] * R2[2][2];
+    Ro[0][0] = R1[0][0] * R2[0][0] + R1[0][1] * R2[1][0] + R1[0][2] * R2[2][0];
+    Ro[0][1] = R1[0][0] * R2[0][1] + R1[0][1] * R2[1][1] + R1[0][2] * R2[2][1];
+    Ro[0][2] = R1[0][0] * R2[0][2] + R1[0][1] * R2[1][2] + R1[0][2] * R2[2][2];
 
-  Ro[1][0] = R1[1][0] * R2[0][0] + R1[1][1] * R2[1][0] + R1[1][2] * R2[2][0];
-  Ro[1][1] = R1[1][0] * R2[0][1] + R1[1][1] * R2[1][1] + R1[1][2] * R2[2][1];
-  Ro[1][2] = R1[1][0] * R2[0][2] + R1[1][1] * R2[1][2] + R1[1][2] * R2[2][2];
+    Ro[1][0] = R1[1][0] * R2[0][0] + R1[1][1] * R2[1][0] + R1[1][2] * R2[2][0];
+    Ro[1][1] = R1[1][0] * R2[0][1] + R1[1][1] * R2[1][1] + R1[1][2] * R2[2][1];
+    Ro[1][2] = R1[1][0] * R2[0][2] + R1[1][1] * R2[1][2] + R1[1][2] * R2[2][2];
 
-  Ro[2][0] = R1[2][0] * R2[0][0] + R1[2][1] * R2[1][0] + R1[2][2] * R2[2][0];
-  Ro[2][1] = R1[2][0] * R2[0][1] + R1[2][1] * R2[1][1] + R1[2][2] * R2[2][1];
-  Ro[2][2] = R1[2][0] * R2[0][2] + R1[2][1] * R2[1][2] + R1[2][2] * R2[2][2];
+    Ro[2][0] = R1[2][0] * R2[0][0] + R1[2][1] * R2[1][0] + R1[2][2] * R2[2][0];
+    Ro[2][1] = R1[2][0] * R2[0][1] + R1[2][1] * R2[1][1] + R1[2][2] * R2[2][1];
+    Ro[2][2] = R1[2][0] * R2[0][2] + R1[2][1] * R2[1][2] + R1[2][2] * R2[2][2];
 }
 
 // Function to multiply a rotation matrix and a vector
 // double const R1[3][3], double const V1[3], double Vo[3]
-static inline void BnUtils_multiplyRotationMatrixWithVector(
-    double const (*const R1)[3], double const *const V1, double *const Vo) {
-  Vo[0] = R1[0][0] * V1[0] + R1[0][1] * V1[1] + R1[0][2] * V1[2];
-  Vo[1] = R1[1][0] * V1[0] + R1[1][1] * V1[1] + R1[1][2] * V1[2];
-  Vo[2] = R1[2][0] * V1[0] + R1[2][1] * V1[1] + R1[2][2] * V1[2];
+static inline void BnUtils_multiplyRotationMatrixWithVector(double const (*const R1)[3], double const *const V1,
+                                                            double *const Vo) {
+    Vo[0] = R1[0][0] * V1[0] + R1[0][1] * V1[1] + R1[0][2] * V1[2];
+    Vo[1] = R1[1][0] * V1[0] + R1[1][1] * V1[1] + R1[1][2] * V1[2];
+    Vo[2] = R1[2][0] * V1[0] + R1[2][1] * V1[1] + R1[2][2] * V1[2];
 }
 
 // Function to compute a rotation matrix from Euler angles (XYZ order). Roll,
 // pitch and yaw are in radians double Ro[3][3]
-void BnUtils_blender_euler_to_rotation_matrix_rad(double roll, double pitch,
-                                                  double yaw,
-                                                  double (*const Ro)[3]);
+void BnUtils_blender_euler_to_rotation_matrix_rad(double roll, double pitch, double yaw, double (*const Ro)[3]);
 
 // Function to compute a rotation matrix from Euler angles (XYZ order). Roll,
 // pitch and yaw are in degrees double Ro[3][3]
-void BnUtils_blender_euler_to_rotation_matrix_degree(double roll, double pitch,
-                                                     double yaw,
-                                                     double (*const Ro)[3]);
+void BnUtils_blender_euler_to_rotation_matrix_degree(double roll, double pitch, double yaw, double (*const Ro)[3]);
 
 // double const values[4]
-BnQuaternion_t
-BnUtils_createQuanternion(BnAxisConfig_t const *const axis_config,
-                          double const *const values);
+BnQuaternion_t BnUtils_createQuanternion(BnAxisConfig_t const *const axis_config, double const *const values);
 
 /** This trasformation ignores what is the local axis of the object once
  * rotated, we don't trust those axis system which might be compromised
@@ -101,28 +92,20 @@ BnUtils_createQuanternion(BnAxisConfig_t const *const axis_config,
 //    double envQuatVals[4],
 //    int pureAxisConfig[4],
 //    double valuesOut[4] );
-void BnUtils_transformSensorQuat(double const *const sensorQuatVals,
-                                 double *const firstQuatVals,
-                                 double const *const startingQuatVals,
-                                 double const *const envQuatVals,
-                                 int const *const pureAxisConfig,
-                                 double *const valuesOut);
+void BnUtils_transformSensorQuat(double const *const sensorQuatVals, double *const firstQuatVals,
+                                 double const *const startingQuatVals, double const *const envQuatVals,
+                                 int const *const pureAxisConfig, double *const valuesOut);
 
 //////////////// DATATYPES, DATAKEYS and COMMUNICATION
 
 // char key[8]
 // char bodypart[4]
-static inline uint8_t
-BnUtils_doesKeyContainBodypart(char const *const key,
-                               char const *const bodypart) {
-  return (key[0] == bodypart[0] && key[1] == bodypart[1] &&
-          key[2] == bodypart[2] && key[3] == bodypart[3]);
+static inline uint8_t BnUtils_doesKeyContainBodypart(char const *const key, char const *const bodypart) {
+    return (key[0] == bodypart[0] && key[1] == bodypart[1] && key[2] == bodypart[2] && key[3] == bodypart[3]);
 }
 
-static inline uint8_t BnUtils_doesKeyContainPlayer(char const *const key,
-                                                   char const *const player) {
-  return (key[4] == player[0] && key[5] == player[1] && key[6] == player[2] &&
-          key[7] == player[3]);
+static inline uint8_t BnUtils_doesKeyContainPlayer(char const *const key, char const *const player) {
+    return (key[4] == player[0] && key[5] == player[1] && key[6] == player[2] && key[7] == player[3]);
 }
 
 #endif // BN_UTILS_H

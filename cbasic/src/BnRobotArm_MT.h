@@ -30,19 +30,17 @@
 #define BN_ROBOT_ARM_MT_H
 
 typedef struct BnRobotArm_MT_ArmZYY_2Nodes_st {
-  BnMotionTracking_2Nodes_t motionTraker;
-  BnRobotIK_ArmZYY_t robotIK;
+    BnMotionTracking_2Nodes_t motionTraker;
+    BnRobotIK_ArmZYY_t robotIK;
 } BnRobotArm_MT_ArmZYY_2Nodes_t;
 
 // It contains common RobotIK and MotionTracking associations
 
-BnRobotArm_MT_ArmZYY_2Nodes_t BnRobotArm_MT_ArmZYY_2Nodes_create(
-    BnMotionTracking_2Nodes_t const *const motionTraker,
-    BnRobotIK_ArmZYY_t const *const robotIK);
+BnRobotArm_MT_ArmZYY_2Nodes_t BnRobotArm_MT_ArmZYY_2Nodes_create(BnMotionTracking_2Nodes_t const *const motionTraker,
+                                                                 BnRobotIK_ArmZYY_t const *const robotIK);
 
-void BnRobotArm_MT_ArmZYY_2Nodes_compute(
-    BnRobotArm_MT_ArmZYY_2Nodes_t *const robotMT, double const *const node1Quat,
-    double const *const node2Quat, double (*const endpositions)[3],
-    double (*const outAngles)[3]);
+void BnRobotArm_MT_ArmZYY_2Nodes_compute(BnRobotArm_MT_ArmZYY_2Nodes_t *const robotMT, double const *const node1Quat,
+                                         double const *const node2Quat, double (*const endpositions)[3],
+                                         double (*const outAngles)[3]);
 
 #endif // BN_ROBOT_ARM_MT_H

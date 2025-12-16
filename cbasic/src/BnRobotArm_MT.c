@@ -25,24 +25,21 @@
 
 #include "BnRobotArm_MT.h"
 
-BnRobotArm_MT_ArmZYY_2Nodes_t BnRobotArm_MT_ArmZYY_2Nodes_create(
-    BnMotionTracking_2Nodes_t const *const motionTraker,
-    BnRobotIK_ArmZYY_t const *const robotIK) {
+BnRobotArm_MT_ArmZYY_2Nodes_t BnRobotArm_MT_ArmZYY_2Nodes_create(BnMotionTracking_2Nodes_t const *const motionTraker,
+                                                                 BnRobotIK_ArmZYY_t const *const robotIK) {
 
-  BnRobotArm_MT_ArmZYY_2Nodes_t data = {*motionTraker, *robotIK};
-  return data;
+    BnRobotArm_MT_ArmZYY_2Nodes_t data = {*motionTraker, *robotIK};
+    return data;
 }
 
 //    double const node1Quat[4],
 //    double const node2Quat[4],
 //    double endpositions[3][3],
 //    double outAngles[3][3]
-void BnRobotArm_MT_ArmZYY_2Nodes_compute(
-    BnRobotArm_MT_ArmZYY_2Nodes_t *const robotMT, double const *const node1Quat,
-    double const *const node2Quat, double (*const endpositions)[3],
-    double (*const outAngles)[3]) {
+void BnRobotArm_MT_ArmZYY_2Nodes_compute(BnRobotArm_MT_ArmZYY_2Nodes_t *const robotMT, double const *const node1Quat,
+                                         double const *const node2Quat, double (*const endpositions)[3],
+                                         double (*const outAngles)[3]) {
 
-  BnMotionTracking_2Nodes_compute(&(robotMT->motionTraker), node1Quat,
-                                  node2Quat, endpositions);
-  BnRobotIK_ArmZYY_compute(&(robotMT->robotIK), endpositions[2], outAngles);
+    BnMotionTracking_2Nodes_compute(&(robotMT->motionTraker), node1Quat, node2Quat, endpositions);
+    BnRobotIK_ArmZYY_compute(&(robotMT->robotIK), endpositions[2], outAngles);
 }

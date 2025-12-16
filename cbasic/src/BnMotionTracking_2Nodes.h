@@ -30,12 +30,12 @@
 #define UNITS_BUFF_SIZE 10
 
 typedef struct BnMotionTracking_2Nodes_st {
-  double initialPosition[3];
-  double armVector1[3];
-  double armVector2[3];
-  double locationConstraints[3][2];
-  uint8_t hasLocationConstraints;
-  char units[UNITS_BUFF_SIZE];
+    double initialPosition[3];
+    double armVector1[3];
+    double armVector2[3];
+    double locationConstraints[3][2];
+    uint8_t hasLocationConstraints;
+    char units[UNITS_BUFF_SIZE];
 } BnMotionTracking_2Nodes_t;
 
 #ifdef __cplusplus
@@ -46,20 +46,18 @@ extern "C" {
 //    maxY}, {minZ, maxZ} }; double const initialPosition[3], double const
 //    armVector1[3], double const armVector2[3], double const (* const
 //    locationConstraints)[2], char const units[UNITS_BUFF_SIZE]);
-BnMotionTracking_2Nodes_t BnMotionTracking_2Nodes_create(
-    double const *const initialPosition, double const *const armVector1,
-    double const *const armVector2,
-    double const (*const locationConstraints)[2], char const *const units);
+BnMotionTracking_2Nodes_t BnMotionTracking_2Nodes_create(double const *const initialPosition,
+                                                         double const *const armVector1, double const *const armVector2,
+                                                         double const (*const locationConstraints)[2],
+                                                         char const *const units);
 
 //    double const node1Quat[4],
 //    double const node2Quat[4],
 //    endpositions[3][3] = { {ip_endposX, ip_endposY, ip_endposZ},
 //    {arm1_endposX, arm1_endposY, arm1_endposZ}, {arm2_endposX, arm2_endposY,
 //    arm2_endposZ}};
-void BnMotionTracking_2Nodes_compute(BnMotionTracking_2Nodes_t *const data,
-                                     double const *const node1Quat,
-                                     double const *const node2Quat,
-                                     double (*const endpositions)[3]);
+void BnMotionTracking_2Nodes_compute(BnMotionTracking_2Nodes_t *const data, double const *const node1Quat,
+                                     double const *const node2Quat, double (*const endpositions)[3]);
 
 #ifdef __cplusplus
 }

@@ -30,34 +30,31 @@
 #define UNITS_BUFF_SIZE 10
 
 typedef struct BnRobotIK_ArmZYY_st {
-  double theta_RA1;
-  double gamma_RA2;
-  double gamma_RA3;
-  double lengthRA1;
-  double lengthRA2;
-  double lengthRA3;
-  double anglesConstraints[3][2];
-  uint8_t hasAnglesConstraints;
-  char units[UNITS_BUFF_SIZE];
+    double theta_RA1;
+    double gamma_RA2;
+    double gamma_RA3;
+    double lengthRA1;
+    double lengthRA2;
+    double lengthRA3;
+    double anglesConstraints[3][2];
+    uint8_t hasAnglesConstraints;
+    char units[UNITS_BUFF_SIZE];
 } BnRobotIK_ArmZYY_t;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-BnRobotIK_ArmZYY_t BnRobotIK_ArmZYY_create(
-    double const lengthRA1, double const lengthRA2, double const lengthRA3,
-    double const (*const anglesConstraints)[2], char const *const units);
+BnRobotIK_ArmZYY_t BnRobotIK_ArmZYY_create(double const lengthRA1, double const lengthRA2, double const lengthRA3,
+                                           double const (*const anglesConstraints)[2], char const *const units);
 
 //    double const endpoint[3],
 //    double outAngles[3][3]
-void BnRobotIK_ArmZYY_compute(BnRobotIK_ArmZYY_t *const data,
-                              double const *const endpoint,
+void BnRobotIK_ArmZYY_compute(BnRobotIK_ArmZYY_t *const data, double const *const endpoint,
                               double (*const outAngles)[3]);
 
 //    double endpoints[3][3]
-void BnRobotIK_ArmZYY_getEndpoints(BnRobotIK_ArmZYY_t *const data,
-                                   double (*const endpoints)[3]);
+void BnRobotIK_ArmZYY_getEndpoints(BnRobotIK_ArmZYY_t *const data, double (*const endpoints)[3]);
 
 #ifdef __cplusplus
 }

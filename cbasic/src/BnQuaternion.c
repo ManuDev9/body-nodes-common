@@ -29,71 +29,60 @@
 #include <stdio.h>
 
 BnQuaternion_t BnQuaternion_create_array(double const vals[4]) {
-  BnQuaternion_t data = {vals[0], vals[1], vals[2], vals[3]};
-  return data;
+    BnQuaternion_t data = {vals[0], vals[1], vals[2], vals[3]};
+    return data;
 }
 
-BnQuaternion_t BnQuaternion_create_wxyz(double const w, double const x,
-                                        double const y, double const z) {
-  BnQuaternion_t data = {w, x, y, z};
-  return data;
+BnQuaternion_t BnQuaternion_create_wxyz(double const w, double const x, double const y, double const z) {
+    BnQuaternion_t data = {w, x, y, z};
+    return data;
 }
 
-BnQuaternion_t BnQuaternion_mul(BnQuaternion_t const *const quat1,
-                                BnQuaternion_t const *const quat2) {
-  // Quaternion multiplication
-  BnQuaternion_t data = {quat1->w * quat2->w - quat1->x * quat2->x -
-                             quat1->y * quat2->y - quat1->z * quat2->z,
-                         quat1->w * quat2->x + quat1->x * quat2->w +
-                             quat1->y * quat2->z - quat1->z * quat2->y,
-                         quat1->w * quat2->y + quat1->y * quat2->w +
-                             quat1->z * quat2->x - quat1->x * quat2->z,
-                         quat1->w * quat2->z + quat1->z * quat2->w +
-                             quat1->x * quat2->y - quat1->y * quat2->x};
-  return data;
+BnQuaternion_t BnQuaternion_mul(BnQuaternion_t const *const quat1, BnQuaternion_t const *const quat2) {
+    // Quaternion multiplication
+    BnQuaternion_t data = {quat1->w * quat2->w - quat1->x * quat2->x - quat1->y * quat2->y - quat1->z * quat2->z,
+                           quat1->w * quat2->x + quat1->x * quat2->w + quat1->y * quat2->z - quat1->z * quat2->y,
+                           quat1->w * quat2->y + quat1->y * quat2->w + quat1->z * quat2->x - quat1->x * quat2->z,
+                           quat1->w * quat2->z + quat1->z * quat2->w + quat1->x * quat2->y - quat1->y * quat2->x};
+    return data;
 }
 
-BnQuaternion_t BnQuaternion_div(BnQuaternion_t const *const quatIn,
-                                double const scalar) {
-  BnQuaternion_t data = {quatIn->w / scalar, quatIn->x / scalar,
-                         quatIn->y / scalar, quatIn->z / scalar};
-  return data;
+BnQuaternion_t BnQuaternion_div(BnQuaternion_t const *const quatIn, double const scalar) {
+    BnQuaternion_t data = {quatIn->w / scalar, quatIn->x / scalar, quatIn->y / scalar, quatIn->z / scalar};
+    return data;
 }
 
 BnQuaternion_t BnQuaternion_conjugate(BnQuaternion_t const *const quatIn) {
-  BnQuaternion_t data = {quatIn->w, -quatIn->x, -quatIn->y, -quatIn->z};
-  return data;
+    BnQuaternion_t data = {quatIn->w, -quatIn->x, -quatIn->y, -quatIn->z};
+    return data;
 }
 
 double BnQuaternion_norm(BnQuaternion_t const *const quat) {
-  return sqrt(quat->w * quat->w + quat->x * quat->x + quat->y * quat->y +
-              quat->z * quat->z);
+    return sqrt(quat->w * quat->w + quat->x * quat->x + quat->y * quat->y + quat->z * quat->z);
 }
 
 BnQuaternion_t BnQuaternion_inverse(BnQuaternion_t const *const quatIn) {
-  double const norm_val = BnQuaternion_norm(quatIn);
-  BnQuaternion_t quatTmp = BnQuaternion_conjugate(quatIn);
-  return BnQuaternion_div(&quatTmp, norm_val * norm_val);
+    double const norm_val = BnQuaternion_norm(quatIn);
+    BnQuaternion_t quatTmp = BnQuaternion_conjugate(quatIn);
+    return BnQuaternion_div(&quatTmp, norm_val * norm_val);
 }
 
-int BnQuaternion_to_string(BnQuaternion_t const *const quat, char *const buffer,
-                           size_t const buffer_size) {
+int BnQuaternion_to_string(BnQuaternion_t const *const quat, char *const buffer, size_t const buffer_size) {
 
-  if (buffer_size < BN_QUATERNION_BUFFER_SIZE) {
-    return -1; // Buffer too small
-  }
-  return snprintf(buffer, buffer_size,
-                  "BnQuaternion(w=%.5f, x=%.5f, y=%.5f, z=%.5f)", quat->w,
-                  quat->x, quat->y, quat->z);
+    if (buffer_size < BN_QUATERNION_BUFFER_SIZE) {
+        return -1; // Buffer too small
+    }
+    return snprintf(buffer, buffer_size, "BnQuaternion(w=%.5f, x=%.5f, y=%.5f, z=%.5f)", quat->w, quat->x, quat->y,
+                    quat->z);
 }
 
 void BnQuaternion_to_list(BnQuaternion_t const *const quat, double valsOut[4]) {
-  valsOut[0] = quat->w;
-  valsOut[1] = quat->x;
-  valsOut[2] = quat->y;
-  valsOut[3] = quat->z;
+    valsOut[0] = quat->w;
+    valsOut[1] = quat->x;
+    valsOut[2] = quat->y;
+    valsOut[3] = quat->z;
 }
 
 uint8_t BnQuaternion_is_empty(BnQuaternion_t const *const quat) {
-  return quat->w == 0.0 && quat->x == 0.0 && quat->y == 0.0 && quat->z == 0.0;
+    return quat->w == 0.0 && quat->x == 0.0 && quat->y == 0.0 && quat->z == 0.0;
 }

@@ -24,72 +24,65 @@
 
 #include "BnAxisConfig.h"
 
-void BnAxisConfig_config(BnAxisConfig_t *const data, int const *const ioAxis,
-                         int const *const ioSign) {
-  data->length = 4;
-  for (uint8_t idl = 0; idl < data->length; ++idl) {
-    data->sign[idl] = ioSign[idl];
-    data->axis[idl] = ioAxis[idl];
-  }
+void BnAxisConfig_config(BnAxisConfig_t *const data, int const *const ioAxis, int const *const ioSign) {
+    data->length = 4;
+    for (uint8_t idl = 0; idl < data->length; ++idl) {
+        data->sign[idl] = ioSign[idl];
+        data->axis[idl] = ioAxis[idl];
+    }
 }
 
 // mSign = new int[]{ pureArray[0], pureArray[1], pureArray[2], pureArray[3] };
 // mAxis = new int[]{ pureArray[4], pureArray[5], pureArray[6], pureArray[7] };
-void BnAxisConfig_config_purearray(BnAxisConfig_t *const data,
-                                   int const *const pureArray) {
-  data->length = 4;
-  for (uint8_t idl = 0; idl < data->length; ++idl) {
-    data->sign[idl] = pureArray[idl];
-    data->axis[idl] = pureArray[idl + 4];
-  }
+void BnAxisConfig_config_purearray(BnAxisConfig_t *const data, int const *const pureArray) {
+    data->length = 4;
+    for (uint8_t idl = 0; idl < data->length; ++idl) {
+        data->sign[idl] = pureArray[idl];
+        data->axis[idl] = pureArray[idl + 4];
+    }
 }
 
-void BnAxisConfig_config_vals(BnAxisConfig_t *const data, int const ioSignW,
-                              int const ioSignX, int const ioSignY,
-                              int const ioSignZ, int const ioAxisW,
-                              int const ioAxisX, int const ioAxisY,
+void BnAxisConfig_config_vals(BnAxisConfig_t *const data, int const ioSignW, int const ioSignX, int const ioSignY,
+                              int const ioSignZ, int const ioAxisW, int const ioAxisX, int const ioAxisY,
                               int const ioAxisZ) {
 
-  data->length = 4;
-  data->sign[0] = ioSignW;
-  data->axis[0] = ioAxisW;
-  data->sign[1] = ioSignX;
-  data->axis[1] = ioAxisX;
-  data->sign[2] = ioSignY;
-  data->axis[2] = ioAxisY;
-  data->sign[3] = ioSignZ;
-  data->axis[3] = ioAxisZ;
+    data->length = 4;
+    data->sign[0] = ioSignW;
+    data->axis[0] = ioAxisW;
+    data->sign[1] = ioSignX;
+    data->axis[1] = ioAxisX;
+    data->sign[2] = ioSignY;
+    data->axis[2] = ioAxisY;
+    data->sign[3] = ioSignZ;
+    data->axis[3] = ioAxisZ;
 }
 
-void BnAxisConfig_apply_float(BnAxisConfig_t const *const data,
-                              float *const iovalues) {
-  float ovalues[data->length];
-  for (uint8_t idv = 0; idv < data->length; ++idv) {
-    ovalues[idv] = iovalues[data->axis[idv]] * data->sign[idv];
-  }
-  for (uint8_t idv = 0; idv < data->length; ++idv) {
-    iovalues[idv] = ovalues[idv];
-  }
+void BnAxisConfig_apply_float(BnAxisConfig_t const *const data, float *const iovalues) {
+    float ovalues[data->length];
+    for (uint8_t idv = 0; idv < data->length; ++idv) {
+        ovalues[idv] = iovalues[data->axis[idv]] * data->sign[idv];
+    }
+    for (uint8_t idv = 0; idv < data->length; ++idv) {
+        iovalues[idv] = ovalues[idv];
+    }
 }
 
-void BnAxisConfig_apply_double(BnAxisConfig_t const *const data,
-                               double *const iovalues) {
-  double ovalues[data->length];
-  for (uint8_t idv = 0; idv < data->length; ++idv) {
-    ovalues[idv] = iovalues[data->axis[idv]] * data->sign[idv];
-  }
-  for (uint8_t idv = 0; idv < data->length; ++idv) {
-    iovalues[idv] = ovalues[idv];
-  }
+void BnAxisConfig_apply_double(BnAxisConfig_t const *const data, double *const iovalues) {
+    double ovalues[data->length];
+    for (uint8_t idv = 0; idv < data->length; ++idv) {
+        ovalues[idv] = iovalues[data->axis[idv]] * data->sign[idv];
+    }
+    for (uint8_t idv = 0; idv < data->length; ++idv) {
+        iovalues[idv] = ovalues[idv];
+    }
 }
 
-void BnAxisConfig_apply_int(BnAxisConfig_t const *const data,
-                            int *const iovalues) {
-  int ovalues[data->length];
-  for (uint8_t idv = 0; idv < data->length; ++idv) {
-    ovalues[idv] = iovalues[data->axis[idv]] * data->sign[idv];
-  }
-  for (uint8_t idv = 0; idv < data->length; ++idv) {
-    iovalues[idv] = ovalues[idv];
-  }
+void BnAxisConfig_apply_int(BnAxisConfig_t const *const data, int *const iovalues) {
+    int ovalues[data->length];
+    for (uint8_t idv = 0; idv < data->length; ++idv) {
+        ovalues[idv] = iovalues[data->axis[idv]] * data->sign[idv];
+    }
+    for (uint8_t idv = 0; idv < data->length; ++idv) {
+        iovalues[idv] = ovalues[idv];
+    }
 }
