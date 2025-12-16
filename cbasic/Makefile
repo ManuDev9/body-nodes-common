@@ -25,7 +25,10 @@
 # Use > for indentation
 .RECIPEPREFIX := >
 
-buildir:
+format:
+> find src test/TestBnCommon.c -name '*.c' -o -name '*.h' | xargs clang-format -i
+
+buildir: format
 > mkdir -p build
 
 BnAxisConfig.o: buildir src/BnAxisConfig.c src/BnAxisConfig.h

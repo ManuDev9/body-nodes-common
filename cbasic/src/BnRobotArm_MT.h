@@ -10,7 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
 
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+ all
  * copies or substantial portions of the Software.
 
  * THE SOFTWARE IS PROVIDED "AS IS"; WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -22,30 +23,26 @@
  * SOFTWARE.
  */
 
-#include "BnRobotIK_ArmZYY.h"
 #include "BnMotionTracking_2Nodes.h"
+#include "BnRobotIK_ArmZYY.h"
 
 #ifndef BN_ROBOT_ARM_MT_H
 #define BN_ROBOT_ARM_MT_H
 
-typedef struct BnRobotArm_MT_ArmZYY_2Nodes_st {    
-    BnMotionTracking_2Nodes_t motionTraker;
-    BnRobotIK_ArmZYY_t robotIK;
+typedef struct BnRobotArm_MT_ArmZYY_2Nodes_st {
+  BnMotionTracking_2Nodes_t motionTraker;
+  BnRobotIK_ArmZYY_t robotIK;
 } BnRobotArm_MT_ArmZYY_2Nodes_t;
 
 // It contains common RobotIK and MotionTracking associations
 
-
 BnRobotArm_MT_ArmZYY_2Nodes_t BnRobotArm_MT_ArmZYY_2Nodes_create(
-    BnMotionTracking_2Nodes_t const * const motionTraker,
-    BnRobotIK_ArmZYY_t const * const robotIK);
-
+    BnMotionTracking_2Nodes_t const *const motionTraker,
+    BnRobotIK_ArmZYY_t const *const robotIK);
 
 void BnRobotArm_MT_ArmZYY_2Nodes_compute(
-    BnRobotArm_MT_ArmZYY_2Nodes_t * const robotMT,
-    double const * const node1Quat,
-    double const * const node2Quat,
-    double (* const endpositions)[3],
-    double (* const outAngles)[3]);
+    BnRobotArm_MT_ArmZYY_2Nodes_t *const robotMT, double const *const node1Quat,
+    double const *const node2Quat, double (*const endpositions)[3],
+    double (*const outAngles)[3]);
 
 #endif // BN_ROBOT_ARM_MT_H
