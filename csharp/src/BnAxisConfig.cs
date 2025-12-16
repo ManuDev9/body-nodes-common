@@ -26,54 +26,68 @@ namespace BodynodesDev.Common
 {
     public class BnAxisConfig
     {
-        public BnAxisConfig() {
-            mAxis = new int[]{ 0, 1, 2, 3 };
-            mSign = new int[]{ 1, 1, 1, 1 };
+        public BnAxisConfig()
+        {
+            mAxis = new int[] { 0, 1, 2, 3 };
+            mSign = new int[] { 1, 1, 1, 1 };
         }
 
-        public BnAxisConfig( int[] pureArray ){
-            mSign = new int[]{ pureArray[0], pureArray[1], pureArray[2], pureArray[3] };
-            mAxis = new int[]{ pureArray[4], pureArray[5], pureArray[6], pureArray[7] };
+        public BnAxisConfig(int[] pureArray)
+        {
+            mSign = new int[] { pureArray[0], pureArray[1], pureArray[2], pureArray[3] };
+            mAxis = new int[] { pureArray[4], pureArray[5], pureArray[6], pureArray[7] };
         }
 
-        public BnAxisConfig( int signW, int signX, int signY, int signZ, int valW, int valX, int valY, int valZ){
-            mSign = new int[]{ signW, signX, signY, signZ };
-            mAxis = new int[]{ valW, valX, valY, valZ };
+        public BnAxisConfig(int signW, int signX, int signY, int signZ, int valW, int valX, int valY, int valZ)
+        {
+            mSign = new int[] { signW, signX, signY, signZ };
+            mAxis = new int[] { valW, valX, valY, valZ };
         }
 
-        public void Config( int[] ioAxis, int[] ioSign ) {
-            for( uint idv = 0; idv < ioAxis.Length; ++idv ) {
+        public void Config(int[] ioAxis, int[] ioSign)
+        {
+            for (uint idv = 0; idv < ioAxis.Length; ++idv)
+            {
                 mAxis[idv] = ioAxis[idv];
                 mSign[idv] = ioSign[idv];
             }
         }
 
-        public void Apply( float[] iovalues ) {
+        public void Apply(float[] iovalues)
+        {
             float[] ovalues = new float[iovalues.Length];
-            for( uint idv = 0; idv < iovalues.Length; ++idv ) {
-                ovalues[idv] = iovalues[ mAxis[idv] ] * mSign[idv] ;
+            for (uint idv = 0; idv < iovalues.Length; ++idv)
+            {
+                ovalues[idv] = iovalues[mAxis[idv]] * mSign[idv];
             }
-            for( uint idv = 0; idv < iovalues.Length; ++idv ) {
+            for (uint idv = 0; idv < iovalues.Length; ++idv)
+            {
                 iovalues[idv] = ovalues[idv];
             }
         }
 
-        public void Apply( double[] iovalues ) {
+        public void Apply(double[] iovalues)
+        {
             double[] ovalues = new double[iovalues.Length];
-            for( uint idv = 0; idv < iovalues.Length; ++idv ) {
-                ovalues[idv] = iovalues[ mAxis[idv] ] * mSign[idv] ;
+            for (uint idv = 0; idv < iovalues.Length; ++idv)
+            {
+                ovalues[idv] = iovalues[mAxis[idv]] * mSign[idv];
             }
-            for( uint idv = 0; idv < iovalues.Length; ++idv ) {
+            for (uint idv = 0; idv < iovalues.Length; ++idv)
+            {
                 iovalues[idv] = ovalues[idv];
             }
         }
 
-        public void Apply( int[] iovalues ) {
+        public void Apply(int[] iovalues)
+        {
             int[] ovalues = new int[iovalues.Length];
-            for( uint idv = 0; idv < iovalues.Length; ++idv ) { 
-                ovalues[idv] = iovalues[ mAxis[idv] ] * mSign[idv] ;
+            for (uint idv = 0; idv < iovalues.Length; ++idv)
+            {
+                ovalues[idv] = iovalues[mAxis[idv]] * mSign[idv];
             }
-            for( uint idv = 0; idv < iovalues.Length; ++idv ) {
+            for (uint idv = 0; idv < iovalues.Length; ++idv)
+            {
                 iovalues[idv] = ovalues[idv];
             }
         }

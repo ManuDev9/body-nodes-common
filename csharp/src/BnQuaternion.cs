@@ -28,17 +28,20 @@ namespace BodynodesDev.Common
     public class BnQuaternion
     {
 
-        private readonly double[] pQvalues; 
+        private readonly double[] pQvalues;
 
-        public BnQuaternion(double[] vals ) {
-            pQvalues = new double[]{vals[0], vals[1], vals[2], vals[3]};
+        public BnQuaternion(double[] vals)
+        {
+            pQvalues = new double[] { vals[0], vals[1], vals[2], vals[3] };
         }
 
-        public BnQuaternion(double w, double x, double y, double z ) {
-            pQvalues = new double[]{w, x, y, z};
+        public BnQuaternion(double w, double x, double y, double z)
+        {
+            pQvalues = new double[] { w, x, y, z };
         }
 
-        public BnQuaternion Mul(BnQuaternion otherQ) {
+        public BnQuaternion Mul(BnQuaternion otherQ)
+        {
             double[] other = otherQ.ToList();
 
             // Quaternion multiplication
@@ -51,53 +54,64 @@ namespace BodynodesDev.Common
         }
 
 
-        public BnQuaternion Div(double scalar) {
+        public BnQuaternion Div(double scalar)
+        {
             // Division of quaternion by scalar    
-            return new BnQuaternion( pQvalues[0] / scalar, pQvalues[1] / scalar, pQvalues[2] / scalar, pQvalues[3] / scalar);
+            return new BnQuaternion(pQvalues[0] / scalar, pQvalues[1] / scalar, pQvalues[2] / scalar, pQvalues[3] / scalar);
         }
 
-        public BnQuaternion Conjugate() {
+        public BnQuaternion Conjugate()
+        {
             // Conjugate of quaternion (inverse for unit quaternions)
             return new BnQuaternion(pQvalues[0], -pQvalues[1], -pQvalues[2], -pQvalues[3]);
         }
 
-        public double Norm() {
+        public double Norm()
+        {
             // Norm (magnitude) of the quaternion
-            return Math.Sqrt( pQvalues[0]*pQvalues[0] + pQvalues[1]*pQvalues[1] + pQvalues[2]*pQvalues[2] + pQvalues[3]*pQvalues[3] );
+            return Math.Sqrt(pQvalues[0] * pQvalues[0] + pQvalues[1] * pQvalues[1] + pQvalues[2] * pQvalues[2] + pQvalues[3] * pQvalues[3]);
         }
 
-        public BnQuaternion Inverse() {
+        public BnQuaternion Inverse()
+        {
             // Inverse of the quaternion
             double norm_val = Norm();
-            return Conjugate().Div( norm_val* norm_val );
+            return Conjugate().Div(norm_val * norm_val);
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             //  Represent quaternion as a string
             return string.Format("BnQuaternion(w={0:F5}, x={1:F5}, y={2:F5}, z={3:F5})", pQvalues[0], pQvalues[1], pQvalues[2], pQvalues[3]);
         }
 
         //  Allows accessing the quaternion components using getW(), getX(), getY(), getZ()
-        public double GetW() {
+        public double GetW()
+        {
             return pQvalues[0];
         }
-        public double GetX() {
+        public double GetX()
+        {
             return pQvalues[1];
         }
-        public double GetY() {
+        public double GetY()
+        {
             return pQvalues[2];
         }
-        public double GetZ() {
+        public double GetZ()
+        {
             return pQvalues[3];
         }
 
-        public double[] ToList() {
-            double[] pQvaluesClone = new double[pQvalues.Length]; 
+        public double[] ToList()
+        {
+            double[] pQvaluesClone = new double[pQvalues.Length];
             Array.Copy(pQvalues, pQvaluesClone, pQvalues.Length);
-            return pQvaluesClone; 
+            return pQvaluesClone;
         }
 
-        public Boolean IsEmpty() {
+        public Boolean IsEmpty()
+        {
             return pQvalues[0] == 0.0 && pQvalues[1] == 0.0 && pQvalues[2] == 0.0 && pQvalues[3] == 0.0;
         }
     }

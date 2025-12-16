@@ -24,7 +24,7 @@
 
 namespace BodynodesDev.Common
 {
-    public interface BnRobotIK_Interface 
+    public interface BnRobotIK_Interface
     {
         void Compute(double[] endpoint, double[][] outAngles);
     }

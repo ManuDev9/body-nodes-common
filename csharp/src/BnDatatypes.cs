@@ -393,19 +393,20 @@ namespace BodynodesDev.Common
                     Console.WriteLine("JSON parsing error: " + ex.Message);
                     return false;
                 }
-                
-                if ( messageJson[BnConstants.MESSAGE_PLAYER_TAG] == null ||
+
+                if (messageJson[BnConstants.MESSAGE_PLAYER_TAG] == null ||
                         messageJson[BnConstants.MESSAGE_BODYPART_TAG] == null ||
                         messageJson[BnConstants.MESSAGE_BODYPART_TAG] == null ||
-                        messageJson[BnConstants.MESSAGE_VALUE_TAG] == null ) {
+                        messageJson[BnConstants.MESSAGE_VALUE_TAG] == null)
+                {
                     return false;
                 }
-                
-                m_player.value =  messageJson[BnConstants.MESSAGE_PLAYER_TAG]!.ToString();
-                m_bodypart.value = messageJson[BnConstants.MESSAGE_BODYPART_TAG]!.ToString();
-                BnSensorType sensortype = new BnSensorType{ value = messageJson[BnConstants.MESSAGE_SENSORTYPE_TAG]!.ToString() };
 
-                if( BnConstants.SENSORTYPE_GLOVE_TAG.Equals( sensortype.value ) )
+                m_player.value = messageJson[BnConstants.MESSAGE_PLAYER_TAG]!.ToString();
+                m_bodypart.value = messageJson[BnConstants.MESSAGE_BODYPART_TAG]!.ToString();
+                BnSensorType sensortype = new BnSensorType { value = messageJson[BnConstants.MESSAGE_SENSORTYPE_TAG]!.ToString() };
+
+                if (BnConstants.SENSORTYPE_GLOVE_TAG.Equals(sensortype.value))
                 {
                     Int32[] values = messageJson[BnConstants.MESSAGE_VALUE_TAG]!.AsArray()!.Select(score => (int?)score != null ? (Int32)score : 0).ToArray();
 
@@ -417,9 +418,9 @@ namespace BodynodesDev.Common
                     }
                     m_sensorData.setValues(values, sensortype);
                 }
-                else 
+                else
                 {
-                    float[] values = messageJson[BnConstants.MESSAGE_VALUE_TAG]!.AsArray()!.Select(score  => (float?)score != null ? (float)score : 0).ToArray();
+                    float[] values = messageJson[BnConstants.MESSAGE_VALUE_TAG]!.AsArray()!.Select(score => (float?)score != null ? (float)score : 0).ToArray();
                     m_sensorData.setValues(values, sensortype);
                 }
                 return true;
@@ -546,11 +547,11 @@ namespace BodynodesDev.Common
 
             public bool isEmpty()
             {
-                if (a_json == null || a_json[BnConstants.ACTION_PLAYER_TAG] == null )
+                if (a_json == null || a_json[BnConstants.ACTION_PLAYER_TAG] == null)
                 {
                     return true;
                 }
-                if ( BnConstants.PLAYER_NONE_TAG.Equals(a_json[BnConstants.ACTION_PLAYER_TAG]!.ToString()))
+                if (BnConstants.PLAYER_NONE_TAG.Equals(a_json[BnConstants.ACTION_PLAYER_TAG]!.ToString()))
                 {
                     return true;
                 }
@@ -562,7 +563,7 @@ namespace BodynodesDev.Common
 
             public BnSensorType getSensorType()
             {
-                if (a_json == null || a_json[BnConstants.ACTION_TYPE_TAG] == null )
+                if (a_json == null || a_json[BnConstants.ACTION_TYPE_TAG] == null)
                 {
                     return new BnSensorType { value = BnConstants.ACTION_TYPE_NONE_TAG };
                 }
@@ -572,7 +573,7 @@ namespace BodynodesDev.Common
 
             public BnBodypart getBodypart()
             {
-                if (a_json == null || a_json[BnConstants.ACTION_BODYPART_TAG] == null )
+                if (a_json == null || a_json[BnConstants.ACTION_BODYPART_TAG] == null)
                 {
                     return new BnBodypart { value = BnConstants.BODYPART_NONE_TAG };
                 }
@@ -581,14 +582,15 @@ namespace BodynodesDev.Common
 
             public BnPlayer getPlayer()
             {
-                if (a_json == null || a_json[BnConstants.ACTION_PLAYER_TAG] == null )
+                if (a_json == null || a_json[BnConstants.ACTION_PLAYER_TAG] == null)
                 {
                     return new BnPlayer { value = BnConstants.PLAYER_NONE_TAG };
                 }
                 return new BnPlayer { value = a_json[BnConstants.ACTION_PLAYER_TAG]!.ToString() };
             }
 
-            public bool parseString(String actionStr) {
+            public bool parseString(String actionStr)
+            {
 #if USE_NEWTONSOFT_JSON
                 a_json = JObject.Parse(actionStr);
                 if (a_json != null)

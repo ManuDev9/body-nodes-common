@@ -24,6 +24,13 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+    - name: Install dotnet-format
+      run: dotnet tool install -g dotnet-format
+
+    - name: Dotnet Format Check
+      working-directory: ./csharp
+      run: dotnet format --verify-no-changes csharpSolution.sln
+
     - name: Run NUnit Tests
       working-directory: ./csharp
       run: make test
@@ -47,7 +54,7 @@ jobs:
     - name: Spotless Format Check
       working-directory: ./java
       run: mvn spotless:check
-    
+
     - name: Run Maven Tests
       working-directory: ./java
       run: make test

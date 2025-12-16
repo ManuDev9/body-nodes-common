@@ -24,7 +24,7 @@
 
 namespace BodynodesDev.Common
 {
-    public interface BnMotionTracking_Interface 
+    public interface BnMotionTracking_Interface
     {
         void Compute(double[] node1Quat, double[] node2Quat, double[][] endpositions);
     }

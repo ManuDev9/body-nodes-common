@@ -43,7 +43,8 @@ namespace BodynodesDev.Common
         }
 
         // Function to multiply two rotation matrices
-        public static double[][] MultiplyRotationMatrices(double[][] R1, double[][] R2) {
+        public static double[][] MultiplyRotationMatrices(double[][] R1, double[][] R2)
+        {
             return new double[][] {
                 new double[] {
                     R1[0][0] * R2[0][0] + R1[0][1] * R2[1][0] + R1[0][2] * R2[2][0],
@@ -64,7 +65,8 @@ namespace BodynodesDev.Common
         }
 
         // Function to multiply a rotation matrix and a vector
-        public static double[] MultiplyRotationMatrixWithVector(double[][] R1, double[] V1) {
+        public static double[] MultiplyRotationMatrixWithVector(double[][] R1, double[] V1)
+        {
             return new double[]
                 {
                     R1[0][0] * V1[0] + R1[0][1] * V1[1] + R1[0][2] * V1[2],
@@ -74,7 +76,8 @@ namespace BodynodesDev.Common
         }
 
         // Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in radians
-        public static double[][] blender_euler_to_rotation_matrix_rad(double roll, double pitch, double yaw) {
+        public static double[][] blender_euler_to_rotation_matrix_rad(double roll, double pitch, double yaw)
+        {
             // counter rh wise rotations
             double[][] R_x = new double[][]
             {
@@ -100,11 +103,13 @@ namespace BodynodesDev.Common
 
 
         // Function to compute a rotation matrix from Euler angles (XYZ order). Roll, pitch and yaw are in degrees
-        public static double[][] blender_euler_to_rotation_matrix_degree(double roll, double pitch, double yaw) {
+        public static double[][] blender_euler_to_rotation_matrix_degree(double roll, double pitch, double yaw)
+        {
             return blender_euler_to_rotation_matrix_rad(ToRadians(roll), ToRadians(pitch), ToRadians(yaw));
         }
 
-        public static BnQuaternion CreateQuanternion(BnAxisConfig axis_config, double[] values) {
+        public static BnQuaternion CreateQuanternion(BnAxisConfig axis_config, double[] values)
+        {
             axis_config.Apply(values);
             return new BnQuaternion(values);
         }
@@ -116,7 +121,8 @@ namespace BodynodesDev.Common
         * envQuatVals                  - is the environment quaternion, basically indicates somehow where the x axis points 
         * pureAxisConfig               - axis configuration that will transfor the sensor values into values for the virtual world. Composed of 8 int array values that I can use to create a BnAxisConfig
         */
-        public static double[] TransformSensorQuat( double[] sensorQuatVals, double[] firstQuatVals, double[] startingQuatVals, double[] envQuatVals, int[] pureAxisConfig) {
+        public static double[] TransformSensorQuat(double[] sensorQuatVals, double[] firstQuatVals, double[] startingQuatVals, double[] envQuatVals, int[] pureAxisConfig)
+        {
 
             BnAxisConfig axisConfig = new BnAxisConfig(pureAxisConfig);
 
@@ -125,7 +131,8 @@ namespace BodynodesDev.Common
             BnQuaternion envQuat = new BnQuaternion(envQuatVals);
 
             BnQuaternion firstQuat = new BnQuaternion(firstQuatVals);
-            if (firstQuat.IsEmpty()) {
+            if (firstQuat.IsEmpty())
+            {
                 firstQuat = sensorQuat.Inverse();
                 firstQuatVals[0] = firstQuat.GetW();
                 firstQuatVals[1] = firstQuat.GetX();
@@ -183,13 +190,13 @@ namespace BodynodesDev.Common
         // Buf is a 8 bytes char array
         public static string CreatePlayerBodypartKey(BnDatatypes.BnPlayer player, BnDatatypes.BnBodypart bodypart)
         {
-            return new string(player.value +"_"+bodypart.value);
+            return new string(player.value + "_" + bodypart.value);
         }
 
         // Buf is a 12 bytes char array
         public static string CreatePlayerBodypartSensortypeKey(BnDatatypes.BnPlayer player, BnDatatypes.BnBodypart bodypart, BnDatatypes.BnSensorType sensortype)
         {
-            return new string(player.value + "_" + bodypart.value + "_"  +sensortype.value);
+            return new string(player.value + "_" + bodypart.value + "_" + sensortype.value);
         }
     }
 }

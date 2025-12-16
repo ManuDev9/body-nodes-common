@@ -30,7 +30,8 @@ namespace BodynodesDev.Common
         private BnMotionTracking_Interface mMotionTraker;
         private BnRobotIK_Interface mRobotIK;
 
-        public BnRobotArm_MT(BnMotionTracking_Interface motionTraker, BnRobotIK_Interface robotIK){
+        public BnRobotArm_MT(BnMotionTracking_Interface motionTraker, BnRobotIK_Interface robotIK)
+        {
             mMotionTraker = motionTraker;
             mRobotIK = robotIK;
         }
@@ -39,9 +40,10 @@ namespace BodynodesDev.Common
         // node1_quat and node2_quat are inputs
         // outAngles in an output
         // positions is just to store data, so the MT does not need to do guess what should be the size
-        public void Compute(double[] node1_quat, double[] node2_quat, double[][] positions, double[][] outAngles) {
-            mMotionTraker.Compute( node1_quat, node2_quat, positions );
-            mRobotIK.Compute(positions[positions.Length-1], outAngles);
+        public void Compute(double[] node1_quat, double[] node2_quat, double[][] positions, double[][] outAngles)
+        {
+            mMotionTraker.Compute(node1_quat, node2_quat, positions);
+            mRobotIK.Compute(positions[positions.Length - 1], outAngles);
         }
     }
 }

@@ -24,7 +24,8 @@
 
 namespace BodynodesDev.Common
 {
-    public class BnRobotIK_ArmZYY : BnRobotIK_Interface {
+    public class BnRobotIK_ArmZYY : BnRobotIK_Interface
+    {
 
         private double mTheta_RA1;
         private double mGamma_RA2;
@@ -39,20 +40,25 @@ namespace BodynodesDev.Common
         // This is an example of anglesConstraints
         // anglesConstraints = [ [ -math.pi/2, math.pi/2 ], [0 , math.pi/2], [0, math.pi/2 ] ]
         // Starting Point is assumed to be [0, 0, 0]
-        public BnRobotIK_ArmZYY( double lengthRA1, double lengthRA2, double lengthRA3, double[][]? anglesConstraints, string units ) {
+        public BnRobotIK_ArmZYY(double lengthRA1, double lengthRA2, double lengthRA3, double[][]? anglesConstraints, string units)
+        {
             mTheta_RA1 = 0;
             mGamma_RA2 = 0;
             mGamma_RA3 = 0;
             mLengthRA1 = lengthRA1;
             mLengthRA2 = lengthRA2;
             mLengthRA3 = lengthRA3;
-            if( anglesConstraints != null ){
+            if (anglesConstraints != null)
+            {
                 mAnglesConstraints = new double[anglesConstraints.Length][];
-                for (int i = 0; i < anglesConstraints.Length; i++) {
+                for (int i = 0; i < anglesConstraints.Length; i++)
+                {
                     mAnglesConstraints[i] = new double[anglesConstraints[i].Length];
                     Array.Copy(anglesConstraints[i], mAnglesConstraints[i], anglesConstraints[i].Length);
                 }
-            } else {
+            }
+            else
+            {
                 mAnglesConstraints = null;
             }
             mUnits = units;
@@ -66,13 +72,17 @@ namespace BodynodesDev.Common
         // endpoint is expected to be an array of 3 elements: [ x, y, z ]. It is an input parameter
         // outAngles is expected to be an array of 3 x 3 elements: [ [0,0,theta_RA1] , [0, gamma_RA2,0], [0,gamma_RA3,0 ]
         //           it is the output paramater
-        public void Compute( double[] endpoint, double[][] outAngles ) {
+        public void Compute(double[] endpoint, double[][] outAngles)
+        {
 
             // First let'z find the Z rotation of Arm1 [ x, y, z ]
-            if(endpoint[0] == 0 && endpoint[1] == 0) {
+            if (endpoint[0] == 0 && endpoint[1] == 0)
+            {
                 // Z rotation is not defined if x,y is at the origin, we will return Nan
                 mTheta_RA1 = Double.NaN;
-            } else {
+            }
+            else
+            {
                 mTheta_RA1 = Math.Atan2(endpoint[1], endpoint[0]);
             }
 
@@ -89,32 +99,40 @@ namespace BodynodesDev.Common
 
             double tmp = 0;
             // From the low of cosine
-            if(dist_iSP_iEP == 0){
+            if (dist_iSP_iEP == 0)
+            {
                 mGamma_RA2 = 0;
-            } else {
-                tmp = ( mLengthRA2*mLengthRA2 + dist_iSP_iEP_2 - mLengthRA3*mLengthRA3 ) / ( 2 * mLengthRA2 * dist_iSP_iEP );
+            }
+            else
+            {
+                tmp = (mLengthRA2 * mLengthRA2 + dist_iSP_iEP_2 - mLengthRA3 * mLengthRA3) / (2 * mLengthRA2 * dist_iSP_iEP);
                 // Let's try to get the right angle even though the point is unreachable 
-                tmp = Math.Min(Math.Max( tmp, -1 ), 1);
+                tmp = Math.Min(Math.Max(tmp, -1), 1);
                 //TODO evaluate what happens in these scenarios
-                
+
                 // Internal angle start of Arm2 of the triangle Arm2+Arm3+endpoint
                 double gamma_2_1 = Math.Acos(tmp);
                 // Angle of endpoint and origin Arm2
                 double gamma_2_2 = 0;
-                if (dist_iSP_iEP_2 != 0){
-                    gamma_2_2 = Math.Asin( diff_iSP_iEP[2] / Math.Sqrt( dist_iSP_iEP_2 ) );
+                if (dist_iSP_iEP_2 != 0)
+                {
+                    gamma_2_2 = Math.Asin(diff_iSP_iEP[2] / Math.Sqrt(dist_iSP_iEP_2));
                 }
-                    
+
                 // Angle from the global Z axis and local Z axis of Arm2
-                mGamma_RA2 = Math.PI/2-(gamma_2_1 + gamma_2_2);
+                mGamma_RA2 = Math.PI / 2 - (gamma_2_1 + gamma_2_2);
             }
-            
+
             double dist_iIP_iEP = mLengthRA3;
-            double dist_iIP_iEP_2 = dist_iIP_iEP*dist_iIP_iEP;
-            if(mAnglesConstraints != null) {
-                if (mGamma_RA2 < mAnglesConstraints[1][0]){
+            double dist_iIP_iEP_2 = dist_iIP_iEP * dist_iIP_iEP;
+            if (mAnglesConstraints != null)
+            {
+                if (mGamma_RA2 < mAnglesConstraints[1][0])
+                {
                     mGamma_RA2 = mAnglesConstraints[1][0];
-                } else if (mGamma_RA2 > mAnglesConstraints[1][1] ){
+                }
+                else if (mGamma_RA2 > mAnglesConstraints[1][1])
+                {
                     mGamma_RA2 = mAnglesConstraints[1][1];
                 }
 
@@ -133,24 +151,32 @@ namespace BodynodesDev.Common
                 dist_iIP_iEP = Math.Sqrt(dist_iIP_iEP_2);
             }
 
-            tmp = ( dist_iIP_iEP_2 + mLengthRA2*mLengthRA2 - dist_iSP_iEP_2 ) / ( 2 * dist_iIP_iEP * mLengthRA2 );
+            tmp = (dist_iIP_iEP_2 + mLengthRA2 * mLengthRA2 - dist_iSP_iEP_2) / (2 * dist_iIP_iEP * mLengthRA2);
             // Let's try to get the right angle even though the point is unreachable 
-            tmp = Math.Min(Math.Max( tmp, -1 ), 1); 
+            tmp = Math.Min(Math.Max(tmp, -1), 1);
             // Internal angle start of Arm3 of the triangle Arm2+Arm3+endpoint, then changed to get the local angle we want
             mGamma_RA3 = (Math.PI - Math.Acos(tmp));
 
-            if(mAnglesConstraints != null) {
-                if ( !Double.IsNaN(mTheta_RA1) ){
-                    if (mTheta_RA1 < mAnglesConstraints[0][0]) {
+            if (mAnglesConstraints != null)
+            {
+                if (!Double.IsNaN(mTheta_RA1))
+                {
+                    if (mTheta_RA1 < mAnglesConstraints[0][0])
+                    {
                         mTheta_RA1 = mAnglesConstraints[0][0];
-                    } else if (mTheta_RA1 > mAnglesConstraints[0][1]) {
+                    }
+                    else if (mTheta_RA1 > mAnglesConstraints[0][1])
+                    {
                         mTheta_RA1 = mAnglesConstraints[0][1];
                     }
                 }
 
-                if(mGamma_RA3 < mAnglesConstraints[2][0]) {
+                if (mGamma_RA3 < mAnglesConstraints[2][0])
+                {
                     mGamma_RA3 = mAnglesConstraints[2][0];
-                } else if (mGamma_RA3 > mAnglesConstraints[2][1]) {
+                }
+                else if (mGamma_RA3 > mAnglesConstraints[2][1])
+                {
                     mGamma_RA3 = mAnglesConstraints[2][1];
                 }
             }
@@ -169,7 +195,8 @@ namespace BodynodesDev.Common
 
 
         // endpoint is expected to be an array of 3 arrays, each subarray is compased of 3 elements: [ x, y, z ]. It is an output parameter
-        public void GetEndpoints(double[][] endpoints) {
+        public void GetEndpoints(double[][] endpoints)
+        {
             // Get the endpoint of Arm1, Arm2, and Arm3 from last compute() step
             endpoints[0][0] = 0;
             endpoints[0][1] = 0;
@@ -179,9 +206,9 @@ namespace BodynodesDev.Common
             endpoints[1][1] = mLengthRA2 * Math.Sin(mGamma_RA2) * Math.Sin(mTheta_RA1);
             endpoints[1][2] = endpoints[0][2] + (mLengthRA2 * Math.Cos(mGamma_RA2));
 
-            endpoints[2][0] = endpoints[1][0] + (mLengthRA3 * Math.Sin(mGamma_RA2+mGamma_RA3) * Math.Cos(mTheta_RA1));
-            endpoints[2][1] = endpoints[1][1] + (mLengthRA3 * Math.Sin(mGamma_RA2+mGamma_RA3) * Math.Sin(mTheta_RA1));
-            endpoints[2][2] = endpoints[1][2] + (mLengthRA3 * Math.Cos(mGamma_RA2+mGamma_RA3));
+            endpoints[2][0] = endpoints[1][0] + (mLengthRA3 * Math.Sin(mGamma_RA2 + mGamma_RA3) * Math.Cos(mTheta_RA1));
+            endpoints[2][1] = endpoints[1][1] + (mLengthRA3 * Math.Sin(mGamma_RA2 + mGamma_RA3) * Math.Sin(mTheta_RA1));
+            endpoints[2][2] = endpoints[1][2] + (mLengthRA3 * Math.Cos(mGamma_RA2 + mGamma_RA3));
 
         }
     }
