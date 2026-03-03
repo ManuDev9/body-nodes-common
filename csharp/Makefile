@@ -24,6 +24,9 @@
 format:
 	dotnet format csharpSolution.sln
 
+test-format:
+	dotnet format --verify-no-changes csharpSolution.sln
+
 build: format
 	dotnet build
 

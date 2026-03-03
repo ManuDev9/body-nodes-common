@@ -125,8 +125,8 @@ namespace BodynodesDev.Common
         public readonly static uint CONNECTION_STATUS_CONNECTED = 2;
 
         // WIFI CONNECTIONS
-        public readonly static uint WIFI_PORT = 12345;
-        public readonly static uint WIFI_MULTICAST_PORT = 12346;
+        public readonly static int WIFI_PORT = 12345;
+        public readonly static int WIFI_MULTICAST_PORT = 12346;
         public readonly static string WIFI_SSID_DEFAULT = "BodynodeHotspot";
         public readonly static string WIFI_PASSWORD_DEFAULT = "bodynodes1";
         public readonly static string WIFI_MULTICASTGROUP_DEFAULT = "239.192.1.99";
