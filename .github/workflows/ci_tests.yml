@@ -108,9 +108,9 @@ jobs:
       run: |
         clang-format --dry-run --Werror $(find src test/TestBnCommon.c -name '*.c' -o -name '*.h')
 
-    - name: Run C Tests
+    - name: Run C Tests with Coverage
       working-directory: ./cbasic
-      run: make test
+      run: make coverage
 
   # -----------------------------------------------------------------
   # Testing C++
