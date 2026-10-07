@@ -136,6 +136,7 @@ public class BnConstants {
 
   // BLE CONNECTIONS
   public static final String BLE_NAME = "Bodynode";
+  public static final String BLE_CHARA_ACTION_UUID = "0000CC9F-0000-1000-8000-00805F9B34FB";
   public static final String BLE_SERVICE_UUID = "0000CCA0-0000-1000-8000-00805F9B34FB";
   public static final String BLE_CHARA_PLAYER_UUID = "0000CCA1-0000-1000-8000-00805F9B34FB";
   public static final String BLE_CHARA_BODYPART_UUID = "0000CCA2-0000-1000-8000-00805F9B34FB";

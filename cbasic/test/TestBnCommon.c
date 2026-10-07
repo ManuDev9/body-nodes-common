@@ -128,7 +128,7 @@ char *extract_macro_value_c(const char *headerContent, const char *key) {
         for (uint64_t _i = 0; _i < (length); _i++) {                                                                   \
             float _e = (expected)[_i];                                                                                 \
             float _a = (actual)[_i];                                                                                   \
-            float _diff = fabsf(_a - _e);                                                                              \
+            /*float _diff = fabsf(_a - _e);*/                                                                          \
             float _absE = fabsf(_e);                                                                                   \
                                                                                                                        \
             float _tol = (absErr);                                                                                     \
@@ -212,7 +212,8 @@ void Test_BnConstants(void) {
         TEST_FAIL_MESSAGE("Memory allocation failed for buffer BnConstants.h");
     }
 
-    size_t read_count = fread(buffer_header, 1, file_size, fp_header);
+    // size_t read_count =
+    fread(buffer_header, 1, file_size, fp_header);
     buffer_header[file_size] = '\0';
     fclose(fp_header);
 

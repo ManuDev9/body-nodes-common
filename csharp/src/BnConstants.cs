@@ -136,6 +136,7 @@ namespace BodynodesDev.Common
 
         // BLE CONNECTIONS
         public readonly static string BLE_NAME = "Bodynode";
+        public readonly static string BLE_CHARA_ACTION_UUID = "0000CC9F-0000-1000-8000-00805F9B34FB";
         public readonly static string BLE_SERVICE_UUID = "0000CCA0-0000-1000-8000-00805F9B34FB";
         public readonly static string BLE_CHARA_PLAYER_UUID = "0000CCA1-0000-1000-8000-00805F9B34FB";
         public readonly static string BLE_CHARA_BODYPART_UUID = "0000CCA2-0000-1000-8000-00805F9B34FB";
