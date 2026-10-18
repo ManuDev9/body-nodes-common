@@ -54,6 +54,9 @@ public class BnConstants {
   public static final String BODYPART_FOOT_RIGHT_TAG = "foot_right";
   public static final String BODYPART_UPPERBODY_TAG = "upperbody";
   public static final String BODYPART_LOWERBODY_TAG = "lowerbody";
+  public static final String BODYPART_FULLSUIT_TAG = "fullsuit";
+  public static final String BODYPART_UPPERSUIT_TAG = "uppersuit";
+  public static final String BODYPART_LOWERSUIT_TAG = "lowersuit";
   public static final String BODYPART_KATANA_TAG = "katana";
   public static final String BODYPART_UNTAGGED_TAG = "untagged";
   public static final String BODYPART_ALL_TAG = "all";

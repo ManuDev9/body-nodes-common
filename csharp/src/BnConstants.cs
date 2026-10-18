@@ -1,7 +1,7 @@
 ﻿/**
 * MIT License
 * 
-* Copyright (c) 2019-2025 Manuel Bottini
+* Copyright (c) 2019-2026 Manuel Bottini
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -54,6 +54,10 @@ namespace BodynodesDev.Common
         public readonly static string BODYPART_FOOT_RIGHT_TAG = "foot_right";
         public readonly static string BODYPART_UPPERBODY_TAG = "upperbody";
         public readonly static string BODYPART_LOWERBODY_TAG = "lowerbody";
+        public readonly static string BODYPART_FULLSUIT_TAG = "fullsuit";
+        public readonly static string BODYPART_UPPERSUIT_TAG = "uppersuit";
+        public readonly static string BODYPART_LOWERSUIT_TAG = "lowersuit";
+
         public readonly static string BODYPART_KATANA_TAG = "katana";
         public readonly static string BODYPART_UNTAGGED_TAG = "untagged";
         public readonly static string BODYPART_ALL_TAG = "all";

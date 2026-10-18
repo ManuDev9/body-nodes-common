@@ -1,7 +1,7 @@
 /**
 * MIT License
 *
-* Copyright (c) 2019-2025 Manuel Bottini
+* Copyright (c) 2019-2026 Manuel Bottini
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +46,9 @@
 #define BN_BODYPART_FOOT_RIGHT_TAG "foot_right"
 #define BN_BODYPART_UPPERBODY_TAG "upperbody"
 #define BN_BODYPART_LOWERBODY_TAG "lowerbody"
+#define BN_BODYPART_FULLSUIT_TAG "fullsuit"
+#define BN_BODYPART_UPPERSUIT_TAG "uppersuit"
+#define BN_BODYPART_LOWERSUIT_TAG "lowersuit"
 #define BN_BODYPART_KATANA_TAG "katana"
 #define BN_BODYPART_UNTAGGED_TAG "untagged"
 #define BN_BODYPART_ALL_TAG "all"
@@ -68,8 +71,11 @@
 #define BN_BODYPART_FOOT_RIGHT_HEX 0x000E
 #define BN_BODYPART_UPPERBODY_HEX 0x000F
 #define BN_BODYPART_LOWERBODY_HEX 0x0010
-#define BN_BODYPART_KATANA_HEX 0x0011
-#define BN_BODYPART_UNTAGGED_HEX 0x0012
+#define BN_BODYPART_FULLSUIT_HEX 0x0011
+#define BN_BODYPART_UPPERSUIT_HEX 0x0012
+#define BN_BODYPART_LOWERSUIT_HEX 0x0013
+#define BN_BODYPART_KATANA_HEX 0x0014
+#define BN_BODYPART_UNTAGGED_HEX 0x0015
 #define BN_BODYPART_ALL_HEX 0xFFFE // Used in some particular cases
 
 // ACTIONS

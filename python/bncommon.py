@@ -41,6 +41,7 @@ class BnConstants(metaclass=_ConstMeta):
     PLAYER_ALL_TAG = "all"
     PLAYER_NONE_TAG = "none"
 
+    # BODY PARTS NAMES
     BODYPART_NONE_TAG = "none"
     BODYPART_HEAD_TAG = "head"
     BODYPART_HAND_LEFT_TAG = "hand_left"
@@ -58,6 +59,9 @@ class BnConstants(metaclass=_ConstMeta):
     BODYPART_FOOT_RIGHT_TAG = "foot_right"
     BODYPART_UPPERBODY_TAG = "upperbody"
     BODYPART_LOWERBODY_TAG = "lowerbody"
+    BODYPART_FULLSUIT_TAG = "fullsuit"
+    BODYPART_UPPERSUIT_TAG = "uppersuit"
+    BODYPART_LOWERSUIT_TAG = "lowersuit"
     BODYPART_KATANA_TAG = "katana"
     BODYPART_UNTAGGED_TAG = "untagged"
     BODYPART_ALL_TAG = "all"
